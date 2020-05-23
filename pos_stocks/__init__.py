@@ -6,7 +6,7 @@
 #   License URL : <https://store.webkul.com/license.html/>
 # 
 #################################################################################
-from . import models
+from . import models 
 
 
 def pre_init_check(cr):
