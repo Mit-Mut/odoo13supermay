@@ -4,7 +4,7 @@
 from odoo import models, fields, api
 
 
-class hidden_menu(models.Model):
+class hiddenmenu(models.Model):
     _name = 'hidden.menu'
     _description = 'Hidden menu'
 
@@ -30,9 +30,9 @@ class hidden_menu(models.Model):
     @api.model
     def create(self, vals):
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
-        return super(hidden_menu, self).create(vals)
+        return super(hiddenmenu, self).create(vals)
 
     @api.multi
     def write(self, vals):
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
-        return super(hidden_menu, self).write(vals)
+        return super(hiddenmenu, self).write(vals)
