@@ -25,7 +25,7 @@
     'depends': ["base"],
     'data': [
         'views/hidden_menu_view.xml',
-        # 'security/ir.model.access.csv'
+        'security/ir.model.access.csv'
     ],
     'installable': True,
     'auto_install': False,
