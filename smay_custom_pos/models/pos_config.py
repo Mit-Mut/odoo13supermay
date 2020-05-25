@@ -21,13 +21,12 @@ class PosConfig(models.Model):
     def existe_conexion(self):
         return True
 
-    #@api.api
-    '''def open_session_cb(self):
-        if not self.env.user.sucursal_id:
+    # @api.api
+    def open_session_cb(self):
+        if not self.env.user.x_studio_sucursal_id:
             raise UserError('No puedes abrir el punto de venta porque no tienes sucursal asignada')
-        if self.env.user.sucursal_id.id != self.sucursal_id.id:
+        if self.env.user.x_studio_sucursal_id.id != self.sucursal_id.id:
             raise UserError(
                 'No puedes abrir el punto de venta porque pertenece a otra sucursal. Tu sucursal asignada es ' + str(
-                    self.env.user.sucursal_id.name) + ' y del punto de venta ' + str(self.sucursal_id.name))
-        return super(PosConfig, self).open_session_cb()'''
-
+                    self.env.user.x_studio_sucursal_id.name) + ' y del punto de venta ' + str(self.sucursal_id.name))
+        return super(PosConfig, self).open_session_cb()
