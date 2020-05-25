@@ -1,4 +1,4 @@
 #    License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0
 
-from . import hidden_menu
-from . import ir_ui_menu
+#from . import hidden_menu
+#from . import ir_ui_menu
