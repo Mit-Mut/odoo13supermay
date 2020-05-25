@@ -8,7 +8,7 @@ from odoo.tools.translate import _
 class ir_ui_menu(models.Model):
     _inherit = 'ir.ui.menu'
 
-    @api.multi
+    #@api.multi
     def _check_hidden_model(self, menus):
         hidden_menus = self.env['hidden.menu'].search([('menus', 'in', list(map(lambda x: x.id, menus))),
                                                        ('company_id', '=', self.env.user.company_id.id),
@@ -23,8 +23,8 @@ class ir_ui_menu(models.Model):
                     res.append(i)
         return self.browse(res)
 
-    @api.multi
-    @api.returns('self')
+    #@api.multi
+    #@api.returns('self')
     def _filter_visible_menus(self):
         res = super(ir_ui_menu, self)._filter_visible_menus()
         groups = self.env.user.groups_id.ids
