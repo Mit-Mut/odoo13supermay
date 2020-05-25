@@ -9,7 +9,7 @@
 
 {
     'name': 'Web Hidden Menu',
-    'version': '12.0.1.0.0',
+    #'version': '12.0.1.0.0',
     'author': 'Sistemas de Datos',
     'maintainer': 'Sistemas de Datos',
     'category': 'Web',
