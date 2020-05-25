@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="res_users_view_form_inherit_pos_user_restrict" model="ir.ui.view">
+    <!--<record id="res_users_view_form_inherit_pos_user_restrict" model="ir.ui.view">
         <field name="name">res.users.view.form.inherit.pos.user.restrict</field>
         <field name="model">res.users</field>
         <field name="inherit_id" ref="point_of_sale.res_users_view_form"/>
@@ -12,6 +12,6 @@
                     groups="point_of_sale.group_pos_user"/>
             </xpath>
         </field>
-    </record>
+    </record>-->
 
 </odoo>
