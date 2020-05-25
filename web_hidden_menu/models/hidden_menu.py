@@ -32,7 +32,7 @@ class hiddenmenu(models.Model):
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(hiddenmenu, self).create(vals)
 
-    @api.multi
+    #@api.multi
     def write(self, vals):
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(hiddenmenu, self).write(vals)
