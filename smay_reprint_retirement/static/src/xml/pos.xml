@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="PopUpMenu">
+        <t t-jquery=".gridView" t-operation="append">
+            <div class="gridView-listItem">
+                <div class="gridView-detailsSection">
+                    <div class="gridView-toolbar reprintRetirementButton">
+                        <div class="gridView-menu"><i class="fa fa-print"></i></div>
+                        <div class="gridView-date">Reimpresion de Retiro</div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+
+    <t t-name="reprintRetirementWidget">
+        <div class="modal-dialog" id="sunny-test">
+        <div class="popup popup-textinput" style="height:250px !important; width: 40%">
+                <p class="title">
+					<t t-esc="widget.options.title"/>
+				</p>
+            <div class="body">
+                Número de Folio: <input class='folio_retiro' type="number" style="width:50%"/>
+
+                </div>
+            <div class="footer">
+					<div class="button acceptReprintRetirement">
+                        Aceptar
+					</div>
+				</div>
+        </div>
+        </div>
+
+    </t>
+
+</templates>

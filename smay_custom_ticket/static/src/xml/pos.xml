@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--Oculta los botones de craer y eliminar orden a los cajeros-->
+    <t t-extend="OrderSelectorWidget">
+        <t t-jquery=".neworder-button" t-operation="replace">
+            <!--
+            <span t-if="widget.pos.user.is_manager" class="order-button square neworder-button">
+                <i class='fa fa-plus' role="img" aria-label="New order" title="New order"/>
+            </span>
+            -->
+        </t>
+
+        <t t-jquery=".deleteorder-button" t-operation="replace">
+            <!--<span t-if="widget.pos.user.is_manager" class="order-button square deleteorder-button">
+                <i class='fa fa-minus' role="img" aria-label="Delete order" title="Delete order"/>
+            </span>-->
+        </t>
+    </t>
+
+    <!--Se ocultan botones de pricelists-->
+    <t t-extend="ProductScreenWidget">
+		<t t-jquery=".control-buttons" t-operation="replace">
+			<div t-if='widget.pos.user.is_manager' class="control-buttons oe_hidden"></div>
+		</t>
+	</t>
+
+    <!--Se oculta el boton de crear clientes a los cajeros-->
+    <t t-extend="ClientListScreenWidget">
+		<t t-jquery=".new-customer" t-operation="replace">
+			<span t-if="widget.pos.get_cashier().is_manager" class='button new-customer' role="img"
+                  aria-label="Add a customer"
+                  title="Add a customer">
+                <i class='fa fa-user'></i>
+                <i class='fa fa-plus'></i>
+            </span>
+		</t>
+	</t>
+
+    <t t-extend="ClientDetails">
+		<t t-jquery=".edit-buttons" t-operation="replace">
+			<div t-if="widget.pos.get_cashier().is_manager" class='edit-buttons'>
+                <div class='button edit'><i class='fa fa-pencil-square' role="img" aria-label="Edit" title="Edit"/></div>
+            </div>
+		</t>
+	</t>
+
+    <!--Se asigna el logotipo de may-->
+    <t t-extend="Chrome">
+		<t t-jquery=".pos-logo" t-operation="replace">
+			<img class="pos-logo" src="/smay_custom_ticket/static/img/logo.jpg" alt="Logo Super May"
+                 style="width:100px; height:45px"/>
+		</t>
+	</t>
+
+    <!-- Modificacion de carrito de venta-->
+    <t t-extend="Orderline">
+
+        <!---->
+        <t t-jquery=".product-name" t-operation="replace">
+        <span class="product-name" style="width:65%;font-size:15px">
+                <t t-esc="line.get_product().display_name"/>
+            <t t-if="line.get_product().tracking!=='none'">
+                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
+                       t-if="line.has_valid_product_lot()"
+                       aria-label="Valid product lot" role="img" title="Valid product lot"/>
+                <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!line.has_valid_product_lot()"
+                   aria-label="Invalid product lot" role="img" title="Invalid product lot"/>
+                </t>
+            </span>
+        </t>
+
+        <!-- Argrega el precio unitario-->
+        <t t-jquery=".price" t-operation="replace">
+			<div class="price"
+                 style="display:block;position:relative;top:-0px;width:35%;font-size:15px;text-align:right">
+                <t t-if="line.get_unit_display_price()&lt;=line.product.lst_price">
+				<t t-esc="widget.format_currency( line.product.lst_price)"/>
+                </t>
+                <t t-if="line.get_unit_display_price()&gt;line.product.lst_price">
+                            <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')"/>
+                        </t>
+                <span style="padding-left:3px"/>
+                <t t-esc="widget.format_currency(line.get_display_price())" style="verti"/>
+            </div>
+		</t>
+
+        <!-- modifica la linea en el carrito V13-->
+        <t t-jquery=".info-list" t-operation='replace'>
+			<ul class="info-list" style="font-size:14px">
+			    <t t-if="line.get_quantity_str() !== '1' || line.selected ">
+            		<li class="info">
+               			<em>
+                            <t t-esc="line.quantity"/>
+			            </em>
+                        <t t-esc="line.get_unit().name"/>
+                        at
+                        <!-- <t t-if="line.get_unit_display_price()&lt;=line.product.list_price">-->
+                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')"/>
+                        <!--</t>
+                        <t t-if="line.get_unit_display_price()&gt;line.product.list_price">
+                            <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')"/>
+                        </t>-->
+			        </li>
+	   			</t>
+                <t t-if="line.quantity > 0">
+                    <t t-if="(line.price) &lt; line.product.lst_price">
+						<li class="info">
+                            Descuento
+                            <em>
+								  <t t-esc="widget.format_currency((line.product.lst_price - line.price) * line.quantity)"/>
+							</em>
+                		</li>
+					</t>
+				</t>
+			</ul>
+		</t>
+	</t>
+
+    <!-- Presenta los totales para Super May V13-->
+    <t t-extend='OrderWidget'>
+		<t t-jquery=".line" t-operation="replace">
+			<div class="line">
+            	<div class='entry total'>
+                	<div class='subentry subtotalSmay'>Subtotal: <span class="value">0.00</span></div>
+                    <!--<div class='subentry taxesSmay'>Taxes: <span class="value">0.00</span></div>-->
+                    <div class='subentry descuentoSmay'>Descuento: <span class="value">0.00</span></div>
+                    <br/>
+                    <span class="label">Total: </span>
+                    <span class="value">0.00 </span>
+				</div>
+			</div>
+		</t>
+	</t>
+
+    <t t-extend="OrderReceipt">
+        <t t-jquery=".pos-receipt" t-operation="replace">
+            <div class="pos-receipt">
+            <t t-if='receipt.company.logo'>
+                <img class="pos-receipt-logo" t-att-src='receipt.company.logo' alt="Logo"
+                     style="max-width: 170px; max-height: 500px;"/>
+                <br/>
+            </t>
+                <t t-if='!receipt.company.logo'>
+                <h2 class="pos-receipt-center-align">
+                    <t t-esc='receipt.company.name'/>
+                </h2>
+                    <br/>
+            </t>
+                <div class="pos-receipt-contact">
+                <t t-if='receipt.company.contact_address'>
+                    <div><t t-esc='receipt.company.contact_address' /></div>
+                </t>
+                    <t t-if='receipt.company.vat'>
+                    <div>RFC:<t t-esc='receipt.company.vat'/></div>
+                </t>
+                    <t t-if='receipt.company.phone'>
+                    <div>Tel:<t t-esc='receipt.company.phone'/></div>
+                </t>
+                    <!--V13-->
+                    <t t-if="widget.pos.company.street">
+                    <div><t t-esc="widget.pos.company.street"/></div>
+                </t>
+                    <t t-if="widget.pos.company.l10n_mx_edi_colony">
+                    <div><t t-esc="widget.pos.company.l10n_mx_edi_colony"/></div>
+                </t>
+
+                    <t t-if="widget.pos.company.zip">
+                    <div>C.P. :<t t-esc="widget.pos.company.zip"/></div>
+                </t>
+
+                    <t t-if="widget.pos.company.city">
+                    <div><t t-esc="widget.pos.company.city"/>,</div>
+                </t>
+
+                    <!--<t t-if="receipt.company.state_id[1]">
+                    <div><t t-esc="receipt.company.state_id[1]"/>,</div>
+                </t>-->
+
+                    <!-- <t t-if="receipt.company.country.name">
+                     <div><t t-esc="receipt.company.country.name"/>,</div>
+                 </t>-->
+
+                    <!--<t t-if='receipt.company.vat'>
+                        <div>VAT:<t t-esc='receipt.company.vat' /></div>
+                    </t>-->
+                    <t t-if='receipt.company.email'>
+                    <div><t t-esc='receipt.company.email' /></div>
+                </t>
+                    <t t-if='receipt.company.website'>
+                    <div><t t-esc='receipt.company.website' /></div>
+                </t>
+                    <t t-if='receipt.header_html'>
+                    <t t-raw='receipt.header_html'/>
+                </t>
+                    <t t-if='!receipt.header_html and receipt.header'>
+                    <div><t t-esc='receipt.header' /></div>
+                </t>
+                    <!--<t t-if='receipt.cashier'>
+                    <div class='cashier'>
+                        <div>*</div>
+                        <div>Served by <t t-esc='receipt.cashier'/></div>
+                    </div>
+                </t>-->
+                    <br/>
+                    <div class="informacion_sucursal" style="font-weight: bold;text-align:left">
+                    <t t-set="sucursal_id" t-value="widget.pos.config.sucursal_id[0]"/>
+                        <t t-foreach="widget.pos.partners" t-as="partner">
+                        <t t-if="partner.id==sucursal_id">
+                            <t t-esc="partner.name || ''"/>
+                            <br/>
+                            <t t-esc="partner.street_name|| ''"/>
+                            <t t-esc="partner.street_number|| ''"/>
+                            <br/>
+                            TEL
+                            <t t-esc="partner.phone|| ''"/>
+                            <br/>
+                            Col.
+                            <t t-esc="partner.l10n_mx_edi_colony|| ''"/>
+                            <t t-esc="partner.city|| ''"/>
+                            <t t-esc="partner.country_id[1]|| ''"/>
+                            <br/>
+                            RFC.
+                            <t t-esc="partner.vat|| ''"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+                <br/>
+                <div class="pos-receipt-order-data">
+                <div><t t-esc='receipt.name' /></div>
+                    <div><t t-esc='receipt.date.localestring' /></div>
+            </div>
+                <br/>
+                <br/>
+                <div class="informacion_sucursal" style="font-weight: bold;font-size:12px;text-align:left">
+                    <div>Cajero: <t t-esc='receipt.cashier'/></div>
+                    <t t-if="receipt.client">
+                    <div>Cliente: <t t-esc='receipt.client'/></div>
+                    </t>
+                    <t t-if="!receipt.client">
+                    <div>Cliente: Publico en General</div>
+                    </t>
+                </div>
+                <br/>
+
+                <!-- Orderlines -->
+                <div class="header_ordelines" style="font-size:10px;font-weight: bold">
+                    <span>Producto</span>
+                    <br/>
+                    <span style="padding-left: 2em;">Precio Unit</span>
+                    <span style="padding-left: 2em;">Desc. Unit</span>
+                    <span style="padding-left: 2em;">Desc. Total</span>
+                </div>
+
+                <div class='orderlines' style="font-size:10px">
+                    <t t-set="x_descuento_total" t-value="0.0"/>
+                    <t t-foreach='receipt.orderlines' t-as='line'>
+                    <t t-set='simple'
+                       t-value='(line.discount === 0 and line.unit_name === "Units" and line.quantity === 1 and !discount_to_show and !(line.display_discount_policy == "without_discount" &amp;&amp; line.price != line.price_lst))'/>
+                        <t t-if='simple'>
+                        <div><t t-esc='line.product_name_wrapped[0]' />
+                            <!--<span t-esc='widget.format_currency_no_symbol(line.price_display)'
+                                  class="price_display pos-receipt-right-align"/>-->
+                            <span t-esc='widget.format_currency(line.price_display)'
+                                  class="price_display pos-receipt-right-align"/>
+                        </div>
+                            <t t-call="OrderReceiptWrappedProductNameLines"/></t>
+                        <t t-if='!simple'>
+                        <div t-esc='line.product_name_wrapped[0]'/>
+                            <t t-call="OrderReceiptWrappedProductNameLines"/>
+                            <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst"><div class="pos-receipt-left-padding"><t t-esc="widget.format_currency(line.price_lst)" />->
+                                <!--<t t-esc="widget.format_currency_no_symbol(line.price)"/>-->
+                            <t t-esc="widget.format_currency(line.price)"/>
+                        </div>
+                        </t>
+                            <t t-elif='line.discount !== 0'>
+                            <div class="pos-receipt-left-padding">
+                                <t t-if="pos.config.iface_tax_included === 'total'">
+                                    <!--<t t-esc="widget.format_currency_no_symbol(line.price_with_tax_before_discount)"/>-->
+                                    <t t-esc="widget.format_currency(line.price_with_tax_before_discount)"/>
+                                </t>
+                                <t t-else="">
+                                    <!--<t t-esc="widget.format_currency_no_symbol(line.price)"/>-->
+                                    <t t-esc="widget.format_currency(line.price)"/>
+                                </t>
+                            </div>
+                        </t>
+                            <!--
+                            <t t-if='line.discount !== 0'>
+                                <div class="pos-receipt-left-padding">
+                                    Discount: <t t-esc='line.discount'/>%
+                                </div>
+                            </t>-->
+                            <t t-if="line.price_without_discount != line.lst_price">
+
+                                <t t-if="line.price_without_discount&gt;line.price_display_one">
+                                <div style="font-size:10px;">
+                            <span style="padding-left: 2em;"> <t
+                                    t-esc="widget.format_currency(line.price_without_discount)"/></span>
+                                    |
+                                    <span style="padding-left: 2.5em;"><t t-esc="widget.format_currency(line.price_without_discount-line.price_display_one)"/></span>
+                                    |
+                                    <span style="padding-left: 2.5em;"><t t-esc="widget.format_currency((line.price_without_discount-line.price_display_one)*line.quantity)"/></span>
+                                    <t t-set="x_descuento_total"
+                                       t-value="x_descuento_total+((line.price_without_discount-line.price_display_one)*line.quantity)"/>
+                        </div>
+
+                            </t>
+                    </t>
+                            <div class="pos-receipt-left-padding" style="padding-bottom:5px">
+                            <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
+                                <t t-if='line.unit_name !== "Units"' t-esc='line.unit_name'/>
+                                x
+                                <!--<t t-esc='widget.format_currency_no_symbol(line.price_display_one)'/>-->
+                                <t t-esc='widget.format_currency(line.price_display_one)'/>
+                                <span class="price_display pos-receipt-right-align">
+                               <!-- <t t-esc='widget.format_currency_no_symbol(line.price_display)'/>-->
+                                    <t t-esc='widget.format_currency(line.price_display)'/>
+                            </span>
+                        </div>
+                            <br/>
+
+                    </t>
+                </t>
+            </div>
+
+                <!-- Subtotal -->
+
+
+                <!--<t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001'/>
+                <t t-if='!taxincluded'>
+                <div class="pos-receipt-right-align">-*-**-*-***-*-*-*-</div>
+                    <br/>
+                    <div>Subtotal<span t-esc='widget.format_currency(receipt.subtotal)'
+                                       class="pos-receipt-right-align"/></div>
+                    <t t-foreach='receipt.tax_details' t-as='tax'>
+                    <div>
+                        <t t-esc='tax.name'/>
+                        <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                    </div>
+                </t>
+            </t>-->
+                <div class="pos-receipt-right-align">--------</div>
+                <br/>
+                <div>Subtotal<span t-esc='widget.format_currency(receipt.total_with_tax+x_descuento_total)'
+                                   class="pos-receipt-right-align"/></div>
+                <div>Descuento<span t-esc='widget.format_currency(x_descuento_total)'
+                                    class="pos-receipt-right-align"/></div>
+
+
+                <!-- Total -->
+                <div class="pos-receipt-right-align">--------</div>
+                <br/>
+                <div class="pos-receipt-amount">
+                TOTAL
+                <span t-esc='widget.format_currency(receipt.total_with_tax)' class="pos-receipt-right-align"/>
+            </div>
+                <br/>
+                <br/>
+
+                <!-- Payment Lines -->
+
+                <t t-foreach='paymentlines' t-as='line'>
+                <div>
+                    <t t-esc='line.name'/>
+                    <!--<span t-esc='widget.format_currency_no_symbol(line.get_amount())' class="pos-receipt-right-align"/>-->
+                    <span t-esc='widget.format_currency(line.get_amount())' class="pos-receipt-right-align"/>
+                </div>
+            </t>
+                <br/>
+
+                <div class="pos-receipt-amount receipt-change">
+                CHANGE
+                <span t-esc='widget.format_currency(receipt.change)' class="pos-receipt-right-align"/>
+            </div>
+                <br/>
+                <br/>
+                <div>
+                    Total de articulos <span t-esc="widget.pos.get_order().get_qty_products()"
+                                             class="pos-receipt-right-align"/>
+                </div>
+                <br/>
+
+                <!-- Extra Payment Info -->
+
+                <!-- <t t-if='receipt.total_discount'>
+                 <div>
+                     Discounts
+                     <span t-esc='widget.format_currency(receipt.total_discount)' class="pos-receipt-right-align"/>
+                 </div>
+             </t>
+                 <t t-if='taxincluded'>
+                 <t t-foreach='receipt.tax_details' t-as='tax'>
+                     <div>
+                         <t t-esc='tax.name'/>
+                         <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                     </div>
+                 </t>
+                     <div>
+                     Total Taxes
+                     <span t-esc='widget.format_currency(receipt.total_tax)' class="pos-receipt-right-align"/>
+                 </div>
+             </t>
+
+                 <div class='before-footer'/>-->
+
+                <!-- Footer -->
+                <!--<div t-if='receipt.footer_html' class="pos-receipt-center-align">
+                <t t-raw='receipt.footer_html'/>
+            </div>-->
+
+                <div t-if='!receipt.footer_html and receipt.footer' class="pos-receipt-center-align">
+                <br/>
+                    <t t-esc='receipt.footer'/>
+                    <br/>
+                    <br/>
+            </div>
+
+                <div class='after-footer'>
+                <t t-foreach='paymentlines' t-as='line'>
+                    <t t-if='line.ticket'>
+                        <br/>
+                        <div class="pos-payment-terminal-receipt">
+                            <t t-raw='line.ticket'/>
+                        </div>
+                    </t>
+                </t>
+            </div>
+
+                <!--<br/>
+                <div class="pos-receipt-order-data">
+                <div><t t-esc='receipt.name' /></div>
+                    <div><t t-esc='receipt.date.localestring' /></div>
+            </div>codigo de barras-->
+
+
+
+        </div>
+
+        </t>
+
+        </t>
+
+
+
+        </templates>

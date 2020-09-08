@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="conciliation_retirements_bank">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page" style=" width:100%; font-size:12px;">
+                    <div style=" width:100%; font-size:12px; margin-left: 5px;margin-bottom: 7px;">
+                        <b>Reporte generado por :</b>
+                        <t t-esc="user.partner_id.name"/>
+                        <br/>
+                        <b>Fecha de creación :</b>
+                        <t t-esc="docs.get_correct_datetime(docs.get_current_datetime())"/>
+                        <br/>
+                    </div>
+
+                    <t t-foreach="docs" t-as="conciliation">
+                        <t t-esc="conciliation._compute_all_totals()"/>
+                        <t t-if="conciliation.state in ('retiros_validados','deposito_validado')">
+                            <br/>
+                            <table class="mainTable">
+                                <tr>
+                                    <th colspan="4" class="leftSpace topBottomSpace topSpace">
+                                        <t t-esc="conciliation.name"/>
+                                        -
+                                        <t t-esc="conciliation.state"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4" class="leftSpace">Creada por
+                                        <t t-esc="conciliation.create_uid.partner_id.name"/>
+                                        el
+                                        <t t-esc="docs.get_correct_datetime(str(conciliation.create_date)[0:19])"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4" class="leftSpace topBottomSpace bottomSpace">
+                                        Modificada por
+                                        <t t-esc="conciliation.create_uid.partner_id.name"/>
+                                        el
+                                        <t t-esc="docs.get_correct_datetime(str(conciliation.write_date)[0:19])"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="columna" colspan="2" style="width:40%;">
+                                        <table style="width:100%; ">
+                                            <tr>
+                                                <th colspan="5" class="encabezado1">RETIROS DE CAJA</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">
+                                                    Folio
+                                                </th>
+
+                                                <th class="encabezado2 borderRight">
+                                                    Monto Retiro
+                                                </th>
+
+                                                <th class="encabezado2 borderRight">
+                                                    Comentario
+                                                </th>
+
+                                                <th class="encabezado2 borderRight">
+                                                    Dif.
+                                                </th>
+
+                                                <th class="encabezado2">
+                                                    Conciliado
+                                                </th>
+                                            </tr>
+                                            <t t-foreach="conciliation.withdraw_line_ids" t-as="retirement">
+                                                <tr>
+                                                    <td class="celdaDatosDerecha">
+                                                        <t t-esc="retirement.retirement_id"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.total_amount)"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="retirement.commentary"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.difference)"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.real_amount)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                    <td class="columna" colspan="2" style="width:20%; ">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <th colspan="2" class="encabezado1"
+                                                    style="border-left: 1px solid white;">PAGOS CON TARJETA
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">Pedido</th>
+                                                <th class="encabezado2 borderRight">Monto</th>
+                                            </tr>
+                                            <t t-foreach="conciliation.card_payment_ids" t-as="card">
+                                                <tr>
+                                                    <tr>
+                                                        <td class="celdaDatosIzquierda">
+                                                            <t t-esc="card.order_reference.replace('Pedido ','')"/>
+                                                        </td>
+                                                        <td class="celdaDatosDerecha">
+                                                            $
+                                                            <t t-esc="docs.get_thousands_format(card.amount)"/>
+                                                        </td>
+                                                    </tr>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                    <td class="columna" colspan="2" style="width:40%; ">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <t t-if="conciliation.state == 'deposito_validado'">
+                                                    <th colspan="5" class="encabezado1"
+                                                        style="border-left: 1px solid white;">
+                                                        DEPOSITOS BANCARIOS
+                                                    </th>
+                                                </t>
+
+                                                <t t-if="conciliation.state != 'deposito_validado'">
+                                                    <th colspan="5"
+                                                        class="alertaEncabezado1">
+                                                        DEPOSITOS BANCARIOS (FALTA VALIDACIÓN)
+                                                    </th>
+                                                </t>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">
+                                                    Banco
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Referencia
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Depositante
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Fecha
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Depositado
+                                                </th>
+
+                                            </tr>
+
+                                            <t t-foreach="conciliation.bank_deposit_ids" t-as="deposit">
+                                                <tr>
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="deposit.bank"/>
+                                                    </td>
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="deposit.reference"/>
+                                                    </td>
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="deposit.depositor"/>
+                                                    </td>
+                                                    <td class="celdaDatosCentrado">
+                                                        <t t-esc="deposit.deposit_date"/>
+                                                    </td>
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(deposit.deposited_amount)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado)"/>
+                                    </th>
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado_card_payments)"/>
+                                    </th>
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.deposit_total)"/>
+                                    </th>
+                                </tr>
+                            </table>
+                            <br/>
+                        </t>
+                    </t>
+
+                    <br/>
+                    <br/>
+
+                    <!--<t t-if="len(docs) > 1">-->
+                    <div style="text-align:center; page-break-before: always;">
+                        <table style="width:50%; border: 1px solid black;margin: 0 auto;">
+                            <tr>
+                                <th colspan="4" class="encabezado1">
+                                    RESUMEN GENERAL DE CONCILIACIONES
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="encabezado2 borderRight">
+                                    Nombre
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Monto Tarjetas
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Monto Conciliado
+                                </td>
+                                <td class="encabezado2">
+                                    Monto Depositado
+                                </td>
+                            </tr>
+                            <t t-value="0" t-set="payments_with_card_grand_total"/>
+                            <t t-value="0" t-set="conciliated_grand_total"/>
+                            <t t-value="0" t-set="deposited_grand_total"/>
+                            <t t-foreach="docs" t-as="conciliation">
+
+                                <t t-if="conciliation.state in ('retiros_validados','deposito_validado')">
+                                    <tr>
+                                        <td class="celdaDatosIzquierda">
+                                            <t t-esc="conciliation.name"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha">
+                                            $
+                                            <t t-esc="docs.get_thousands_format(conciliation.total_conciliado_card_payments)"/>
+                                            <t t-value="payments_with_card_grand_total+conciliation.total_conciliado_card_payments"
+                                               t-set="payments_with_card_grand_total"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha">
+                                            $
+                                            <t t-esc="docs.get_thousands_format(conciliation.total_conciliado)"/>
+                                            <t t-value="conciliated_grand_total+conciliation.total_conciliado"
+                                               t-set="conciliated_grand_total"/>
+                                        </td>
+                                        <t t-if="conciliation.state=='deposito_validado'">
+                                            <td class="celdaDatosDerecha">
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.deposit_total)"/>
+                                                <t t-set="deposited_grand_total"
+                                                   t-value="deposited_grand_total+conciliation.deposit_total"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="conciliation.state=='retiros_validados'">
+                                            <td class="celdaDatosDerecha" style="background-color :#FF0000">
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.deposit_total)"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+
+                                </t>
+                            </t>
+                            <tr>
+                                <th class="totalEtiqueta">TOTAL</th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(payments_with_card_grand_total)"/>
+                                </th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(conciliated_grand_total)"/>
+                                </th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(deposited_grand_total)"/>
+                                </th>
+                            </tr>
+                            <!--<tr>
+                                <th class="totalEtiqueta">
+                                    DIFERENCIA
+                                </th>
+                                <th colspan="2" class="totalCantidad">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(deposited_grand_total-conciliated_grand_total)"/>
+                                </th>
+                            </tr>-->
+                        </table>
+                        <br/>
+                        <br/>
+
+                        <!--<t t-if="len(docs.get_pending_validation_retirements()) == 0">
+                            Todas las conciliaciones estan validadas con el deposito bancario
+                        </t>-->
+                        <t t-if="len(docs.get_pending_validation_retirements()) > 0">
+                            <table style="width:50%; border: 1px solid black; margin: 0 auto;">
+                                <tr>
+                                    <th colspan="4" class="encabezado1">RETIROS EN CONCILIACIONES POR VALIDAR</th>
+                                </tr>
+                                <tr>
+                                    <th class="encabezado2 borderRight">Folio</th>
+                                    <th class="encabezado2 borderRight">Conciliacion</th>
+                                    <th class="encabezado2 borderRight">Estado</th>
+                                    <th class="encabezado2">Monto</th>
+                                </tr>
+                                <t t-set="total" t-value="0"/>
+                                <t t-foreach="docs.get_pending_validation_retirements()" t-as="pending_retirement">
+                                    <tr>
+                                        <td class="celdaDatosDerecha">
+                                            <t t-esc="pending_retirement.sequence_cashbox_out_id"/>
+                                        </td>
+
+                                        <td class="celdaDatosIzquierda">
+                                            <t t-esc="docs.get_information_by_folio(pending_retirement.sequence_cashbox_out_id).get('name')"/>
+                                        </td>
+
+                                        <td class="celdaDatosIzquierda">
+                                            <t t-esc="docs.get_information_by_folio(pending_retirement.sequence_cashbox_out_id).get('state')"/>
+                                        </td>
+
+                                        <td class="celdaDatosDerecha">
+                                            $
+                                            <t t-esc="docs.get_thousands_format(abs(pending_retirement.amount))"/>
+                                            <t t-set="total" t-value="total+abs(pending_retirement.amount)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <th colspan="3" class="totalEtiqueta">TOTAL</th>
+                                    <th class="totalCantidad">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(total)"/>
+                                    </th>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                        </t>
+
+                        <!--<t t-if="len(docs.get_pending_retirements()) == 0">
+                            No hay retiros de caja pendientes por conciliar
+                        </t>-->
+                        <t t-if="len(docs.get_pending_retirements()) > 0">
+                            <table style="width:50%; border: 1px solid black;margin: 0 auto;">
+                                <tr>
+                                    <th colspan="4" class="encabezado1">FOLIOS POR CONCILIAR</th>
+                                </tr>
+                                <tr>
+                                    <th class="encabezado2 borderRight">
+                                        Folio
+                                    </th>
+                                    <th class="encabezado2 borderRight">
+                                        Fecha
+                                    </th>
+                                    <th class="encabezado2 borderRight">
+                                        Cajero
+                                    </th>
+                                    <th class="encabezado2">Monto</th>
+                                </tr>
+                                <t t-set="total_pending_retirement" t-value="0"/>
+                                <t t-foreach="docs.get_pending_retirements()" t-as="pending_retirement">
+                                    <tr>
+                                        <td class="celdaDatosDerecha">
+                                            <t t-esc="pending_retirement.sequence_cashbox_out_id"/>
+                                        </td>
+                                        <td class="celdaDatosCentrado">
+                                            <t t-esc="docs.get_correct_datetime(str(pending_retirement.create_date)[0:19])"/>
+                                        </td>
+                                        <td class="celdaDatosIzquierda">
+                                            <t t-esc="pending_retirement.write_uid.partner_id.name"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha">
+                                            $
+                                            <t t-esc="docs.get_thousands_format(abs(pending_retirement.amount))"/>
+                                            <t t-set="total_pending_retirement"
+                                               t-value="total_pending_retirement+abs(pending_retirement.amount)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <th colspan="3" class="totalEtiqueta">TOTAL</th>
+                                    <th class="totalCantidad">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(total_pending_retirement)"/>
+                                    </th>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                    <!--</t>-->
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

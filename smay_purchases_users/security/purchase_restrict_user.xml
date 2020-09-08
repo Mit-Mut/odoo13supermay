@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record id="purchases_rule_user_order" model="ir.rule">
+            <field name="name">Show purchase of asigned warehouse.</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="domain_force">[('picking_type_id','=',user.x_almacen_compras.id)]</field>
+            <field name="groups" eval="[(4,ref('purchase.group_purchase_user'))]"/>
+        </record>
+
+        <record id="purchases_rule_manager_order" model="ir.rule">
+            <field name="name">Show All purchase for Manager.</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

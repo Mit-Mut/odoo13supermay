@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="XReportButton">
+        <span class="control-button">
+            <i class="fa fa-sticky-note"></i>
+            Print X-Report
+        </span>
+    </t>
+
+    <!--Muestra el menu en el punto de venta para el reporte de arqueo-->
+
+    <t t-extend="PopUpMenu">
+        <t t-jquery=".gridView" t-operation="append">
+            <div class="gridView-listItem">
+                <div class="gridView-detailsSection">
+                    <div class="gridView-toolbar closeReportButton">
+                        <div class="gridView-menu"><i class="fa fa-file-text"></i></div>
+                        <div class="gridView-date">Reporte de Caja</div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

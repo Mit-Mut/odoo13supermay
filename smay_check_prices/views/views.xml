@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ace_view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group col="2">
+                        <field name="es_checador_precios"/>
+                        <field name="mostrar_existencias"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

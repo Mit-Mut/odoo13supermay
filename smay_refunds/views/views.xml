@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--<record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_security_pin']" position="after">
+                <field name="is_manager"/>
+            </xpath>
+        </field>
+    </record>-->
+
+    <record id="view_pos_pos_form_inherited" model='ir.ui.view'>
+        <field name="name">inherit_pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_reference']" position='after'>
+                <field name="x_motivo_devolucion"/>
+                <field name="x_descripcion_devolucion"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="refund_view_pos_config_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form_refund</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group col="2">
+                    <field name="x_dias_permitidos_devolucion" string='Dias permitidos para devolucion'/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+
+
+

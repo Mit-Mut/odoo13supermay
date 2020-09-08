@@ -1,0 +1,192 @@
+.content h2 {
+	margin-top: 0;
+	background: rgba(255,255,255,0.5);
+    padding: 20px;
+    border-radius: 3px 3px 0px 0px;
+    border-bottom: solid 1px rgba(60,60,60,0.1);
+    text-align: center;
+}
+
+.content {
+    font-size: 15px;
+    background: #f7f7f7;
+    color: #333;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 13em;
+    width: -moz-max-content;
+    max-width: 37em;
+    top: 33%;
+    height: auto;
+    position: absolute;
+    border-radius: 3px;
+    z-index: 1200;
+    font-family: 'Lato';
+}
+
+.content .footer{
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    border-top: solid 1px rgba(60,60,60,0.1);
+}
+
+.content .button {
+    float: right;
+    width: 110px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 2px;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: solid 1px rgba(60,60,60,0.1);
+    background: rgba(210, 210, 210, 0.1);
+    font-weight: normal;
+}
+
+
+.content .gridView {
+    display: grid;
+    grid-template-columns: repeat(2, 250px);
+    grid-gap: 10px;
+}
+
+.content .gridView-listItem {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    white-space: nowrap;
+    font-size: 13px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #4c4c4c;
+    background-color: #ffffff;
+    border-color: #cccccc;
+	position: relative;
+	width: 250px;
+}
+
+.content .gridView-imageSection {
+	position: relative;
+	width: 250px;
+	height: 141px;
+	overflow: hidden;
+	background-color: yellow;
+}
+
+.content .gridView-image {
+	width: 100%;
+	height: auto;
+}
+
+.content .gridView-image {
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.content .gridView-duration {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	padding: 5px 10px;
+}
+
+.content .gridView-title {
+	padding: .5rem .75rem;
+	font-size: 1.4rem;
+}
+
+.content .gridView-toolbar {
+	display: flex;
+	align-items: center;
+	font-size: 1.2rem;
+}
+
+.content .gridView-date {
+	flex-grow: 1;
+	padding: .5rem .75rem;
+}
+
+.content .gridView-menu {
+	padding: .5rem .75rem;
+	cursor: pointer;
+}
+
+.content .gridView.cover {
+	padding-top: 21px;border-top: 1px solid #d8d8d8;
+}
+
+.content .gridView.cover .gridView-image {
+ 	background-size: cover;
+}
+
+.content .gridView.contain {
+    padding-bottom: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.content .gridView.contain .gridView-image {
+ 	background-size: contain;
+}
+
+
+.marca_agua{
+    content: "G";
+
+  color: rgba(52, 166, 214, 0.4);
+  z-index: 9999;
+  font-size: 20px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 300px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+
+  -webkit-pointer-events: none;
+  -moz-pointer-events: none;
+  -ms-pointer-events: none;
+  -o-pointer-events: none;
+  pointer-events: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

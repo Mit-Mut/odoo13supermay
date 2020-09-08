@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report file="smay_reconciliation_of_withdrawals.conciliation_retirements_bank"
+                id="bank_conciliation" model="conciliation.withdrawals"
+                name="smay_reconciliation_of_withdrawals.conciliation_retirements_bank"
+                report_type="qweb-pdf" string="Conciliación Retiros/Banco"/>
+
+
+    </data>
+</odoo>

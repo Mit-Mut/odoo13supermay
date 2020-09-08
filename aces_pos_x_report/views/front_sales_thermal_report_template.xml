@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="front_sales_thermal_report_template">
+           <receipt align='center' width='40' value-thousands-separator='' >
+                <t t-foreach="docs" t-as="receipt">
+                     <div align="center">
+                        <div size='double-height' style="font-size:20px;">
+                            <div>X-REPORT</div> 
+                                ====================================
+                            <br />
+                            <t t-if="receipt.get_company_data().rml_header1">
+                                <span><t t-esc="receipt.get_company_data().rml_header1" /></span><br />
+                            </t>
+                        </div>
+                        <span style="font-size:10px;">
+                            <t t-if="receipt.get_company_data().name">
+                                <t t-esc="receipt.get_company_data().name" /><br />
+                            </t>
+                            <t t-if="receipt.get_company_data().street">
+                                <t t-esc="receipt.get_company_data().street" /><br />
+                            </t>
+                            <t t-if="receipt.get_company_data().street2">
+                                <t t-esc="receipt.get_company_data().street2" />
+                            </t>
+                            <t t-if="receipt.get_company_data().city">
+                                <t t-esc="receipt.get_company_data().city" />
+                            </t>
+                            <t t-if="receipt.get_company_data().state_id.name">
+                                <t t-esc="receipt.get_company_data().state_id.name" />
+                            </t>
+                            <t t-if="receipt.get_company_data().country_id.name">
+                                <t t-esc="receipt.get_company_data().country_id.name" />
+                            </t><br />
+                            <t t-if="receipt.get_company_data().phone">
+                                Tel: <t t-esc="receipt.get_company_data().phone" /><br />
+                            </t>
+                            <t t-if="receipt.get_company_data().email">
+                                Email: <t t-esc="receipt.get_company_data().email" /><br />
+                            </t>
+                             <t t-if="receipt.get_company_data().website">
+                                Website: <t t-esc="receipt.get_company_data().website" /><br />
+                             </t>
+                         </span>
+                    </div>
+                    <div align="center">
+                        ================
+                    </div>
+                    <line>
+                        <left>
+                            <pre>Report Date</pre>
+                        </left>
+                        <right t-esc="receipt.get_current_date()"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Report Time</pre>
+                        </left>
+                        <right t-esc="receipt.get_current_time()"/>
+                    </line>
+                    <br/>
+                    <line>
+                        <left>
+                            <pre>Batch #</pre>
+                        </left>
+                        <right t-esc="receipt.name"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Batch Status</pre>
+                        </left>
+                        <right t-esc="receipt.state"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Start Date</pre>
+                        </left>
+                        <right t-esc="receipt.get_session_date(receipt.start_at)"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Start Time</pre>
+                        </left>
+                        <right t-esc="receipt.get_session_time(receipt.start_at)"/>
+                    </line>
+                    <br/>
+                    <line>
+                        <left>
+                            <pre>Opening Total</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.cash_register_balance_start'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Sales</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_sales()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Returns</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_returns()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Tax</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_tax()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Discount Amount</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_discount()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Gross Total</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_first()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <t t-if="receipt.get_user()">
+                        <line>
+                            <left>
+                                <pre>Gross Profit</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc='receipt.get_gross_total()'/>
+                                </value>
+                            </right>
+                        </line>
+                        <line>
+                            <left>
+                                <pre>Net Gross Profit</pre>
+                            </left>
+                            <right>
+                                <value>
+                                    <t t-esc='receipt.get_net_gross_total()'/>
+                                </value>
+                            </right>
+                        </line>
+                    </t>
+                    <br/>
+                    <t t-if="receipt.get_product_category()">
+                        <div>
+                            =======================================<br/>
+                            Department Sales
+                        </div>
+                        <br/>
+                        <t t-foreach="receipt.get_product_category()" t-as="l">
+                            <line>
+                                <left>
+                                    <pre><t t-esc="receipt.get_product_name(l.get('pos_categ_id'))"/></pre>
+                                </left>
+                                <right>
+                                    <t t-esc="l.get('price')"/>
+                                </right>
+                            </line>
+                        </t>
+                        <line>
+                            <right>
+                                ===========
+                            </right>
+                        </line>
+                        <line>
+                            <right>
+                                <t t-esc="receipt.get_product_cate_total()"/>
+                            </right>
+                        </line>
+                    </t>
+                    <br/>
+                    <div>
+                        =======================================<br/>
+                        Payments Total
+                    </div><br/>
+                    <t t-foreach="receipt.get_payments()" t-as="l">
+                        <line>
+                            <left>
+                                <pre><t t-esc="l.get('name')"/></pre>
+                            </left>
+                            <right>
+                                <t t-esc="l.get('sum')"/>
+                            </right>
+                        </line>
+                    </t>
+                    <br/>
+                </t>
+            </receipt>
+        </template>
+
+    </data>
+</openerp>

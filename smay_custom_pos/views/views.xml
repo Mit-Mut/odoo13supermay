@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pos_pos_form_inherited" model='ir.ui.view'>
+        <field name="name">inherit_pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='refund']" position='replace'>
+                <button name="refund" string="Return Products" type="object"
+                        attrs="{'invisible':[('state','=','draft')]}" groups="point_of_sale.group_pos_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_pos_session_form_user" model="ir.ui.view">
+        <field name="name">view.pos.session.form.user</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="groups_id" eval="[(6,0,[ref('point_of_sale.group_pos_user')])]"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="replace">
+                <header>
+                    <button name="open_cashbox_pos" type="object" string="Asignar Fondo"
+                            attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}"
+                            class="oe_highlight"
+                            context="{'balance': 'start'}"/>
+                    <button name="action_pos_session_open" type="object" string="Abrir caja"
+                            attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
+                            class="oe_highlight"/>
+
+                    <button name="open_frontend_cb" type="object" string="Continuar venta" states="opened"
+                            class="oe_highlight"/>
+                    <button name="action_pos_session_closing_control" type="object" string="Cerrar caja"
+                            attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
+                            groups="point_of_sale.group_pos_manager"
+                            class="oe_highlight btn-danger" context="{'auto_closing_control': True}"/>
+                    <button name="action_pos_session_closing_control" type="object"
+                            string="Validar y contabilizar asiento(s) de cierre"
+                            attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
+                            class="oe_highlight"
+                            confirm="Are you sure you want to do this?"/>
+                    <button name="action_pos_session_closing_control" type="object"
+                            string="Validar y contabilizar asiento(s) de cierre" states="closing_control"
+                            class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//notebook" position="replace">
+                <notebook>
+                    <page string="Control de Efectivo" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                        <group class="col-md-12" style="margin-left: 140px;">
+                            <group class="col-md-7">
+                                <div style="margin:0;padding:0;">
+                                    <group style="margin:0;padding:0;">
+                                        <field style="text-align:oe_button_boxright;margin:0;padding:0;"
+                                               name="cash_register_balance_start" readonly="1" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}" string="Fondo de Caja"/>
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}"
+                                           groups="point_of_sale.group_pos_manager">
+                                        <field style="text-align:right;margin:0;padding:0;"
+                                               name="cash_register_total_entry_encoding" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}"
+                                           groups="point_of_sale.group_pos_manager">
+                                        <field style="text-align:right;margin:0;padding:0;"
+                                               name="cash_register_balance_end" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}"
+                                           groups="point_of_sale.group_pos_manager">
+                                        <field style="text-align:right;margin:0;padding:0;"
+                                               name="cash_register_balance_end_real" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
+                                    </group>
+                                </div>
+                                <div style="margin:0;padding:0;" groups="point_of_sale.group_pos_manager">
+                                    <group style="margin:0;padding:0;">
+                                        <button class="oe_inline oe_link" name="open_cashbox_pos" type="object"
+                                                context="{'balance': 'start'}"
+                                                attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}">
+                                            Set Starting Cash
+                                        </button>
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <button class="oe_inline oe_link" name="340" type="action"
+                                                attrs="{'invisible' : [('state', '=', 'closed')]}">Cash In/Out
+                                        </button>
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                    </group>
+                                    <group style="margin:0;padding:0;"
+                                           attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <button class="oe_inline oe_link" name="open_cashbox_pos" type="object"
+                                                attrs="{'invisible': [('state', 'in', ['new_session', 'opening_control', 'closed'])]}"
+                                                context="{'balance': 'close'}">Set Closing Cash
+                                        </button>
+                                    </group>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+
+            </xpath>
+
+            <xpath expr="//sheet/div" position="replace">
+
+                <div class="oe_button_box" name="button_box" groups="point_of_sale.group_pos_manager">
+                    <button name="action_view_order"
+                            class="oe_stat_button"
+                            icon="fa-shopping-basket"
+                            type="object">
+                        <field name="order_count" widget="statinfo" string="Orders"/>
+                    </button>
+                    <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v"
+                            attrs="{'invisible':[('picking_count', '=', 0)]}">
+                        <field name="picking_count" widget="statinfo" string="Picking Errors"/>
+                    </button>
+                    <button name="action_show_payments_list" type="object" class="oe_stat_button" icon="fa-dollar">
+                        <field name="total_payments_amount" widget="statinfo" string="Payments"/>
+                    </button>
+                    <button
+                            name="show_journal_items"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Journal Items"
+                            attrs="{'invisible':[('move_id', '=', False)]}"
+                            groups="account.group_account_user">
+                    </button>
+                </div>
+
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="user_id" options="{'no_open': True}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='config_id']" position="replace">
+                <field name="config_id" options="{'no_open': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='cash_control']" position="after">
+                <div class="text-muted">
+                    Fondo de caja
+                </div>
+                <field string='fondo de caja' name="fondo_caja" attrs="{'invisible': [('cash_control', '=', False)]}"/>
+            </xpath>
+        </field>
+
+    </record>
+
+
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_config_ids']" position="after">
+                <field name="sucursal_id"/>
+
+            </xpath>
+        </field>
+    </record>
+    <record id="fixed_payments_view_pos_config_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form_fixed_payments</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group col="2">
+                    <field name="sucursal_id"
+                           string='Sucursal que sera presentada en el ticket.'/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_dashboard_pos" model="ir.ui.view">
+        <field name="name">custom_dashboard_pos</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div/div[1]/div[1]/div[2]" position="replace">
+                <div class="o_secondary">
+                    <t t-esc="record.pos_session_username.value || 'Disponible'"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//div/div[1]/div[2]/a" position="replace">
+                <a class="o_kanban_manage_toggle_button" href="#" groups="point_of_sale.group_pos_manager">
+                    <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                </a>
+            </xpath>
+
+            <xpath expr="//div/div[2]/div[1]" position="replace">
+                <div class="container o_kanban_card_content o_visible">
+                    <div class="row">
+                        <div class="col-6 o_kanban_primary_left">
+                            <!--<button t-if="!record.current_session_id.raw_value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>-->
+                            <div t-if="!record.pos_session_username.value" class="row">
+                                <button t-if="!record.current_session_id.raw_value" class="btn btn-primary"
+                                        name="open_session_cb" type="object">Abrir Caja
+                                </button>
+                            </div>
+                            <!--<button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>-->
+                            <button t-if="record.current_session_state.raw_value === 'opening_control'"
+                                    class="btn btn-primary" name="open_existing_session_cb" type="object">Establecer
+                                Fondo
+                            </button>
+                            <!--<button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Resume</button>-->
+                            <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary"
+                                    name="open_ui" type="object">Continuar Venta
+                            </button>
+                            <button t-if="record.pos_session_username.value" class="btn btn-default"
+                                    name="open_session_cb" type="object">Ver Caja
+                            </button>
+
+                            <!--<t t-if="record.pos_session_username.value">
+                                <br/>
+                                <t t-esc="record.pos_session_username.value"/>
+                            </t>-->
+                        </div>
+                        <div class="col-6 o_kanban_primary_right">
+
+                            <div t-if="record.last_session_closing_date.value" class="row">
+                                <div class="col-xs-6">
+                                    <span>Último Cierre</span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span>
+                                        <t t-esc="record.last_session_closing_date.value"/>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div t-if="record.last_session_closing_date.value" class="row">
+                                <div class="col-xs-6">
+                                    <span>Fondo</span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span>
+                                        <field name="last_session_closing_cash" widget="monetary"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+
+</odoo>

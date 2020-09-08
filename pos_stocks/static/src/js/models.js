@@ -23,7 +23,6 @@ odoo.define('pos_stock.models',function(require) {
                 operaciones.forEach(function(item){
                     if(self.config.picking_type_id[0]==item['id']){
                         self.config['stock_location_id']=item['default_location_src_id'][0]
-                        console.log(self.stock_location_id)
                         }
                     }
                 )
@@ -56,8 +55,6 @@ odoo.define('pos_stock.models',function(require) {
                              }
 
     product_model.loaded = function(self,products){
-        console.log('productos')
-        console.log(products)
         if(self.config.wk_display_stock && self.config.wk_hide_out_of_stock){
             var available_product = [];
             for(var i = 0,len = products.length; i<len; i++){

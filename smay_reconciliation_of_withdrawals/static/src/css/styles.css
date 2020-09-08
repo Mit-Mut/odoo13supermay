@@ -1,0 +1,98 @@
+.mainTable{
+    width:100%;
+    font-size:12px;
+    outline: 1px solid;
+}
+
+.leftSpace{
+    padding-left:5px;
+}
+
+.topBottomSpace{
+    padding-top: 4px;
+    padding-bottom:4px;
+}
+
+.topSpace{
+    padding-top:5px;
+}
+
+
+.bottomSpace{
+    padding-bottom:5px;
+}
+
+.columna{
+    width:50%;
+    border-right: 1px solid black;
+}
+
+.encabezado1{
+    background-color:#000000;
+    color:#FFFFFF;
+    text-align:center;
+    padding-top:4px;
+    padding-bottom:4px;
+}
+
+.alertaEncabezado1{
+    background-color:#FF0000;
+    color:#FFFFFF;
+    text-align:center;
+    padding-top:4px;
+    padding-bottom:4px;
+}
+
+.encabezado2{
+    background-color:#9A9A9A;
+    color:#000000;
+    text-align:center;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+
+.borderRight{
+    border-right: 1px solid white;
+}
+
+.boderLeft{
+    border-left: 1px solid white;
+}
+
+.celdaDatosDerecha{
+    text-align:right;
+    padding-right:5px;
+    padding-top:2px;
+    padding-bottom:2px;
+}
+
+.celdaDatosIzquierda{
+    text-align:left;
+    padding-left:5px;
+    padding-top:2px;
+    padding-bottom:2px;
+}
+
+.celdaDatosCentrado{
+    text-align:center;
+    padding-top:2px;
+    padding-bottom:2px;
+}
+
+
+.totalEtiqueta{
+    text-align: right;
+    font-size:13px;
+    padding-right: 7px;
+    padding-bottom:7px;
+    padding-top: 7px;
+}
+
+.totalCantidad{
+    text-align: right;
+    font-size:13px;
+    padding-right: 7px;
+    padding-bottom:7px;
+    padding-top: 7px;
+}
+
