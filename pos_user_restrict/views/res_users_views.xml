@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_users_view_form_inherit_pos_user_restrict" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.pos.user.restrict</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Super May Market">
+                    <group string="Punto de Venta" name="pos">
+                        <field name="pos_config_ids"
+                               widget="many2many_tags"
+                               groups="point_of_sale.group_pos_user"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

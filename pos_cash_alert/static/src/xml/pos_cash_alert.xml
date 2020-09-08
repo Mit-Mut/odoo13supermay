@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<templates id="template" xml:space="preserve">
+	<t t-name="CashPopupWidget">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="height:350px !important">
+				<!--<p class="title">Cash Drawer Alert</p>-->
+                <p class="title">Alerta de Retiro de Efectivo</p>
+                <div class="body">
+					<p id='cash_message' class="message"></p>
+				</div>
+                <div class="footer">
+					<!-- <div class="button confirm" style='width:126px;'>-->
+                    <!--Do It Later-->
+                    <!--Cancelar-->
+                    <!--</div>-->
+                    <div class="button" style='width:126px;' id="now">
+						<!--Take Money Out-->
+                        Realizar Retiro
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+
+    <t t-name="CashOutPopupWidget">
+		<div class="modal-dialog" id="sunny-test">
+			<div class="popup popup-textinput" style="height:600px; width: 40%">
+				<!--<p class="title"><t t-esc=" widget.options.title || 'Take Money Out' " /></p>-->
+                <p class="title"><t t-esc=" widget.options.title || 'Retiro de efectivo' " /></p>
+                <div class="body">
+					<table width="100%" height="100%">
+						<tr>
+							<td>
+								<table id="denominacion_billetes">
+                                    <tr>
+                                        <td>
+                                            $1
+                                        </td>
+                                        <td style="padding:4px;border:3px">
+                                    		<input id="un_peso" style="display:block" type="number" name="1" value="0"/>
+                                		</td>
+
+                                    </tr>
+                                    <!--<tr>
+                                    	<td>
+                                              $5
+                                        </td>
+                                        <td style="padding:4px;border:3px;">
+                                        	<input id="cinco_pesos" style="display:block" type="number" name="unPeso" value="0"/>
+                                  		</td>
+                                    </tr>-->
+                                    <tr>
+                                        <td>
+                                            $10
+                                        </td>
+                                        <td style="padding:4px;border:3px">
+                                    		<input id="diez_pesos" style="display:block" type="number" name="10"
+                                                   value="0"/>
+                                		</td>
+                                    </tr>
+                                    <tr>
+										<td>
+											$20
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="veinte_pesos" style="display:block" type="number" name="20"
+                                                   value="0"/>
+										</td>
+									</tr>
+                                    <tr>
+										<td>
+											$50
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="cincuenta_pesos" style="display:block" type="number" name="50"
+                                                   value="0"/>
+										</td>
+									</tr>
+                                    <tr>
+										<td>
+											$100
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="cien_pesos" style="display:block" type="number" name="100"
+                                                   value="0"/>
+										</td>
+
+									</tr>
+                                    <tr>
+										<td>
+											$200
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="doscientos_pesos" style="display:block" type="number" name="200"
+                                                   value="0"/>
+										</td>
+									</tr>
+                                    <tr>
+										<td>
+											$500
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="quinientos_pesos" style="display:block" type="number" name="500"
+                                                   value="0"/>
+										</td>
+									</tr>
+                                    <tr>
+										<td>
+											$1,000
+										</td>
+                                        <td style="padding:4px;border:3px">
+											<input id="mil_pesos" style="display:block" type="number" name="1000"
+                                                   value="0"/>
+										</td>
+									</tr>
+								</table>
+							</td>
+                            <td>
+								<table>
+									<tr>
+										<th class="text-left">
+											Monto Total:
+										</th>
+									</tr>
+                                    <tr>
+										<td>
+											<input id="amount_out" style="display:block" type="number" name="discount"
+                                                   value="0"/>
+										</td>
+									</tr>
+                                    <tr>
+                            			<th class="text-left"><br/>Motivo</th>
+									</tr>
+                                    <tr>
+                            			<td style="padding:4px">
+											<select id="reason_out" style="width:80%; display:block">
+												<option value="retiro">Retiro</option>
+                                                <option value="prestamo">Prestamo</option>
+                                                <option value="gasto">Gasto</option>
+											</select>
+										</td>
+									</tr>
+                                    <tr>
+										<th class="text-left">
+											<br/>Observación
+										</th>
+									</tr>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                            			<td>
+											<textarea id="comment" style="width:80%;display:block;resize:none" rows="4"
+                                                      cols="25"
+                                                      name="comment" form="usrform"/>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+                <div id="put_in_out_error" style="background:#ffa566;padding:10px;display:none">
+					<span id="error_message" style="color:brown"></span>
+				</div>
+                <div class="footer">
+					<div class="button cash_apply">
+					   <!--Proceed-->
+                        Aceptar
+					</div>
+                    <!--<div class="button cancel">
+						Cancel
+                        Cancelar
+					</div>-->
+				</div>
+			</div>
+		</div>
+	</t>
+
+
+    <t t-name="SuccessPopopWidget">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="border-radius:5px; height:220px">
+				<div class="cash_out_status" style="height:80px;width:80px;margin-top:15px">
+					<div class="show_tick draw"></div>
+				</div>
+                <h2 id="quote_status" style="color:#5cb85c"><t t-esc="widget.options.message || 'Order Sent !!!!!'"/></h2>
+			</div>
+		</div>
+	</t>
+
+
+
+</templates>

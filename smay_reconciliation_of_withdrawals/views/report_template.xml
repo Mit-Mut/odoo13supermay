@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="conciliation_retirements_bank">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page" style=" width:100%; font-size:12px;">
+                    <div style=" width:100%; font-size:12px; margin-left: 5px;margin-bottom: 7px;">
+                        <b>Reporte generado por :</b>
+                        <t t-esc="user.partner_id.name"/>
+                        <br/>
+                        <b>Fecha de creación :</b>
+                        <t t-esc="docs.get_correct_datetime(docs.get_current_datetime())"/>
+                        <br/>
+                    </div>
+
+                    <!--<t t-foreach="docs" t-as="conciliation">
+                        <t t-esc="conciliation._compute_all_totals()"/>
+                        <t t-if="conciliation.state in ('retiros_validados','deposito_validado')">
+                            <br/>
+                            <table class="mainTable">
+                                <tr>
+                                    <th colspan="4" class="leftSpace topBottomSpace topSpace">
+                                        <t t-esc="conciliation.name"/>
+                                        -
+                                        <t t-esc="conciliation.state"/>
+                                    </th>
+                                    <th colspan="4" class="leftSpace">Creada por
+                                        <t t-esc="conciliation.create_uid.partner_id.name"/>
+                                        el
+                                        <t t-esc="docs.get_correct_datetime(str(conciliation.create_date)[0:19])"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4" class="leftSpace topBottomSpace bottomSpace">
+                                        Fecha Conciliada:
+                                        <t t-esc="docs.get_correct_datetime(str(conciliation.start_date)[0:19])[0:10]"/>
+                                        -
+                                        <t t-esc="docs.get_correct_datetime(str(conciliation.end_date)[0:19])[0:10]"/>
+                                    </th>
+                                    <th colspan="4" class="leftSpace topBottomSpace bottomSpace">
+                                        Comentarios:
+                                        <t t-esc="conciliation.comments"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="columna" colspan="2" style="width:35%; ">
+                                        <table style="width:100%; ">
+                                            <tr>
+                                                <th colspan="5" class="encabezado1">RETIROS DE CAJA</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight" style="width:10%; ">
+                                                    Folio
+                                                </th>
+
+                                                <th class="encabezado2 borderRight" style="width:20%; ">
+                                                    Monto Retiro
+                                                </th>
+
+                                                <th class="encabezado2 borderRight" style="width:30%; ">
+                                                    Comentario
+                                                </th>
+
+                                                <th class="encabezado2 borderRight" style="width:20%; ">
+                                                    Dif.
+                                                </th>
+
+                                                <th class="encabezado2" style="width:20%; ">
+                                                    Conciliado
+                                                </th>
+                                            </tr>
+                                            <t t-foreach="conciliation.get_sorted_retirements()" t-as="retirement">
+                                                <tr>
+                                                    <td class="celdaDatosDerecha">
+                                                        <t t-esc="retirement.retirement_id"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.total_amount)"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="retirement.commentary"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.difference)"/>
+                                                    </td>
+
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(retirement.real_amount)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                    <td class="columna" colspan="2" style="width:15%; ">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <th colspan="2" class="encabezado1"
+                                                    style="border-left: 1px solid white;">PAGOS CON TARJETA
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">Pedido</th>
+                                                <th class="encabezado2 borderRight">Monto</th>
+                                            </tr>
+                                            <t t-foreach="conciliation.card_payment_ids" t-as="card">
+                                                <tr>
+                                                    <tr>
+                                                        <td class="celdaDatosIzquierda">
+                                                            <t t-esc="card.order_reference.replace('Pedido ','')"/>
+                                                        </td>
+                                                        <td class="celdaDatosDerecha">
+                                                            $
+                                                            <t t-esc="docs.get_thousands_format(card.amount)"/>
+                                                        </td>
+                                                    </tr>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+
+                                    <td class="columna" colspan="2" style="width:25%; ">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <th colspan="3" class="encabezado1"
+                                                    style="border-left: 1px solid white;">FALTANTES
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">Cajero</th>
+                                                <th class="encabezado2 borderRight">Monto</th>
+                                                <th class="encabezado2 borderRight">Comentario</th>
+                                            </tr>
+                                            <t t-foreach="conciliation.faltante_ids" t-as="faltante">
+                                                <tr>
+                                                    <tr>
+                                                        <td class="celdaDatosIzquierda">
+                                                            <t t-esc="faltante.cajero_id"/>
+                                                        </td>
+                                                        <td class="celdaDatosDerecha">
+                                                            $
+                                                            <t t-esc="docs.get_thousands_format(faltante.amount)"/>
+                                                        </td>
+                                                        <td class="celdaDatosIzquierda">
+                                                            <t t-esc="faltante.commentary"/>
+                                                        </td>
+                                                    </tr>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+
+
+                                    <td class="columna" colspan="2" style="width:25%; ">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <t t-if="conciliation.state == 'deposito_validado'">
+                                                    <th colspan="4" class="encabezado1"
+                                                        style="border-left: 1px solid white;">
+                                                        DEPOSITOS BANCARIOS
+                                                    </th>
+                                                </t>
+
+                                                <t t-if="conciliation.state != 'deposito_validado'">
+                                                    <th colspan="4"
+                                                        class="alertaEncabezado1">
+                                                        DEPOSITOS BANCARIOS (SIN VALIDAR)
+                                                    </th>
+                                                </t>
+                                            </tr>
+                                            <tr>
+                                                <th class="encabezado2 borderRight">
+                                                    Banco
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Referencia
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Fecha
+                                                </th>
+                                                <th class="encabezado2 borderRight">
+                                                    Depositado
+                                                </th>
+
+                                            </tr>
+
+                                            <t t-foreach="conciliation.bank_deposit_ids" t-as="deposit">
+                                                <tr>
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="deposit.bank"/>
+                                                    </td>
+                                                    <td class="celdaDatosIzquierda">
+                                                        <t t-esc="deposit.reference"/>
+                                                    </td>
+                                                    <td class="celdaDatosCentrado">
+                                                        <t t-esc="deposit.deposit_date"/>
+                                                    </td>
+                                                    <td class="celdaDatosDerecha">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(deposit.deposited_amount)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="totalEtiqueta">
+                                        TOTAL DE RETIROS
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_retiros)"/>
+                                    </th>
+
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado_card_payments)"/>
+                                    </th>
+
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_faltantes)"/>
+                                    </th>
+                                    <th class="totalEtiqueta">
+                                        TOTAL
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.deposit_total)"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="totalEtiqueta">
+                                        TOTAL CONCILIADO
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado)"/>
+                                    </th>
+                                    <th class="totalEtiqueta">
+
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                    </th>
+                                    <th class="totalEtiqueta">
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="totalEtiqueta">
+                                        TOTAL DIFERENCIA
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_diff)"/>
+                                    </th>
+                                    <th class="totalEtiqueta">
+
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                    </th>
+                                    <th class="totalEtiqueta">
+                                    </th>
+                                    <th class="totalCantidad" style="border-right: 1px solid black;">
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td style="border-top: 1px solid black;"></td>
+                                    <td style="border-top: 1px solid black;"></td>
+                                    <td style="border-top: 1px solid black;"></td>
+                                    <td style="border-top: 1px solid black;"></td>
+                                    <td style="border-top: 1px solid black;"></td>
+                                    <td colspan="1" style="border-top: 1px solid black;font-size:14px;">
+
+                                        Total Conciliado
+                                    </td>
+                                    <td colspan="1"
+                                        style="border-top: 1px solid black;text-align:right;font-size:14px;">
+
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado)"/>
+
+
+                                    </td>
+                                    <td style="border-top: 1px solid black;"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="1" style="font-size:14px;">
+
+                                        Total Diferencias(+)
+                                    </td>
+                                    <td colspan="1" style="text-align:right;font-size:14px;">
+
+                                        $
+                                        <t t-esc="docs.get_thousands_format(abs(conciliation.total_diff))"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="1" style="font-size:14px;">
+
+                                        Total Retiros
+                                    </td>
+                                    <td colspan="1"
+                                        style="border-top: 1px solid black; text-align:right;font-size:14px;">
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_retiros)"/>
+
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="1" style="font-size:14px;">
+
+                                        Total Tarjetas (+)
+                                    </td>
+                                    <td colspan="1" style="text-align:right;font-size:14px;">
+
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado_card_payments)"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="1" style="font-size:14px;">
+
+                                        Total Faltantes(+)
+                                    </td>
+                                    <td colspan="1" style="text-align:right;font-size:14px;">
+
+                                        $
+                                        <t t-esc="docs.get_thousands_format(abs(conciliation.total_faltantes))"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="1" style="font-size:14px;">
+
+                                        Total Venta
+                                    </td>
+                                    <td colspan="1"
+                                        style="border-top: 1px solid black;text-align:right;font-size:14px;">
+
+                                        $
+                                        <t t-esc="docs.get_thousands_format(conciliation.total_conciliado+conciliation.total_faltantes+conciliation.total_conciliado_card_payments+abs(conciliation.total_diff))"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <br/>
+                        </t>
+                    </t>
+
+                    <br/>-->
+                    <br/>
+
+
+                    <div style="text-align:center;">
+                        <table style="width:100%; border: 1px solid black;margin: 0 auto;">
+                            <tr>
+                                <th colspan="10" class="encabezado1">
+                                    RESUMEN GENERAL DE CONCILIACIONES
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="encabezado2 borderRight">
+                                    Nombre
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Venta Neta
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Retiros
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Gastos
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Prestamos
+                                </td>
+
+                                <td class="encabezado2 borderRight">
+                                    Tarjetas
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Faltantes
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Sobrantes
+                                </td>
+                                <td class="encabezado2 borderRight">
+                                    Devoluciones
+                                </td>
+                                <td class="encabezado2">
+                                    Depositos
+                                </td>
+                            </tr>
+                            <t t-value="0" t-set="gran_total_venta_neta"/>
+                            <t t-value="0" t-set="gran_total_conciliado"/>
+                            <t t-value="0" t-set="gran_total_gastos"/>
+                            <t t-value="0" t-set="gran_total_prestamos"/>
+                            <t t-value="0" t-set="gran_total_tarjetas"/>
+                            <t t-value="0" t-set="gran_total_faltantes"/>
+                            <t t-value="0" t-set="gran_total_sobrantes"/>
+                            <t t-value="0" t-set="gran_total_devoluciones"/>
+                            <t t-value="0" t-set="gran_total_depositos"/>
+
+
+                            <t t-value="0" t-set="deposited_grand_total"/>
+                            <t t-foreach="docs" t-as="conciliation">
+
+                                <t t-if="conciliation.state in ('retiros_validados','deposito_validado')">
+                                    <tr>
+                                        <td class="celdaDatosIzquierda">
+                                            <t t-esc="conciliation.name"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_venta_neta)"/>
+                                                <t t-set="gran_total_venta_neta"
+                                                   t-value="gran_total_venta_neta+conciliation.total_venta_neta"/>
+                                            </b>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_conciliado)"/>
+                                            </b>
+                                            <t t-set="gran_total_conciliado"
+                                               t-value="gran_total_conciliado+conciliation.total_conciliado"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <t t-foreach="conciliation.gasto_ids" t-as="gasto">
+                                                <div>
+                                                    <span style="display: block;float:left">
+                                                        <t t-esc="gasto.description"/>
+                                                    </span>
+                                                    <span style="display: block;float:right">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(gasto.amount)"/>
+                                                    </span>
+                                                </div>
+                                                <br/>
+
+                                            </t>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_gastos)"/>
+                                            </b>
+                                            <t t-value="gran_total_gastos+conciliation.total_gastos"
+                                               t-set="gran_total_gastos"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <t t-foreach="conciliation.prestamo_ids" t-as="prestamo">
+                                                <span style="display: block;float:left">
+                                                    <t t-esc="prestamo.description"/>
+                                                </span>
+                                                <span style="display: block;float:right">
+                                                    $
+                                                    <t t-esc="docs.get_thousands_format(prestamo.amount)"/>
+
+                                                </span>
+                                                <br/>
+
+                                            </t>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_prestamos)"/>
+                                            </b>
+                                            <t t-value="gran_total_prestamos+conciliation.total_prestamos"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_conciliado_card_payments)"/>
+                                            </b>
+
+                                            <t t-value="gran_total_tarjetas+conciliation.total_conciliado_card_payments"
+                                               t-set="gran_total_tarjetas"/>
+
+                                        </td>
+
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <t t-foreach="conciliation.faltante_ids" t-as="faltante">
+                                                <div>
+                                                    <span style="display: block;float:left">
+                                                        <t t-esc="faltante.cajero_id"/>
+                                                    </span>
+                                                    <span style="display: block;float:right">
+                                                        $
+                                                        <t t-esc="docs.get_thousands_format(faltante.amount)"/>
+                                                    </span>
+                                                </div>
+                                                <br/>
+
+                                            </t>
+
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_faltantes)"/>
+                                            </b>
+                                            <t t-value="gran_total_faltantes+conciliation.total_faltantes"
+                                               t-set="gran_total_faltantes"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_sobrantes)"/>
+                                            </b>
+                                            <t t-value="gran_total_sobrantes+conciliation.total_sobrantes"
+                                               t-set="gran_total_sobrantes"/>
+                                        </td>
+
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.total_devoluciones)"/>
+                                            </b>
+                                            <t t-value="gran_total_devoluciones+conciliation.total_devoluciones"
+                                               t-set="gran_total_devoluciones"/>
+                                        </td>
+                                        <td class="celdaDatosDerecha" style='vertical-align:bottom'>
+                                            <b>
+                                                $
+                                                <t t-esc="docs.get_thousands_format(conciliation.deposit_total)"/>
+                                            </b>
+                                            <t t-value="gran_total_depositos+conciliation.deposit_total"
+                                               t-set="gran_total_depositos"/>
+                                        </td>
+                                    </tr>
+
+                                </t>
+                            </t>
+                            <t>
+                                <th class="totalEtiqueta">
+                                    TOTAL
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc=" docs.get_thousands_format(gran_total_venta_neta)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_conciliado)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_gastos)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_prestamos)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_tarjetas)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_faltantes)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_sobrantes)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_devoluciones)"/>
+                                </th>
+                                <th class="celdaDatosDerecha">
+                                    $
+                                    <t t-esc="docs.get_thousands_format(gran_total_depositos)"/>
+                                </th>
+                            </t>
+                            <!--<tr>
+                                <th class="totalEtiqueta">TOTAL</th>
+
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(retirements_grand_total)"/>
+                                </th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(payments_with_card_grand_total)"/>
+                                </th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(conciliated_grand_total)"/>
+                                </th>
+                                <th class="totalCantidad">
+
+                                    $
+                                    <t t-esc="docs.get_thousands_format(deposited_grand_total)"/>
+                                </th>
+                            </tr>-->
+                        </table>
+                        <br/>
+                        <br/>
+
+
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
