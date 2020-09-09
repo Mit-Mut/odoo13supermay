@@ -66,6 +66,8 @@ class SmayPurchasesOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_line(self):
+        _logger.warning('CAMBIO LA LINEA')
+        _logger.warning(str(self.analytic_account_select))
         self.cantidad_lineas = len(self.order_line)
         self.cantidad_productos = 0
         for line in self.order_line:
