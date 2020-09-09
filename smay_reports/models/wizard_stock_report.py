@@ -66,7 +66,7 @@ class StockReportSmay(models.Model):
             condicional = 'and sl.id = ' + str(location_id)
 
         tools.drop_view_if_exists(self._cr, self._table)
-        '''self._cr.execute("""
+        self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
                 SELECT  1 as "id",
                         pp.barcode as "barcode",
@@ -92,14 +92,14 @@ class StockReportSmay(models.Model):
                 JOIN stock_location sl
                     ON sq.location_id = sl.id
                     AND sl.active = true
-                JOIN (
+                /*JOIN (
                     SELECT product_id as product_id,
                             avg(cost) as costo
                     FROM product_price_history
                     GROUP BY product_id
                 ) avg_cost
-                    ON avg_cost.product_id = pp.id
-                JOIN (
+                    ON avg_cost.product_id = pp.id*/
+                /*JOIN (
                     SELECT pph2.product_id as product_id, 
                             pph2.cost as "ultimo_costo" 
                     FROM    (			
@@ -112,9 +112,9 @@ class StockReportSmay(models.Model):
                         ON fecha_ult_precio.product_id = pph2.product_id
                         AND fecha_ult_precio.fecha = pph2.datetime
                     ) ultimo_costo
-                    ON ultimo_costo.product_id = sq.product_id
+                    ON ultimo_costo.product_id = sq.product_id*/
                 WHERE sl.usage='internal' 
                 %s
                 ORDER BY pt.name,sq.quantity,sl.complete_name
             )
-        """ % (self._table, condicional))'''
+        """ % (self._table, condicional))
