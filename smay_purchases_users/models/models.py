@@ -44,15 +44,15 @@ class SmayPurchasesOrder(models.Model):
     analytic_account_select = fields.Many2one('account.analytic.account', string='Cuenta Analitica')
 
     #cantidad_lineas = fields.Integer('Items', default=0)
-    cantidad_lineas = fields.Integer('Items', compute='_compute_qty_products')
+    cantidad_lineas = fields.Integer('Items', compute='_compute_qty_lines')
 
-    cantidad_productos = fields.Float('Cantidad Prods.', default=0)
-    #cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_lines')
+    #cantidad_productos = fields.Float('Cantidad Prods.', default=0)
+    cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_products')
 
     def _compute_qty_products(self):
-        self.cantidad_lineas=0
+        self.cantidad_productos=0
         for line in self.order_line:
-            self.cantidad_lineas += line.product_qty
+            self.cantidad_productos += line.product_qty
 
     def _compute_qty_lines(self):
         self.cantidad_lineas = len(self.order_line)
