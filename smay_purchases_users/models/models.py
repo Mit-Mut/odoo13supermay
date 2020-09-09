@@ -70,7 +70,7 @@ class SmayPurchasesOrder(models.Model):
             _logger.warning('CAMBIO LA LINEA')
             _logger.warning(str(self.analytic_account_select))
             for line in self.order_line:
-                line.analytic_account_select = self.analytic_account_select
+                line.analytic_account_select = self.analytic_account_select.id
 
     def write(self, vals):
         self.validate_purchase(vals)
