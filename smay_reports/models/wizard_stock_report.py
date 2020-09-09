@@ -44,8 +44,9 @@ class StockReportWizard(models.TransientModel):
 
 class StockReportSmay(models.Model):
     _name = 'stock.report.smay'
-    _description = 'Vista para guardar la informacion del reporte'
     _auto = False
+    _description = 'Vista para guardar la informacion del reporte'
+
 
     product_id = fields.Many2one('product.product', 'Producto', readonly=True)
     barcode = fields.Char(readonly=True)
@@ -62,6 +63,7 @@ class StockReportSmay(models.Model):
         condicional = ''
         if int(location_id) > 0:
             condicional = 'and sl.id = ' + str(location_id)
+            return
         #tools.drop_view_if_exists(self._cr, self._table)
         '''self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
