@@ -45,7 +45,7 @@ class StockReportWizard(models.TransientModel):
 class StockReportSmay(models.Model):
     _name = 'stock.report.smay'
     _description = 'Vista para guardar la informacion del reporte'
-    #_auto = False
+    _auto = False
 
     product_id = fields.Many2one('product.product', 'Producto', readonly=True)
     barcode = fields.Char(readonly=True)
