@@ -13,11 +13,11 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['point_of_sale', 'base', 'pos_user_restrict'],
+    'depends': ['point_of_sale','base', 'pos_user_restrict'],
 
     # always loaded
     'data': [
-        'views/views.xml',
+        #'views/views.xml',
         'views/templates.xml',
     ],
 }

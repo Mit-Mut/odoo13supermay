@@ -10,6 +10,9 @@ _logger = logging.getLogger(__name__)
 class SmayReprintTicketResUser(models.Model):
     _inherit = 'res.users'
 
+    
+    
+    is_manager = fields.Boolean(string='Es encargado', default=False)
     pos_security_pin = fields.Char(string='PIN para punto de venta')
 
     _sql_constraints = [

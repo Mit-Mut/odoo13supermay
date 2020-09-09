@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
 
     <record id="view_pos_pos_form_inherited" model='ir.ui.view'>
         <field name="name">inherit_pos.order.form</field>
@@ -9,6 +10,49 @@
             <xpath expr="//button[@name='refund']" position='replace'>
                 <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}" groups="point_of_sale.group_pos_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='cash_control']" position="after">
+                <div class="text-muted">
+                    Fondo de caja
+                </div>
+                <field string='fondo de caja' name="fondo_caja" attrs="{'invisible': [('cash_control', '=', False)]}"/>
+            </xpath>
+        </field>
+
+    </record>
+
+
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_config_ids']" position="after">
+                <field name="sucursal_id"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fixed_payments_view_pos_config_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form_fixed_payments</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group col="2">
+                    <field name="sucursal_id"
+                           string='Sucursal que sera presentada en el ticket.'/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -156,46 +200,10 @@
     </record>
 
 
-    <record id="pos_config_view_form" model="ir.ui.view">
-        <field name="name">view.pos.config.form</field>
-        <field name="model">pos.config</field>
-        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//label[@for='cash_control']" position="after">
-                <div class="text-muted">
-                    Fondo de caja
-                </div>
-                <field string='fondo de caja' name="fondo_caja" attrs="{'invisible': [('cash_control', '=', False)]}"/>
-            </xpath>
-        </field>
-
-    </record>
 
 
-    <record id="res_users_form_view" model="ir.ui.view">
-        <field name="name">res.users.form.view</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='pos_config_ids']" position="after">
-                <field name="sucursal_id"/>
 
-            </xpath>
-        </field>
-    </record>
-    <record id="fixed_payments_view_pos_config_form" model="ir.ui.view">
-        <field name="name">view.pos.config.form_fixed_payments</field>
-        <field name="model">pos.config</field>
-        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <group col="2">
-                    <field name="sucursal_id"
-                           string='Sucursal que sera presentada en el ticket.'/>
-                </group>
-            </xpath>
-        </field>
-    </record>
+
 
     <record id="custom_dashboard_pos" model="ir.ui.view">
         <field name="name">custom_dashboard_pos</field>
@@ -219,29 +227,24 @@
                 <div class="container o_kanban_card_content o_visible">
                     <div class="row">
                         <div class="col-6 o_kanban_primary_left">
-                            <!--<button t-if="!record.current_session_id.raw_value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>-->
+
                             <div t-if="!record.pos_session_username.value" class="row">
                                 <button t-if="!record.current_session_id.raw_value" class="btn btn-primary"
                                         name="open_session_cb" type="object">Abrir Caja
                                 </button>
                             </div>
-                            <!--<button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>-->
+
                             <button t-if="record.current_session_state.raw_value === 'opening_control'"
                                     class="btn btn-primary" name="open_existing_session_cb" type="object">Establecer
                                 Fondo
                             </button>
-                            <!--<button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Resume</button>-->
+
                             <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary"
                                     name="open_ui" type="object">Continuar Venta
                             </button>
                             <button t-if="record.pos_session_username.value" class="btn btn-default"
                                     name="open_session_cb" type="object">Ver Caja
                             </button>
-
-                            <!--<t t-if="record.pos_session_username.value">
-                                <br/>
-                                <t t-esc="record.pos_session_username.value"/>
-                            </t>-->
                         </div>
                         <div class="col-6 o_kanban_primary_right">
 
@@ -275,4 +278,5 @@
     </record>
 
 
+    </data>
 </odoo>
