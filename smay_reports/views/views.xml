@@ -17,9 +17,9 @@
                     <field name="product_id" type="row"/>
                     <!--<field name="impuestos" type="col" string="Impuestos"/>-->
                     <field name="almacen" type="col"/>
-                    <field name="last_price_unit" type="measure" string="Ultimo Costo"/>
+                    <!--<field name="last_price_unit" type="measure" string="Ultimo Costo"/>-->
                     <field name="cantidad" type="measure" string="Stock"/>
-                    <field name="last_price_total" type="measure" string="Total Costo"/>
+                    <!--<field name="last_price_total" type="measure" string="Total Costo"/>-->
 
                 </pivot>
             </field>
