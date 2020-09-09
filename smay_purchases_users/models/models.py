@@ -46,8 +46,8 @@ class SmayPurchasesOrder(models.Model):
     #cantidad_lineas = fields.Integer('Items', default=0)
     cantidad_lineas = fields.Integer('Items', compute='_compute_qty_products')
 
-    #cantidad_productos = fields.Float('Cantidad Prods.', default=0)
-    cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_lines')
+    cantidad_productos = fields.Float('Cantidad Prods.', default=0)
+    #cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_lines')
 
     def _compute_qty_products(self):
         self.cantidad_lineas=0
