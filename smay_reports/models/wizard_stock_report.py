@@ -29,7 +29,7 @@ class StockReportWizard(models.TransientModel):
 
     def generate_report(self):
         self.env['stock.report.smay']._genera_vista(self.sucursal_id)
-        return
+        
         return {
             'name': _("Valoración de Inventario - SMAY"),
             'view_mode': 'pivot',
