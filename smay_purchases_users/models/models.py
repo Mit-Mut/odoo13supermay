@@ -66,11 +66,10 @@ class SmayPurchasesOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_line(self):
-        if self.env.user.has_group('purchase.group_purchase_manager') and self.analytic_account_select:
-            _logger.warning('CAMBIO LA LINEA')
-            _logger.warning(str(self.analytic_account_select))
+            self.cantidad_lineas = len(self.order_line)
             for line in self.order_line:
                 line.analytic_account_select = self.analytic_account_select.id
+                self.cantidad_productos=line.product_qty
 
     def write(self, vals):
         self.validate_purchase(vals)
