@@ -69,7 +69,7 @@ class SmayPurchasesOrder(models.Model):
             self.cantidad_lineas = len(self.order_line)
             for line in self.order_line:
                 line.analytic_account_select = self.analytic_account_select.id
-                self.cantidad_productos=line.product_qty
+                self.cantidad_productos+=line.product_qty
 
     def write(self, vals):
         self.validate_purchase(vals)
