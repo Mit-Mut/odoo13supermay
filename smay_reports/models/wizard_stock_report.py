@@ -76,9 +76,9 @@ class StockReportSmay(models.Model):
                         replace(sl.complete_name,'Physical Locations','') as "almacen",                     
                         sq.quantity as "cantidad",
                         sq.reserved_quantity as "qty_reservada",
-                        ultimo_costo.ultimo_costo as "last_price_unit",
-                        (sq.quantity+sq.reserved_quantity) as "qty_total",                   
-                        (sq.quantity+sq.reserved_quantity)*ultimo_costo.ultimo_costo as "last_price_total"
+                       // ultimo_costo.ultimo_costo as "last_price_unit",
+                        (sq.quantity+sq.reserved_quantity) as "qty_total"//,                   
+                        //(sq.quantity+sq.reserved_quantity)*ultimo_costo.ultimo_costo as "last_price_total"
                 FROM stock_quant as sq
                 RIGHT JOIN product_product as pp
                     ON sq.product_id = pp.id
