@@ -29,6 +29,7 @@ class StockReportWizard(models.TransientModel):
 
     def generate_report(self):
         self.env['stock.report.smay']._genera_vista(self.sucursal_id)
+        return
         return {
             'name': _("Valoración de Inventario - SMAY"),
             'view_mode': 'pivot',
@@ -63,8 +64,8 @@ class StockReportSmay(models.Model):
         condicional = ''
         if int(location_id) > 0:
             condicional = 'and sl.id = ' + str(location_id)
-            return
-        #tools.drop_view_if_exists(self._cr, self._table)
+
+        tools.drop_view_if_exists(self._cr, self._table)
         '''self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
                 SELECT  1 as "id",
