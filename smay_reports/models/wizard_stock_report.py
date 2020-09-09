@@ -29,7 +29,7 @@ class StockReportWizard(models.TransientModel):
 
     def generate_report(self):
         self.env['stock.report.smay']._genera_vista(self.sucursal_id)
-        
+
         return {
             'name': _("Valoración de Inventario - SMAY"),
             'view_mode': 'pivot',
@@ -57,8 +57,8 @@ class StockReportSmay(models.Model):
     cantidad = fields.Float(readonly=True)
     qty_reservada = fields.Float(readonly=True)
     qty_total = fields.Float(readonly=True)
-    last_price_unit = fields.Float(readonly=True)
-    last_price_total = fields.Float(readonly=True)
+    #last_price_unit = fields.Float(readonly=True)
+    #last_price_total = fields.Float(readonly=True)
 
     def _genera_vista(self, location_id):
         condicional = ''
