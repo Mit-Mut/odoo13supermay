@@ -67,6 +67,7 @@ class SmayPurchasesOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_line(self):
             self.cantidad_lineas = len(self.order_line)
+            self.cantidad_productos =0
             for line in self.order_line:
                 line.analytic_account_select = self.analytic_account_select.id
                 self.cantidad_productos+=line.product_qty
