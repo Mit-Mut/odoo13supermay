@@ -69,7 +69,7 @@
 
                     <field name="cantidad_lineas" readonly="True"/>
                     <field name="cantidad_productos" readonly="True"/>
-                    <field name="analytic_account_select" options="{'no_create': True,'no_open':True}" groups="purchase.group_purchase_manager"/>
+                    <!--<field name="analytic_account_select" options="{'no_create': True,'no_open':True}" groups="purchase.group_purchase_manager"/>-->
 
 
                 </xpath>
