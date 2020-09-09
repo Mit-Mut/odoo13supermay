@@ -62,7 +62,7 @@ class StockReportSmay(models.Model):
         condicional = ''
         if int(location_id) > 0:
             condicional = 'and sl.id = ' + str(location_id)
-        tools.drop_view_if_exists(self._cr, self._table)
+        #tools.drop_view_if_exists(self._cr, self._table)
         '''self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
                 SELECT  1 as "id",
