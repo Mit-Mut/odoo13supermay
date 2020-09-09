@@ -53,7 +53,7 @@ class SmayPurchasesOrder(models.Model):
                 'account_analytic_id': self.analytic_account_select.id
             })
 
-    @api.onchange('order_line')
+    @api.onchange('order_line.product_qty, order_line.price_unit')
     def _onchange_line(self):
         self.cantidad_lineas = len(self.order_line)
         self.cantidad_productos = 0
