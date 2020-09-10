@@ -163,7 +163,7 @@ class SmayPurchasesOrder(models.Model):
         if self.env['stock.picking'].browse(resulta.get('res_id')).state != 'done':
             for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
                 for _line in line.move_line_ids:
-                    _line.write({
+                    _line.sudo(True).write({
                         'qty_done': _line.product_uom_qty,
                     })
 
@@ -190,7 +190,7 @@ class SmayPurchasesOrder(models.Model):
                                 ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit, 1)
                             old_list_price.append(_product)
 
-                            line.product_id.write({
+                            line.product_id.sudo(True).write({
                                 'standard_price': line.price_unit,
                                 'list_price': round(((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
                                                     1),
@@ -198,14 +198,14 @@ class SmayPurchasesOrder(models.Model):
                             })
 
                         else:
-                            line.product_id.write({
+                            line.product_id.sudo(True).write({
                                 'standard_price': line.price_unit,
                                 # 'list_price': ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
                                 # 'x_purcharse_change_price': self.name,
                             })
                     elif round(((line.product_id.x_utility_percent / 100) + 1),
                                1) * line.price_unit < line.product_id.list_price:
-                        line.product_id.write({
+                        line.product_id.sudo(True).write({
                             'standard_price': line.price_unit,
                             # 'list_price': ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
                             # 'x_purcharse_change_price': self.name,
@@ -213,7 +213,7 @@ class SmayPurchasesOrder(models.Model):
 
                 ###CAMBIO DE COMPRAS 20200627
                 elif line.product_id.standard_price > line.price_unit:
-                    line.product_id.write({
+                    line.product_id.sudo(True).write({
                         'standard_price': line.price_unit
                     })
 
