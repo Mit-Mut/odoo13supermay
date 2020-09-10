@@ -294,6 +294,7 @@ class SmayPurchasesProduct(models.Model):
     _inherit = 'product.template'
 
     x_utility_percent = fields.Float(string='Porcentaje de utilidad', default=16)
+    x_fecha_actualizacion_precios = fields.Datetime('Fecha en que se cambio el precio')
 
 
 class SmayPurchasesProductProduct(models.Model):
