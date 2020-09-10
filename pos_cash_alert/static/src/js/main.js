@@ -395,13 +395,13 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
                               title:'Facturas sin timbrar',
                               body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el retiro es necesario timbrarlas:  '+ orders +'\n.'
                           })
-                    }).fail(function(){
+                    }).catch(function(){
                       //console.log('fallo la respuesta del server')
                     })
 
 
 
-                }).fail(function(){
+                }).catch(function(){
                     self.gui.show_popup('error',{
                         title:'Sin conexión',
                         body:'No hay conexión con el servidor, contacta al administrador del sistema.'
@@ -414,7 +414,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 
                 retirement_pass.done(function(){
                     self.gui.show_popup('cash_out_popup');
-                }).fail(function(unused,event){
+                }).catch(function(unused,event){
                 setTimeout(function(){
 					    self.gui.show_popup('cash_popup');},1500);
 					});
@@ -489,10 +489,10 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
                                 title:'Facturas sin timbrar',
                                 body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el retiro es necesario timbrarlas:  '+ orders +'\n.'
                             })
-                    }).fail(function(){
+                    }).catch(function(){
                         //console.log('fallo la respuesta del server')
                     })
-                }).fail(function(){
+                }).catch(function(){
                     self.gui.show_popup('error',{
                         title:'Sin conexión',
                         body:'No hay conexión con el servidor, contacta al administrador del sistema.'
