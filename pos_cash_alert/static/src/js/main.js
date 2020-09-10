@@ -431,6 +431,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 			if(self.pos.config.cash_withdraw != 0){
 				setTimeout(function(){
 					//new Model('pos.session').call('get_cash_register_difference',[self.pos.pos_session.id])
+					console.log('entroaosdaoidjaoisdoasid')
 					rpc.query({
 					    model:'pos.session',
 					    method: 'get_cash_register_difference',
