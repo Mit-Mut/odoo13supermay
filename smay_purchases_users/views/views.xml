@@ -133,28 +133,28 @@
         </record>
 
 
-        <!--<record model="ir.ui.view" id="product_template_form_view_inherited">
+        <record model="ir.ui.view" id="product_template_form_view_inherited">
             <field name="name">product.template.utility</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='list_price']" position="after">
-                    <field name="x_utility_percent"/>
-                </xpath>
-            </field>
-
-        </record>-->
-
-        <record model="ir.ui.view" id="product_template_form_view_inherited">
-            <field name="name">product.template.utility</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='list_price']" position="after">
+                <xpath expr="//field[@name='standard_price']" position="after">
                     <field name="x_utility_percent"/>
                 </xpath>
             </field>
 
         </record>
+
+        <!--<record model="ir.ui.view" id="product_template_form_view_inherited">
+            <field name="name">product.template.utility</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="after">
+                    <field name="x_utility_percent"/>
+                </xpath>
+            </field>
+
+        </record>-->
     </data>
 </odoo>
