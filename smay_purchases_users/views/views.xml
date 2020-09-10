@@ -5,8 +5,8 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <!--<xpath expr="//notebook" position='inside'>-->
-                <xpath expr="//group[@name='pos']" position="inside">
+                <xpath expr="//notebook" position='inside'>
+                <!--<xpath expr="//group[@name='pos']" position="inside">-->
                     <page string='Compras Super May'>
                         <group>
                             <field name="x_almacen_compras" options="{'no_create': True,'no_open':True}"/>
