@@ -5,6 +5,7 @@ odoo.define('smay_pos_invoice.smay_pos_invoice', function (require) {
     var popups = require('point_of_sale.popups');
     var gui = require('point_of_sale.gui');
     var screens = require('point_of_sale.screens');
+    var rpc = require('web.rpc');
 
     models.load_models([
         {
@@ -70,6 +71,33 @@ odoo.define('smay_pos_invoice.smay_pos_invoice', function (require) {
         },
     ],{
     'after': 'pos.config'
+    });
+
+    var _super_ReceiptScreenWidget = screens.ReceiptScreenWidget;
+    _super_ReceiptScreenWidget = screens.ReceiptScreenWidget.include({
+        show: function(){
+            this._super();
+            var self = this;
+            if(self.pos.get_order().to_invoice){
+                setTimeout(function(){
+                    rpc.query({
+                        model: 'pos.order',
+                        method: 'check_successful_invoice',
+                        args: [this.posmodel.get_order().name],
+                        timeout: 2000,
+                    }).then(function(order) {
+                        if(order==false){
+                            self.gui.show_popup('error',{
+                                title: 'Error en la Factura',
+                                body: "La factura generada por la orden: "+self.pos.get_order().name+" no fue timbrada. \n\n Revisa el RFC del cliente.",
+                            })
+                            $('.popup-error').width(650)
+                            $('.popup-error').height(200)
+                        }
+                    })
+                }, 3000)
+            }
+        },
     });
 
 

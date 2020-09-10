@@ -645,6 +645,51 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 			self._super(options);
 
 			$('.gridView-toolbar.closeSessionButton').on('click',function(){
+
+			     /// REvisa que todas las facturas generadas esten timbradas para proceder con el cierre
+			    rpc.query({
+                    model:'pos.config',
+                    method: 'existe_conexion',
+                    args:[],
+                },{
+                    timeout:1000,
+                    shadow:true
+                }).then(function(resp){
+
+                    rpc.query({
+                        model:'pos.session',
+                        method: 'get_unsigned_invoices',
+                        args:[self.pos.pos_session.id],
+                    },{
+                      timeout:5000,
+                      shadow:true
+                    }).then(function(resp){
+                        var orders ='\n'
+                        var elements =0
+                        for(var r in resp){
+                            //console.log(r)
+                            orders+=r+'.  '
+                            elements++
+                        }
+
+                        orders+='\n'
+
+                        if(elements>0 )
+                            self.gui.show_popup('error',{
+                                title:'Facturas sin timbrar',
+                                body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el cierre es necesario timbrarlas:  '+ orders +'\n.'
+                            })
+                    }).fail(function(){
+                      //console.log('fallo la respuesta del server')
+                    })
+                }).fail(function(){
+                    self.gui.show_popup('error',{
+                    title:'Sin conexión',
+                    body:'No hay conexión con el servidor, contacta al administrador del sistema.'
+                    })
+                })
+              ////
+
 				var close_pass = self.gui.ask_password_smay('cierre de caja');
 				var difference_fund = self.pos.pos_session.cash_register_balance_start - self.pos.pos_session.cash_register_balance_end_real;
 

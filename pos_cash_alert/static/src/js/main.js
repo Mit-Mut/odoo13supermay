@@ -358,6 +358,57 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 			self.$("#cash_message").text('Es necesario que realices un retiro de efectivo, tu caja excedio los  '+withdraw_amount+ '  permitidos.');
 			self.$('#now').on('click',function(){
 				//self.gui.show_popup('cash_out_popup');
+
+				///Revisa que no haya facturas sin timbrar
+
+		        rpc.query({
+                    model:'pos.config',
+                    method: 'existe_conexion',
+                    args:[],
+
+                },{
+                    timeout:1000,
+                    shadow:true
+                }).then(function(resp){
+
+                    rpc.query({
+                        model:'pos.session',
+                        method: 'get_unsigned_invoices',
+                        args:[self.pos.pos_session.id],
+
+                    },{
+                        timeout:5000,
+                        shadow:true
+                    }).then(function(resp){
+                        //console.log(resp)
+                        var orders ='\n'
+                        var elements =0
+                        for(var r in resp){
+                            console.log(r)
+                            orders+=r+'.  '
+                            elements++
+                        }
+                        orders+='\n'
+
+                      if(elements>0 )
+                          self.gui.show_popup('error',{
+                              title:'Facturas sin timbrar',
+                              body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el retiro es necesario timbrarlas:  '+ orders +'\n.'
+                          })
+                    }).fail(function(){
+                      //console.log('fallo la respuesta del server')
+                    })
+
+
+
+                }).fail(function(){
+                    self.gui.show_popup('error',{
+                        title:'Sin conexión',
+                        body:'No hay conexión con el servidor, contacta al administrador del sistema.'
+                    })
+                })
+
+              ////
 				var retirement_pass = self.gui.ask_password_smay('retiro');
 				$('.button.cancel').hide();
 
@@ -403,6 +454,51 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
             var self = this;
 			self._super(options);
 			$('.gridView-toolbar.retirementButton').on('click',function(){
+
+			    			    //Revisa que no haya facturas sin timbrar
+
+			    rpc.query({
+                    model:'pos.config',
+                    method: 'existe_conexion',
+                    args:[],
+                },{
+                    timeout:1000,
+                    shadow:true
+                }).then(function(resp){
+
+                    rpc.query({
+                        model:'pos.session',
+                        method: 'get_unsigned_invoices',
+                        args:[self.pos.pos_session.id],
+                    },{
+                        timeout:5000,
+                        shadow:true
+                    }).then(function(resp){
+                        //console.log(resp)
+                        var orders ='\n'
+                        var elements =0
+                        for(var r in resp){
+                            //console.log(r)
+                            orders+=r+'.  '
+                            elements++
+                        }
+                        orders+='\n'
+
+                        if(elements>0 )
+                            self.gui.show_popup('error',{
+                                title:'Facturas sin timbrar',
+                                body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el retiro es necesario timbrarlas:  '+ orders +'\n.'
+                            })
+                    }).fail(function(){
+                        //console.log('fallo la respuesta del server')
+                    })
+                }).fail(function(){
+                    self.gui.show_popup('error',{
+                        title:'Sin conexión',
+                        body:'No hay conexión con el servidor, contacta al administrador del sistema.'
+                    })
+                })
+
                 var refund_pass = self.gui.ask_password_smay('retiro de efectivo');
                 refund_pass.done(function(){
                     self.gui.show_popup('cash_out_popup');

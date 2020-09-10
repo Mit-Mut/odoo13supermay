@@ -55,3 +55,14 @@ class PosInvoicePosOrder(models.Model):
             [('state', '=', 'opened'), ('user_id', '=', self.env.user.id)]).config_id.x_cuenta_analitica
         invoice_line['analytic_account_id'] = cuenta_analitica
         return invoice_line
+
+    @api.model
+    def check_successful_invoice(self, pos_reference):
+        order = self.env['pos.order'].search(
+            [('pos_reference', '=', pos_reference), ('amount_total', '>', 0)])
+        if order.invoice_id:
+            if order.account_move.l10n_mx_edi_pac_status == 'signed':
+                return True
+            else:
+                return False
+        return order

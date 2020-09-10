@@ -10,6 +10,16 @@ class PosSessionSmayCloseSession(models.Model):
     _inherit = 'pos.session'
 
     @api.model
+    def get_unsigned_invoices(self, session_id):
+        session = self.browse(session_id)
+        unsigned_orders = {}
+        for orders in session.order_ids:
+            for order in orders:
+                if order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign':
+                    unsigned_orders[order.pos_reference] = order.invoice_id.number
+        return unsigned_orders
+
+    @api.model
     def action_pos_session_closing_control_from_pos(self, session_id):
         session = self.env['pos.session'].browse(session_id)
         for order in session.order_ids:
@@ -22,11 +32,9 @@ class PosSessionSmayCloseSession(models.Model):
             return 0
         session.action_pos_session_closing_control()
 
-
     @api.model
     def get_cash_register_total_entry_encoding(self, id_session):
         return self.env['pos.session'].browse(id_session).cash_register_total_entry_encoding
-
 
     @api.model
     def get_session_state(self, session_id):
@@ -35,7 +43,6 @@ class PosSessionSmayCloseSession(models.Model):
 
 class AccountBankStmtSmayCloseSession(models.Model):
     _inherit = 'account.bank.statement.cashbox'
-
 
     @api.model
     def return_session_fund(self, session_id, cashbox_lines_ids):
