@@ -437,6 +437,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 					    method: 'get_cash_register_difference',
 					    args: [self.pos.pos_session.id]
 					}).then(function(cash_register_difference){
+					    console.log('1'+cash_register_difference)
 						if(cash_register_difference > 0) return
 					    self.pos.cash_register_difference = cash_register_difference;
 						if(self.pos.config.cash_withdraw - Math.abs(parseFloat(cash_register_difference,10)+parseFloat(self.pos.config.fondo_caja,10))<=0)
