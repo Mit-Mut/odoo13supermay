@@ -43,14 +43,14 @@ class SmayPurchasesOrder(models.Model):
 
     analytic_account_select = fields.Many2one('account.analytic.account', string='Cuenta Analitica')
 
-    #cantidad_lineas = fields.Integer('Items', default=0)
+    # cantidad_lineas = fields.Integer('Items', default=0)
     cantidad_lineas = fields.Integer('Items', compute='_compute_qty_lines')
 
-    #cantidad_productos = fields.Float('Cantidad Prods.', default=0)
+    # cantidad_productos = fields.Float('Cantidad Prods.', default=0)
     cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_products')
 
     def _compute_qty_products(self):
-        self.cantidad_productos=0
+        self.cantidad_productos = 0
         for line in self.order_line:
             self.cantidad_productos += line.product_qty
 
@@ -66,11 +66,11 @@ class SmayPurchasesOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_line(self):
-            self.cantidad_lineas = len(self.order_line)
-            self.cantidad_productos =0
-            for line in self.order_line:
-                line.analytic_account_select = self.analytic_account_select.id
-                self.cantidad_productos+=line.product_qty
+        self.cantidad_lineas = len(self.order_line)
+        self.cantidad_productos = 0
+        for line in self.order_line:
+            line.analytic_account_select = self.analytic_account_select.id
+            self.cantidad_productos += line.product_qty
 
     def write(self, vals):
         self.validate_purchase(vals)
@@ -197,8 +197,8 @@ class SmayPurchasesOrder(models.Model):
                                 'x_purcharse_change_price': self.name,
                             })
 
-                            line.product_id.product_tmp_id.sudo(True).write({
-                                'x_fecha_actualizacion_precios':line.write_date
+                            line.product_id.product_tmpl_id.sudo(True).write({
+                                'x_fecha_actualizacion_precios': line.write_date
                             })
 
                         else:
