@@ -298,7 +298,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 
                             self.pos.chrome.do_action('aces_pos_x_report.report_pos_sales_pdf_front',{additional_context:{
                                 active_ids:pos_session_id,
-                            }}).fail(function(){
+                            }}).catch(function(){
                                 self.pos.show_popup('error','no se generó en reporte. (0001)')
                             })
                         }
@@ -679,10 +679,10 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
                                 title:'Facturas sin timbrar',
                                 body:'Hay facturas que no fueron timbradas exitosamente.\n Para realizar el cierre es necesario timbrarlas:  '+ orders +'\n.'
                             })
-                    }).fail(function(){
+                    }).catch(function(){
                       //console.log('fallo la respuesta del server')
                     })
-                }).fail(function(){
+                }).catch(function(){
                     self.gui.show_popup('error',{
                     title:'Sin conexión',
                     body:'No hay conexión con el servidor, contacta al administrador del sistema.'
