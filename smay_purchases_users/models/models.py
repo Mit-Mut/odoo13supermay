@@ -197,6 +197,10 @@ class SmayPurchasesOrder(models.Model):
                                 'x_purcharse_change_price': self.name,
                             })
 
+                            line.product_id.product_tmp_id.sudo(True).write({
+                                'x_fecha_actualizacion_precios':line.write_date
+                            })
+
                         else:
                             line.product_id.sudo(True).write({
                                 'standard_price': line.price_unit,
