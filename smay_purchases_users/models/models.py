@@ -226,6 +226,8 @@ class SmayPurchasesOrder(models.Model):
 
                 email_to = ''
                 for user in self.env.user.company_id.x_notification_partner_ids:
+                    _logger.warning('COREEEEEEEOOOO')
+                    _logger.warning(str(user))
                     email_to += user.email + ';'
 
                 mail = self.env['mail.mail']
