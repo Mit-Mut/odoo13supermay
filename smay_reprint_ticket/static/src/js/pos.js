@@ -184,7 +184,7 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
                         method: 'get_information_reprint',
                         args:[$( "#tickets").children("option:selected").val(),false],
                         }).then(function(data){
-                            self.gui.show_screen('receipt',{reprint:'true'})
+                            //self.gui.show_screen('receipt',{reprint:'true'})
                             var date_reprint = new Date()
                             var day = (date_reprint.getDate()>=10) ? date_reprint.getDate() : '0'+date_reprint.getDate()
                             var month  = ((parseInt(date_reprint.getMonth())+1)>=10) ? (parseInt(date_reprint.getMonth())+1) : '0'+(parseInt(date_reprint.getMonth())+1)
@@ -223,6 +223,8 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
                                 date_reprint : day+'/'+month+'/'+date_reprint.getFullYear()+'  '+hours+':'+minutes+':'+seconds
 
                             }
+
+                            self.gui.show_screen('receipt',{reprint:'true'})
                             $('.pos-receipt').html(QWeb.render('ReprintPosTicket' ,{widget:self,receipt:receipt}));
                         }).catch(function(){
                     });
