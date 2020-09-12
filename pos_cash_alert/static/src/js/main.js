@@ -440,11 +440,11 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 					//}).then(function(cash_register_difference){
 					    }).then(function(get_cash_register_total_entry_encoding){
 					    console.log(get_cash_register_total_entry_encoding)
-						if(cash_register_difference > 0) return
+						/*if(cash_register_difference > 0) return
 					    self.pos.cash_register_difference = cash_register_difference;
 						if(self.pos.config.cash_withdraw - Math.abs(parseFloat(cash_register_difference,10)+parseFloat(self.pos.config.fondo_caja,10))<=0)
 							if(self.gui!=null && self.pos.get_order().get_orderlines().length == 0)
-						self.gui.show_popup('cash_popup',{});
+						self.gui.show_popup('cash_popup',{});*/
 					}).catch(function(unused,event){
 					    event.preventDefault();
 					});
