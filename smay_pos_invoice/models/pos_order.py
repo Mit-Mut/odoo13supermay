@@ -60,7 +60,7 @@ class PosInvoicePosOrder(models.Model):
     def check_successful_invoice(self, pos_reference):
         order = self.env['pos.order'].search(
             [('pos_reference', '=', pos_reference), ('amount_total', '>', 0)])
-        if order.invoice_id:
+        if order.account_move:
             if order.account_move.l10n_mx_edi_pac_status == 'signed':
                 return True
             else:
