@@ -248,7 +248,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 								message: 'El retiro de '+ self.number_format(parseFloat(amount_out),2) +' fue exitoso'
 							})
 							
-							setTimeout(function(){
+							//setTimeout(function(){
 								var date    = new Date();
 								var company = self.pos.company;
 								var receipt = {
@@ -296,7 +296,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 									self.gui.show_screen('receipt',{'retirement': true});
 								var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 								$('.pos-receipt').html(receiptFinal);
-							}, 0)
+							///}, 0)
 					    }).catch(function(unused, event){
 						    self.gui.show_popup('error', {
 							    title: 'No se registro el retiro en el sistema.',
