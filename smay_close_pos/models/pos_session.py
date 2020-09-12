@@ -16,7 +16,7 @@ class PosSessionSmayCloseSession(models.Model):
         for orders in session.order_ids:
             for order in orders:
                 if order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign':
-                    unsigned_orders[order.pos_reference] = order.invoice_id.number
+                    unsigned_orders[order.pos_reference] = order.account_move.number
         return unsigned_orders
 
     @api.model
