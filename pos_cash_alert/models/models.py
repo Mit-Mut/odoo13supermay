@@ -37,13 +37,6 @@ class PosSession(models.Model):
     _inherit = 'pos.session'
 
     def get_cash_register_difference(self):
-        _logger.warning('TESTTTTTTTTTT')
-        _logger.warning('self.cash_register_id.difference' + str(self.cash_register_id.difference))
-        _logger.warning('self.cash_register_balance_end' + str(self.cash_register_balance_end))
-        _logger.warning('self.cash_register_balance_end_real' + str(self.cash_register_balance_end_real))
-        _logger.warning('self.cash_register_balance_start' + str(self.cash_register_balance_start))
-        _logger.warning('self.cash_register_difference' + str(self.cash_register_difference))
-        _logger.warning('self.cash_register_total_entry_encoding' + str(self.cash_register_total_entry_encoding))
         return self.cash_register_id.difference
 
     def get_cash_register_balance_start(self):

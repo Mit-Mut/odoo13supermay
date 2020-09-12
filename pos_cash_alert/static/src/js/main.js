@@ -296,7 +296,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 									self.gui.show_screen('receipt',{'retirement': true});
 								var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 								$('.pos-receipt').html(receiptFinal);
-							}, 1500)
+							}, 0)
 					    }).catch(function(unused, event){
 						    self.gui.show_popup('error', {
 							    title: 'No se registro el retiro en el sistema.',
