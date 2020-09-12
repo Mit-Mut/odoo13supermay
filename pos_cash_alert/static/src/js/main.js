@@ -438,7 +438,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 					    method:'get_cash_register_total_entry_encoding',
 					    args: [self.pos.pos_session.id]
 					//}).then(function(cash_register_difference){
-					    then(function(get_cash_register_total_entry_encoding){
+					    }).then(function(get_cash_register_total_entry_encoding){
 					    console.log(get_cash_register_total_entry_encoding)
 						if(cash_register_difference > 0) return
 					    self.pos.cash_register_difference = cash_register_difference;
