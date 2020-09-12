@@ -434,10 +434,12 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 					console.log('entroaosdaoidjaoisdoasid')
 					rpc.query({
 					    model:'pos.session',
-					    method: 'get_cash_register_difference',
+					    //method: 'get_cash_register_difference',
+					    method:'get_cash_register_total_entry_encoding',
 					    args: [self.pos.pos_session.id]
-					}).then(function(cash_register_difference){
-					    console.log('1'+cash_register_difference)
+					//}).then(function(cash_register_difference){
+					    then(function(get_cash_register_total_entry_encoding){
+					    console.log(get_cash_register_total_entry_encoding)
 						if(cash_register_difference > 0) return
 					    self.pos.cash_register_difference = cash_register_difference;
 						if(self.pos.config.cash_withdraw - Math.abs(parseFloat(cash_register_difference,10)+parseFloat(self.pos.config.fondo_caja,10))<=0)
