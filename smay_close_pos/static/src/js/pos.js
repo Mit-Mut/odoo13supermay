@@ -44,7 +44,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
                         $('.popup-error').height(300)
 
                     }
-                }).fail(function(){
+                }).catch(function(){
                     var session_start_at = self.pos.pos_session.start_at
                     var hora_apertura=session_start_at.substr(5,2)+'/'+session_start_at.substr(8,2)+'/'+session_start_at.substr(0,4)+' '+session_start_at.substr(11,8)+' UTC'
                     var hora_apertura_local = new Date(hora_apertura)
