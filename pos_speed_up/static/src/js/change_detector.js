@@ -321,6 +321,8 @@ odoo.define('pos_speed_up.change_detector', function (require) {
                 method: 'sync_not_reload',
                 args: [client_version, model.fields]
             }).then(function (res) {
+            console.log('RESSSSS')
+            console.log(res)
                 localStorage.setItem('product_index_version', res['latest_version']);
 
                 // increase count
@@ -331,6 +333,8 @@ odoo.define('pos_speed_up.change_detector', function (require) {
                 }
 
                 indexedDB.get_object_store('products').then(function (store) {
+                    console.log('store')
+                    console.
                     _.each(res['create'], function (record) {
                         store.put(record).onerror = function (e) {
                             console.log(e);
@@ -343,7 +347,7 @@ odoo.define('pos_speed_up.change_detector', function (require) {
                             localStorage.setItem('product_index_version', client_version);
                         };
                     });
-                }).fail(function (error) {
+                }).catch(function (error) {
                     console.log(error);
                     localStorage.setItem('product_index_version', client_version);
                 });

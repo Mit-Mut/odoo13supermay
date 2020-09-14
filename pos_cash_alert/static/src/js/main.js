@@ -387,7 +387,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
                         var orders ='\n'
                         var elements =0
                         for(var r in resp){
-                            console.log(r)
+                            //console.log(r)
                             orders+=r+'.  '
                             elements++
                         }
@@ -434,7 +434,6 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 			if(self.pos.config.cash_withdraw != 0){
 				setTimeout(function(){
 					//new Model('pos.session').call('get_cash_register_difference',[self.pos.pos_session.id])
-					console.log('entroaosdaoidjaoisdoasid')
 					rpc.query({
 					    model:'pos.session',
 					    //method: 'get_cash_register_difference',
@@ -442,7 +441,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 					    args: [self.pos.pos_session.id]
 					//}).then(function(cash_register_difference){
 					    }).then(function(cash_register_total_entry_encoding){
-					    console.log(cash_register_total_entry_encoding)
+					    //console.log(cash_register_total_entry_encoding)
 					    if(cash_register_total_entry_encoding >= self.pos.config.cash_withdraw && self.gui!=null && self.pos.get_order().get_orderlines().length == 0)
 					        self.gui.show_popup('cash_popup',{});
 						/*if(cash_register_difference > 0) return

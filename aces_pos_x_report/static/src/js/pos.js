@@ -73,7 +73,7 @@ var QWeb = core.qweb;
                                     self.pos.gui.show_popup('error','Error al generar el reporte');
                                 });
                             }else{
-                                self.pos.gui.show_popup('error', 'No esta habilitado en la configuración del punto de venta para imprimir el reporte');
+                                self.pos.gui.show_popup('error', 'No esta habilitado en la configuración del punto de venta para imprimir el reporte.');
                             }
 
 

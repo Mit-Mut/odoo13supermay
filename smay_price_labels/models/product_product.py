@@ -27,3 +27,12 @@ class SmayPriceProduct(models.Model):
                         self.browse(product_id), i, self.env.user.partner_id)
                     aux_price = aux_price2
         return prices
+
+
+class SamyProductPricelist(models.Model):
+    _inherit = "product_pricelist"
+
+    def get_product_price(self, product, quantity, partner, date=False, uom_id=False):
+        price = super(SamyProductPricelist, self).get_product_price(self, product, quantity, partner, date=False,
+                                                                    uom_id=False)
+        return round(price, 1)
