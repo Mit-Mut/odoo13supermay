@@ -5,6 +5,7 @@ odoo.define('smay_custom_pos.smay_custom_pos', function(require){
 	var session = require('web.session');
 	var core = require('web.core');
 	var _t = core._t;
+	var models = require('point_of_sale.models');
 
 	var Gui = gui.Gui;
     Gui.include({
@@ -18,5 +19,15 @@ odoo.define('smay_custom_pos.smay_custom_pos', function(require){
 				window.location = session.debug ? $.param.querystring(url, {debug: session.debug}) : url;
 			});
 		},
+    });
+
+
+    var _super_product = models.Product;
+	models.Product = models.Product.extend({
+
+        get_price: function(pricelist, quantity){
+            var price = this._super(pricelist, quantity);
+            return Math.round(price*10)/10
+        },
     });
 });
