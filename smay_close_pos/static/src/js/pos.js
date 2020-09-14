@@ -14,6 +14,63 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 
     var reprint_ticket = require('smay_reprint_ticket.smay_reprint_ticket');
 
+    var _super_order = pos_model.Order;
+    pos_model.Order = pos_model.Order.extend({
+
+        add_product: function(product, options){
+            _super_order.prototype.add_product.apply(this, arguments);
+
+            if(!self.pos.config.es_checador_precios){
+                rpc.query({
+                    model:'pos.session',
+                    method:'get_session_start_at',
+                    args:[self.pos.pos_session.id],
+                    timeout:500,
+                }).then(function(resp){
+                    var hora_apertura=resp.substr(5,2)+'/'+resp.substr(8,2)+'/'+resp.substr(0,4)+' '+resp.substr(11,8)+' UTC'
+                    var hora_apertura_local = new Date(hora_apertura)
+                    var fecha_actual = new Date()
+                    if(fecha_actual.getDate()!=hora_apertura_local.getDate() || fecha_actual.getMonth()+1!=hora_apertura_local.getMonth()+1||fecha_actual.getFullYear()!=hora_apertura_local.getFullYear()){
+                        self.pos.get_order().remove_all_paymentlines()
+                        for(var i= 0; i<self.pos.get_order().get_orderlines().length; i++){
+                            self.pos.get_order().remove_orderline(self.pos.get_order().get_orderlines()[i])
+                                i--
+                        }
+
+                        self.pos.gui.show_popup('error',{
+                            title: 'Error en Sesión',
+                            body:'Debes de cerrar tu sessión porque no fue inicializada hoy.'
+                        })
+                        $('.popup-error').height(300)
+
+                    }
+                }).fail(function(){
+                    var session_start_at = self.pos.pos_session.start_at
+                    var hora_apertura=session_start_at.substr(5,2)+'/'+session_start_at.substr(8,2)+'/'+session_start_at.substr(0,4)+' '+session_start_at.substr(11,8)+' UTC'
+                    var hora_apertura_local = new Date(hora_apertura)
+                    var fecha_actual = new Date()
+                    if(fecha_actual.getDate()!= hora_apertura_local.getDate() ||
+                        fecha_actual.getMonth()+1!=hora_apertura_local.getMonth()+1||
+                        fecha_actual.getFullYear()!=hora_apertura_local.getFullYear()){
+
+                        self.pos.get_order().remove_all_paymentlines()
+                        for(var i= 0; i<self.pos.get_order().get_orderlines().length; i++){
+                            self.pos.get_order().remove_orderline(self.pos.get_order().get_orderlines()[i])
+                            i--
+                        }
+
+                        self.pos.gui.show_popup('error',{
+                            title: 'Error en Sesiòn',
+                            body:'Debes de cerrar tu session.'
+                        })
+
+                        $('.popup-error').height(300)
+                    }
+                });
+            }
+        },
+    });
+
     var ConfirmationClosePopupWidget = popups.extend({
         template : 'ConfirmationClosePopupWidget',
 

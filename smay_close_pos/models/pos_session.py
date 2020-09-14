@@ -10,6 +10,10 @@ class PosSessionSmayCloseSession(models.Model):
     _inherit = 'pos.session'
 
     @api.model
+    def get_session_start_at(self, session_id):
+        return self.browse(session_id).start_at
+
+    @api.model
     def get_unsigned_invoices(self, session_id):
         session = self.browse(session_id)
         unsigned_orders = {}
