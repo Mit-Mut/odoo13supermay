@@ -30,7 +30,7 @@ class SmayPriceProduct(models.Model):
 
 
 class SamyProductPricelist(models.Model):
-    _inherit = "product_pricelist"
+    _inherit = "product.pricelist"
 
     def get_product_price(self, product, quantity, partner, date=False, uom_id=False):
         price = super(SamyProductPricelist, self).get_product_price(self, product, quantity, partner, date=False,
