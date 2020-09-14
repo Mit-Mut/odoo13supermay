@@ -33,6 +33,5 @@ class SamyProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     def get_product_price(self, product, quantity, partner, date=False, uom_id=False):
-        price = super(SamyProductPricelist, self).get_product_price(self, product, quantity, partner, date=False,
-                                                                    uom_id=False)
+        price = super(SamyProductPricelist, self).get_product_price(self, product, quantity, partner, date, uom_id)
         return round(price, 1)
