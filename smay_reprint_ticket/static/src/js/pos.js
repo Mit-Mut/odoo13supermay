@@ -229,7 +229,7 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
                             $('.pos-receipt').html(QWeb.render('ReprintPosTicket' ,{widget:self,receipt:receipt}));
                             self.pos.config.iface_print_auto  = true;
                             self.gui.show_screen('receipt',{reprint:'true'})
-                            console.log('llego aqui')
+                            console.log('llego aquiiiiiiiiiiiiii')
                             console.log(self)
                             this.print()
 
