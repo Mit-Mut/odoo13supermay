@@ -118,11 +118,14 @@ odoo.define('smay_reprint_retirement.smay_reprint_retirement', function(require)
 								receipt: receipt
 							};
 
+							self.pos.config.iface_print_auto  = false;
 							if(self.gui.get_current_screen() != 'receipt')
 								self.gui.show_screen('receipt',{'retirement': true});
 
 							var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 							$('.pos-receipt').html(receiptFinal);
+							self.pos.config.iface_print_auto  = true;
+							window.print()
 						//}, 1000)
 
 						//setTimeout(function(){
