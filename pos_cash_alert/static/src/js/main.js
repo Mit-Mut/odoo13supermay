@@ -292,10 +292,12 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 									receipt: receipt
 								};
 
+                                self.pos.config.iface_print_auto  = false;
 								if(self.gui.get_current_screen() != 'receipt')
 									self.gui.show_screen('receipt',{'retirement': true});
 								var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 								$('.pos-receipt').html(receiptFinal);
+								window.print()
 							///}, 0)
 					    }).catch(function(unused, event){
 						    self.gui.show_popup('error', {
