@@ -85,7 +85,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 			                }}).catch(function(){
 								self.pos.gui.show_popup('error','No se pudo generar el reporte de cierre');
 								});
-                        }else{
+                        }else{show_screen
                             self.pos.gui.show_popup('error', 'No esta habilitado en la configuración del punto de venta para imprimir el reporte');
                         }
                     }).catch(function(){
