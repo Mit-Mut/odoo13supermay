@@ -27,8 +27,8 @@ odoo.define('smay_custom_pos.smay_custom_pos', function(require){
 
         get_price: function(pricelist, quantity){
             var price = _super_product.prototype.get_price.apply(this, arguments);
-            console.log(price+'    antes de redondear')
-            console.log(Math.round(price*10)/10 + '   Redondeado' )
+            //console.log(price+'    antes de redondear')
+            //console.log(Math.round(price*10)/10 + '   Redondeado' )
             return Math.round(price*10)/10
         },
     });
