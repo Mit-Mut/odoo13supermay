@@ -27,7 +27,7 @@ odoo.define('smay_custom_pos.smay_custom_pos', function(require){
 
         get_price: function(pricelist, quantity){
             var self= this;
-            var price = self._super(this, arguments);
+            var price = this._super(this, arguments);
             return Math.round(price*10)/10
         },
     });
