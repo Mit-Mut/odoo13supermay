@@ -294,7 +294,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
             local_dt = local.localize(fecha, is_dst=None)
             utc_dt = local_dt.astimezone(pytz.utc)
-            return str(utc_dt)
+            return str(utc_dt)[0:19]
         return '2017-02-02 17:30:00'
 
     def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
