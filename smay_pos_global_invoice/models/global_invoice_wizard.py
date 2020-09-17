@@ -582,7 +582,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 sucursal_ids[0]).name,
         }
 
-        self._get_info_tax('IVA(16%) VENTAS', data_invoice)
+        data_invoice['line_ids'].append(self._get_info_tax('IVA(16%) VENTAS', data_invoice))
 
         '''(0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
                            'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
@@ -611,6 +611,7 @@ class GlobalInvoiceWizard(models.TransientModel):
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         _logger.warning('ETIQUETA DE TAX'+str(etiqueta_impuesto))
         _logger.warning('ETIQUETAssssssssssss'+str(data_invoice['line_ids']))
+        lineas =data_invoice['line_ids']
         impuesto = [
             0, '',
             {
@@ -647,7 +648,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'l10n_mx_edi_qty_umt': 0,
             }]
 
-        data_invoice['line_ids'] = data_invoice['line_ids'].append(impuesto)
+        return lineas.append(impuesto)
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
