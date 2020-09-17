@@ -612,41 +612,44 @@ class GlobalInvoiceWizard(models.TransientModel):
         _logger.warning('ETIQUETA DE TAX'+str(etiqueta_impuesto))
         _logger.warning('ETIQUETAssssssssssss'+str(data_invoice['line_ids']))
         lineas = data_invoice['line_ids']
-        impuesto = [
-            0, '',
-            {
-                'account_id': 23,
-                'sequence': 10,
-                'name': 'IVA(16%) VENTAS',
-                'quantity': 1,
-                'price_unit': 12.48,
-                'discount': 0,
-                'debit': 0,
-                'credit': 12.48,
-                'amount_currency': 0,
-                'date_maturity': False,
-                'currency_id': False,
-                'partner_id': 273,
-                'product_uom_id': False,
-                'product_id': False,
-                'payment_id': False,
-                'tax_ids': [[6, False, []]],
-                'tax_base_amount': 77.97,
-                'tax_exigible': False,
-                'tax_repartition_line_id': 6,
-                'tag_ids': [[6, False, [938]]],
-                'analytic_account_id': False,
-                'analytic_tag_ids': [[6, False, []]],
-                'recompute_tax_line': False,
-                'display_type': False,
-                'is_rounding_line': False,
-                'exclude_from_invoice_tab': True,
-                'purchase_line_id': False,
-                'predict_from_name': False,
-                'predict_override_default_account': False,
-                'l10n_mx_edi_customs_number': False,
-                'l10n_mx_edi_qty_umt': 0,
-            }]
+        impuesto_def = self.env['account.tax'].search([('name','=',etiqueta_impuesto)])
+        if impuesto_def:
+
+            impuesto = [
+                0, '',
+                {
+                    'account_id': impuesto_def.cash_basis_transition_account_id,
+                    'sequence': 10,
+                    'name': impuesto_def.name,
+                    'quantity': 1,
+                    'price_unit': 12.48,
+                    'discount': 0,
+                    'debit': 0,
+                    'credit': 12.48,
+                    'amount_currency': 0,
+                    'date_maturity': False,
+                    'currency_id': False,
+                    'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
+                    'product_uom_id': False,
+                    'product_id': False,
+                    'payment_id': False,
+                    'tax_ids': [[6, False, []]],
+                    'tax_base_amount': 77.97,
+                    'tax_exigible': False,
+                    'tax_repartition_line_id': 6,
+                    'tag_ids': [[6, False, [938]]],
+                    'analytic_account_id': False,
+                    'analytic_tag_ids': [[6, False, []]],
+                    'recompute_tax_line': False,
+                    'display_type': False,
+                    'is_rounding_line': False,
+                    'exclude_from_invoice_tab': True,
+                    'purchase_line_id': False,
+                    'predict_from_name': False,
+                    'predict_override_default_account': False,
+                    'l10n_mx_edi_customs_number': False,
+                    'l10n_mx_edi_qty_umt': 0,
+                }]
 
         _logger.warning('SE AGREGO EL IMPUESTO'+str(lineas.append(impuesto)))
 
