@@ -270,7 +270,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for session in sessions_to_invoicing:
             session.sudo().write({
                 'factura_global': True,
-                'global_invoice_name': Invoice.number,
+                'global_invoice_name': Invoice.name,
             })
 
         # time.sleep(1)
