@@ -387,43 +387,6 @@ class GlobalInvoiceWizard(models.TransientModel):
         if len(list(set(analytic_account_ids))) > 1:
             raise UserError('Existe mas de una cuenta analitica en los puntos de venta a facturar')
 
-        '''[
-                    0, '',
-                    {
-                        'account_id': 23,
-                        'sequence': 10,
-                        'name': 'IVA(16%) VENTAS',
-                        'quantity': 1,
-                        'price_unit': 12.48,
-                        'discount': 0,
-                        'debit': 0,
-                        'credit': 12.48,
-                        'amount_currency': 0,
-                        'date_maturity': False,
-                        'currency_id': False,
-                        'partner_id': 273,
-                        'product_uom_id': False,
-                        'product_id': False,
-                        'payment_id': False,
-                        'tax_ids': [[6, False, []]],
-                        'tax_base_amount': 77.97,
-                        'tax_exigible': False,
-                        'tax_repartition_line_id': 6,
-                        'tag_ids': [[6, False, [938]]],
-                        'analytic_account_id': False,
-                        'analytic_tag_ids': [[6, False, []]],
-                        'recompute_tax_line': False,
-                        'display_type': False,
-                        'is_rounding_line': False,
-                        'exclude_from_invoice_tab': True,
-                        'purchase_line_id': False,
-                        'predict_from_name': False,
-                        'predict_override_default_account': False,
-                        'l10n_mx_edi_customs_number': False,
-                        'l10n_mx_edi_qty_umt': 0
-                    }
-                ],'''
-
         data_invoice = {
             'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
             'l10n_mx_edi_payment_method_id': self.pay_method_id,
@@ -435,9 +398,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             'type': 'out_invoice',
             'company_id': self.env.user.company_id.id,
             'invoice_date': str(date.today()),  # - timedelta(days=2)),
-            #'date_due': str(date.today()),
+            # 'date_due': str(date.today()),
             'line_ids': [
-                ],
+            ],
             'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
                 'res.partner'].browse(
                 sucursal_ids[0]).name,
@@ -447,8 +410,84 @@ class GlobalInvoiceWizard(models.TransientModel):
         data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
         data_invoice['line_ids'].append(self._get_line_totals(data_invoice))
 
+        orders = self.env['pos.order'].search(
+            [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
+             ('amount_total', '>', 0), ('sucursal_id', '=', user_sucursal.id)])
+
+        self._add_invoice_lines(data_invoice, orders)
+
         _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
+
+    def _add_invoice_lines(self, data_invoice, orders):
+        account_id = self.env['account.account'].search(
+            [('name', '=', '401.01.01 Ventas y/o servicios gravados a la tasa general')]).id
+        for order in orders:
+            order_taxes = {}
+            for orderline in order.lines:
+
+                for tax in orderline.tax_ids:
+                    order_taxes[int(tax.amount)] = tax.id
+
+            if order.state == 'invoiced' or order.amount_total <= 0:
+                continue
+
+            for order_tax in order_taxes:
+                description = order.pos_reference + '_' + str(order_tax)
+                amount_total = 0
+                subtotal = 0
+                for orderline_2 in order.lines:
+                    if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
+                        amount_total += orderline_2.price_subtotal_incl
+                        subtotal += orderline_2.price_subtotal
+
+                if amount_total == 0:
+                    continue
+
+                # aqui debo de guardar cada linea de factura
+
+                line = [
+                           0, '',
+                           {
+                               'account_id': account_id,
+                               'sequence': 10,
+                               'name': description,
+                               'quantity': 1,
+                               'price_unit': amount_total,
+                               'discount': 0,
+                               'debit': 0,
+                               'credit': subtotal,
+                               'amount_currency': 0,
+                               'date_maturity': False,
+                               'currency_id': False,
+                               'partner_id': self.env['res.company'].browse(
+                                   self.env.user.company_id.id).invoice_partner_id.property_account_receivable_id.id,
+                               'product_uom_id': 1,
+                               'product_id': 8381,
+                               'payment_id': False,
+                               'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
+                               'tax_base_amount': 0,
+                               'tax_exigible': False,
+                               'tax_repartition_line_id': False,
+                               'tag_ids': [[6, False, []]],
+                               'analytic_account_id': False,
+                               'analytic_tag_ids': [[6, False, []]],
+                               'recompute_tax_line': False,
+                               'display_type': False,
+                               'is_rounding_line': False,
+                               'exclude_from_invoice_tab': False,
+                               'purchase_line_id': False,
+                               'predict_from_name': False,
+                               'predict_override_default_account': False,
+                               'l10n_mx_edi_customs_number': False,
+                               'l10n_mx_edi_qty_umt': 0
+                           }
+                       ],
+
+                lines = data_invoice['line_ids']
+                lines.append(line)
+
+            _logger.warning(data_invoice)
 
     def _get_line_totals(self, data_invoice):
 
@@ -462,10 +501,10 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'sequence': 10,
                 'name': False,
                 'quantity': 1,
-                #'price_unit': -90.45,
+                # 'price_unit': -90.45,
                 'price_unit': -0,
                 'discount': 0,
-                #'debit': 90.45,
+                # 'debit': 90.45,
                 'debit': 0,
                 'credit': 0,
                 'amount_currency': 0,
@@ -496,16 +535,15 @@ class GlobalInvoiceWizard(models.TransientModel):
             }
         ]
         return totals
-        #return lineas.append(totals)
+        # return lineas.append(totals)
 
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         lineas = data_invoice['line_ids']
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         repartition_id = 0
         for imp in impuesto_def.invoice_repartition_line_ids:
-            if imp.repartition_type=='tax':
+            if imp.repartition_type == 'tax':
                 repartition_id = imp.id
-
 
         if impuesto_def:
             impuesto = [
@@ -515,11 +553,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'sequence': 10,
                     'name': impuesto_def.name,
                     'quantity': 1,
-                    #'price_unit': 12.48,
+                    # 'price_unit': 12.48,
                     'price_unit': 0,
                     'discount': 0,
                     'debit': 0,
-                    #'credit': 12.48,
+                    # 'credit': 12.48,
                     'credit': 0,
                     'amount_currency': 0,
                     'date_maturity': False,
@@ -529,12 +567,12 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'product_id': False,
                     'payment_id': False,
                     'tax_ids': [[6, False, []]],
-                    #'tax_base_amount': 77.97,
+                    # 'tax_base_amount': 77.97,
                     'tax_base_amount': 0,
                     'tax_exigible': False,
-                    #'tax_repartition_line_id': 6,
-                    #'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
-                    'tax_repartition_line_id':repartition_id,
+                    # 'tax_repartition_line_id': 6,
+                    # 'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
+                    'tax_repartition_line_id': repartition_id,
                     # 'tag_ids': [[6, False, [938]]],
                     'analytic_account_id': False,
                     'analytic_tag_ids': [[6, False, []]],
@@ -549,7 +587,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'l10n_mx_edi_qty_umt': 0,
                 }]
 
-        #_logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
+        # _logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
 
         return impuesto
 
