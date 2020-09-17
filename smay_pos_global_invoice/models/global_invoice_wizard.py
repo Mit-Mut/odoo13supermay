@@ -396,6 +396,27 @@ class GlobalInvoiceWizard(models.TransientModel):
                         'invoice_date': str(date.today()),  # - timedelta(days=2)),
                         # 'date_due': str(date.today()),
                         'line_ids': [
+                            (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3}),
+                (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
+                           'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
+                           'product_uom_id': 1, 'analytic_account_id': 3})
 
                         ],
                         'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
