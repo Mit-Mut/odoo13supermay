@@ -237,7 +237,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         _logger.warning('FACTURA DE VARIOS PRODUCTOS')
         _logger.warning(str(Invoice))
 
-        Invoice.compute_taxes()
+        #Invoice.compute_taxes()
 
         for tax_line in Invoice.tax_line_ids:
             tax_line.write({
@@ -385,22 +385,23 @@ class GlobalInvoiceWizard(models.TransientModel):
             raise UserError('Existe mas de una cuenta analitica en los puntos de venta a facturar')
 
         data_invoice = {'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
-            'l10n_mx_edi_payment_method_id': self.pay_method_id,
-            'l10n_mx_edi_usage': self.uso_cfdi_id,
-            'user_id': self.env.user.id,
-            'team_id': equipo_ventas[0],
-            'journal_id': journal_ids[0],
-            'fiscal_position_id': position_fiscal_ids[0],
-            'type': 'out_invoice',
-            'company_id': self.env.user.company_id.id,
-            'invoice_date': str(date.today()),  # - timedelta(days=2)),
-            # 'date_due': str(date.today()),
-            'line_ids': [
+                        'l10n_mx_edi_payment_method_id': self.pay_method_id,
+                        'l10n_mx_edi_usage': self.uso_cfdi_id,
+                        'user_id': self.env.user.id,
+                        'team_id': equipo_ventas[0],
+                        'journal_id': journal_ids[0],
+                        'fiscal_position_id': position_fiscal_ids[0],
+                        'type': 'out_invoice',
+                        'company_id': self.env.user.company_id.id,
+                        'invoice_date': str(date.today()),  # - timedelta(days=2)),
+                        # 'date_due': str(date.today()),
+                        'line_ids': [
 
-            ],
-            'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env['res.partner'].browse(
-                sucursal_ids[0]).name,
-        }
+                        ],
+                        'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
+                            'res.partner'].browse(
+                            sucursal_ids[0]).name,
+                        }
 
         '''(0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
                            'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
@@ -423,9 +424,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                 (0, None, {'product_id': 8595, 'quantity': 2.0, 'discount': 0.0, 'price_unit': 23.62,
                            'name': '[012388002507] LIRIO NEUTRO EXH/3 120 GR', 'tax_ids': [(6, 0, [2])],
                            'product_uom_id': 1, 'analytic_account_id': 3})'''
-        _logger.warning('Dicccionario para crear la facrtura '+str(data_invoice))
+        _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
-
 
     def get_company(self):
         return self.env.user.company_id.id
