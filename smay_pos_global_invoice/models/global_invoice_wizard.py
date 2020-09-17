@@ -282,7 +282,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         _logger.warning('PPPPPPPPPPPPPPPPPPPPPPPPPPPP')
 
-        '''if label == 'START':
+        if label == 'START':
             default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
         if label == 'END':
             default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
@@ -294,7 +294,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
             local_dt = local.localize(fecha, is_dst=None)
             utc_dt = local_dt.astimezone(pytz.utc)
-            return str(utc_dt)'''
+            return str(utc_dt)
         return '2017-02-02 17:30:00'
 
     def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
