@@ -245,7 +245,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             })'''
 
         # esta funcion valida la factura
-        Invoice.action_invoice_open()
+        #Invoice.action_invoice_open()
 
         '''Invoice.write({
             'payment_ids': [(0, 0, {
@@ -274,9 +274,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             })
 
         # time.sleep(1)
-        Invoice.action_invoice_open()
+        #Invoice.action_invoice_open()
         # time.sleep(5)
-        Invoice.l10n_mx_edi_update_sat_status()
+        #Invoice.l10n_mx_edi_update_sat_status()
         # time.sleep(2)
         '''email_act = Invoice.action_invoice_sent()
 
@@ -285,9 +285,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             email_ctx.update(default_email_from=Invoice.company_id.email)
             Invoice.message_post_with_template(email_ctx.get('default_template_id'))'''
 
-        return self.env.ref('account.account_invoices').report_action(Invoice)
+        #return self.env.ref('account.account_invoices').report_action(Invoice)
 
-        return {
+        '''return {
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
@@ -298,7 +298,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'nodestroy': False,
             'target': 'current',
             'res_id': Invoice.id and Invoice.ids[0] or False,
-        }
+        }'''
 
     def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
         product = self.env.user.company_id.invoice_product_id
