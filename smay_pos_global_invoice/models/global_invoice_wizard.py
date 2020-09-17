@@ -598,7 +598,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'l10n_mx_edi_qty_umt': 0
             }
         ]
-        return lineas
+        return totals
         #return lineas.append(totals)
 
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
@@ -646,7 +646,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         _logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
 
-        return lineas
+        return impuesto
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
