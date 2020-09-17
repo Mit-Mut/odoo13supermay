@@ -239,10 +239,10 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         #Invoice.compute_taxes()
 
-        for tax_line in Invoice.tax_line_ids:
+        '''for tax_line in Invoice.tax_line_ids:
             tax_line.write({
                 'account_analytic_id': self.env['pos.config'].browse(pos_configs[0]).x_cuenta_analitica.id,
-            })
+            })'''
 
         # esta funcion valida la factura
         Invoice.action_invoice_open()
