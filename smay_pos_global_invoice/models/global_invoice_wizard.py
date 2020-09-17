@@ -598,7 +598,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'l10n_mx_edi_qty_umt': 0
             }
         ]
-        return lineas.append(totals)
+        return lineas
+        #return lineas.append(totals)
 
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         lineas = data_invoice['line_ids']
