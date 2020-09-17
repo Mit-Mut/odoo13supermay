@@ -618,7 +618,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             impuesto = [
                 0, '',
                 {
-                    'account_id': impuesto_def.cash_basis_transition_account_id,
+                    'account_id': impuesto_def.cash_basis_transition_account_id.id,
                     'sequence': 10,
                     'name': impuesto_def.name,
                     'quantity': 1,
