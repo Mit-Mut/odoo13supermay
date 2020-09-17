@@ -605,6 +605,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         lineas = data_invoice['line_ids']
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         _logger.warning('REPSARTITITITITITITI'+str(impuesto_def.invoice_repartition_line_ids))
+        _logger.warning('REPSARTITITITITITITI'+str(max(impuesto_def.invoice_repartition_line_ids)))
         if impuesto_def:
             impuesto = [
                 0, '',
