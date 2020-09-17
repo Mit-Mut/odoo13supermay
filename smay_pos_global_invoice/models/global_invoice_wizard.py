@@ -435,7 +435,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'type': 'out_invoice',
             'company_id': self.env.user.company_id.id,
             'invoice_date': str(date.today()),  # - timedelta(days=2)),
-            'date_due': str(date.today()),
+            #'date_due': str(date.today()),
             'line_ids': [
 
                 [
