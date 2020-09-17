@@ -627,9 +627,10 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'payment_id': False,
                     'tax_ids': [[6, False, []]],
                     # 'tax_base_amount': 77.97,
-                    'tax_base_amount': 77.97,
+                    'tax_base_amount': 0,
                     'tax_exigible': False,
-                    'tax_repartition_line_id': 6,
+                    #'tax_repartition_line_id': 6,
+                    'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids),
                     # 'tag_ids': [[6, False, [938]]],
                     'analytic_account_id': False,
                     'analytic_tag_ids': [[6, False, []]],
@@ -644,7 +645,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'l10n_mx_edi_qty_umt': 0,
                 }]
 
-        _logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
+        #_logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
 
         return impuesto
 
