@@ -438,7 +438,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             #'date_due': str(date.today()),
             'line_ids': [
 
-                [
+                '''[
                     0, '',
                     {
                         'account_id': 30,
@@ -540,7 +540,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                         'predict_override_default_account': False,
                         'l10n_mx_edi_customs_number': False,
                         'l10n_mx_edi_qty_umt': 0}
-                ]
+                ]'''
                 ],
             'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
                 'res.partner'].browse(
@@ -566,11 +566,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'sequence': 10,
                 'name': False,
                 'quantity': 1,
-                'price_unit': -90.45,
-                #'price_unit': -0,
+                #'price_unit': -90.45,
+                'price_unit': -0,
                 'discount': 0,
-                'debit': 90.45,
-                #'debit': 0,
+                #'debit': 90.45,
+                'debit': 0,
                 'credit': 0,
                 'amount_currency': 0,
                 # 'date_maturity': '2020-09-17',
@@ -619,12 +619,12 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'sequence': 10,
                     'name': impuesto_def.name,
                     'quantity': 1,
-                    'price_unit': 12.48,
-                    #'price_unit': 0,
+                    #'price_unit': 12.48,
+                    'price_unit': 0,
                     'discount': 0,
                     'debit': 0,
-                    'credit': 12.48,
-                    #'credit': 0,
+                    #'credit': 12.48,
+                    'credit': 0,
                     'amount_currency': 0,
                     'date_maturity': False,
                     'currency_id': False,
@@ -633,8 +633,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'product_id': False,
                     'payment_id': False,
                     'tax_ids': [[6, False, []]],
-                    'tax_base_amount': 77.97,
-                    #'tax_base_amount': 0,
+                    #'tax_base_amount': 77.97,
+                    'tax_base_amount': 0,
                     'tax_exigible': False,
                     #'tax_repartition_line_id': 6,
                     #'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
