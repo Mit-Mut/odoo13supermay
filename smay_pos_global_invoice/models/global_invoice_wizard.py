@@ -645,7 +645,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'l10n_mx_edi_qty_umt': 0,
             }]
 
-    data_invoice['line_ids'] = data_invoice['line_ids'].append(impuesto)
+        data_invoice['line_ids'] = data_invoice['line_ids'].append(impuesto)
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
