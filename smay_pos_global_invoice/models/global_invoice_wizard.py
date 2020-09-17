@@ -606,6 +606,12 @@ class GlobalInvoiceWizard(models.TransientModel):
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         _logger.warning('REPSARTITITITITITITI'+str(impuesto_def.invoice_repartition_line_ids))
         _logger.warning('REPSARTITITITITITITI'+str(min(impuesto_def.invoice_repartition_line_ids)))
+        repartition_id = 0
+        for imp in impuesto_def.invoice_repartition_line_ids:
+            if imp.repartition_type=='tax':
+                repartition_id = imp.id
+                
+
         if impuesto_def:
             impuesto = [
                 0, '',
@@ -632,7 +638,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'tax_base_amount': 0,
                     'tax_exigible': False,
                     #'tax_repartition_line_id': 6,
-                    'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
+                    #'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
+                    'tax_repartition_line_id':repartition_id,
                     # 'tag_ids': [[6, False, [938]]],
                     'analytic_account_id': False,
                     'analytic_tag_ids': [[6, False, []]],
