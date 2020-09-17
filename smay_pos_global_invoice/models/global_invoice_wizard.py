@@ -438,7 +438,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             # 'date_due': str(date.today()),
             'line_ids': [
 
-                [
+                '''[
                     0, '',
                     {
                         'account_id': 30,
@@ -540,7 +540,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                         'predict_override_default_account': False,
                         'l10n_mx_edi_customs_number': False,
                         'l10n_mx_edi_qty_umt': 0}
-                ]],
+                ]'''
+                ],
             'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
                 'res.partner'].browse(
                 sucursal_ids[0]).name,
@@ -604,13 +605,11 @@ class GlobalInvoiceWizard(models.TransientModel):
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         lineas = data_invoice['line_ids']
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
-        _logger.warning('REPSARTITITITITITITI'+str(impuesto_def.invoice_repartition_line_ids))
-        _logger.warning('REPSARTITITITITITITI'+str(min(impuesto_def.invoice_repartition_line_ids)))
         repartition_id = 0
         for imp in impuesto_def.invoice_repartition_line_ids:
             if imp.repartition_type=='tax':
                 repartition_id = imp.id
-                
+
 
         if impuesto_def:
             impuesto = [
