@@ -20,6 +20,7 @@ class herenciasMOVE(models.Model):
         _logger.warning(str(vals))
         return res
 
+
 class herenciasMOVEline(models.Model):
     _inherit = 'account.move.line'
 
@@ -130,6 +131,22 @@ class GlobalInvoiceWizard(models.TransientModel):
                                             pos_config_id).sucursal_id.name + ' y tu sucursal asignada es ' + sucursal.name + '. Contacta al administrador para la correcta configuración de tu usuario.')
                 return sucursal.name
 
+    def get_date(self, label):
+        default_datetime = ''
+
+        if label == 'START':
+            default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
+        if label == 'END':
+            default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
+
+        if default_datetime != '':
+            local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
+            fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
+            local_dt = local.localize(fecha, is_dst=None)
+            utc_dt = local_dt.astimezone(pytz.utc)
+            return str(utc_dt)[0:19]
+        return '2017-02-02 17:30:00'
+
     def generate_invoice(self):
         pos_configs = []
         user_sucursal = self.env.user.sucursal_id
@@ -145,6 +162,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                                                                               ('notas_credito_global', '=', False),
                                                                               ('config_id.sucursal_id.id', '=',
                                                                                user_sucursal.id)])
+
+        _logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
 
         if sessions_not_invoicing_credit_notes:
             message = 'No se han realizado las notas de credito de las siguientes sesiones:\n'
@@ -162,6 +181,8 @@ class GlobalInvoiceWizard(models.TransientModel):
             ('factura_global', '=', False),
         ])
 
+        _logger.warning("estas sessiones seran las que se facturaran" + str(sessions_to_invoicing))
+
         if not sessions_to_invoicing:
             raise UserError('No existen sesiones para facturar en las fechas indicadas')
 
@@ -169,12 +190,14 @@ class GlobalInvoiceWizard(models.TransientModel):
         for session in sessions_to_invoicing:
             orders += len(session.order_ids)
             if len(session.order_ids) == 0:
-                session.sudo().write({
+                session.sudo(True).write({
                     'factura_global': True
                 })
 
         if orders == 0:
             return
+
+        _logger.warning("estas son las ordenes que se van a facturasrrrrr" + str(orders))
 
         # aqui verifico que no haya ordenes con cliente asignado y sin facturar
         orders_without_invoicing = []
@@ -276,26 +299,6 @@ class GlobalInvoiceWizard(models.TransientModel):
             'target': 'current',
             'res_id': Invoice.id and Invoice.ids[0] or False,
         }
-
-    def get_date(self, label):
-        default_datetime = ''
-
-        _logger.warning('PPPPPPPPPPPPPPPPPPPPPPPPPPPP')
-
-        if label == 'START':
-            default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
-        if label == 'END':
-            default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
-
-        _logger.warning('LLLLLLLLLLLLLLLLLLLLLLLLLLLL'+default_datetime)
-
-        if default_datetime != '':
-            local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
-            fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
-            local_dt = local.localize(fecha, is_dst=None)
-            utc_dt = local_dt.astimezone(pytz.utc)
-            return str(utc_dt)[0:19]
-        return '2017-02-02 17:30:00'
 
     def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
         product = self.env.user.company_id.invoice_product_id
