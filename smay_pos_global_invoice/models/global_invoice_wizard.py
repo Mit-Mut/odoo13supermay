@@ -147,6 +147,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             return str(utc_dt)[0:19]
         return '2017-02-02 17:30:00'
 
+    def get_company(self):
+        return self.env.user.company_id.id
+    
     def generate_invoice(self):
         pos_configs = []
         user_sucursal = self.env.user.sucursal_id
@@ -670,8 +673,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                            'product_uom_id': 1, 'analytic_account_id': 3})'''
         _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
-
-
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
