@@ -438,7 +438,6 @@ class GlobalInvoiceWizard(models.TransientModel):
             # 'date_due': str(date.today()),
             'line_ids': [
 
-
                 [
                     0, '',
                     {
@@ -551,62 +550,60 @@ class GlobalInvoiceWizard(models.TransientModel):
         data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
         data_invoice['line_ids'].append(self._get_line_totals(data_invoice))
 
-
         _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
 
-
-    def _get_line_totals(self):
+    def _get_line_totals(self, data_invoice):
 
         lineas = data_invoice['line_ids']
 
         totals = [
-                    0, '',
-                    {
-                        'account_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.property_account_receivable_id.id,
-                        'sequence': 10,
-                        'name': False,
-                        'quantity': 1,
-                        #'price_unit': -90.45,
-                        'price_unit': -0,
-                        'discount': 0,
-                        #'debit': 90.45,
-                        'debit': 0,
-                        'credit': 0,
-                        'amount_currency': 0,
-                        #'date_maturity': '2020-09-17',
-                        'date_maturity':str(date.today()),
-                        'currency_id': False,
-                        #'partner_id': 273,
-                        'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
-                        'product_uom_id': False,
-                        'product_id': False,
-                        'payment_id': False,
-                        'tax_ids': [[6, False, []]],
-                        'tax_base_amount': 0,
-                        'tax_exigible': True,
-                        'tax_repartition_line_id': False,
-                        'tag_ids': [[6, False, []]],
-                        'analytic_account_id': False,
-                        'analytic_tag_ids': [[6, False, []]],
-                        'recompute_tax_line': False,
-                        'display_type': False,
-                        'is_rounding_line': False,
-                        'exclude_from_invoice_tab': True,
-                        'purchase_line_id': False,
-                        'predict_from_name': False,
-                        'predict_override_default_account': False,
-                        'l10n_mx_edi_customs_number': False,
-                        'l10n_mx_edi_qty_umt': 0
-                    }
-                ]
+            0, '',
+            {
+                'account_id': self.env['res.company'].browse(
+                    self.env.user.company_id.id).invoice_partner_id.property_account_receivable_id.id,
+                'sequence': 10,
+                'name': False,
+                'quantity': 1,
+                # 'price_unit': -90.45,
+                'price_unit': -0,
+                'discount': 0,
+                # 'debit': 90.45,
+                'debit': 0,
+                'credit': 0,
+                'amount_currency': 0,
+                # 'date_maturity': '2020-09-17',
+                'date_maturity': str(date.today()),
+                'currency_id': False,
+                # 'partner_id': 273,
+                'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
+                'product_uom_id': False,
+                'product_id': False,
+                'payment_id': False,
+                'tax_ids': [[6, False, []]],
+                'tax_base_amount': 0,
+                'tax_exigible': True,
+                'tax_repartition_line_id': False,
+                'tag_ids': [[6, False, []]],
+                'analytic_account_id': False,
+                'analytic_tag_ids': [[6, False, []]],
+                'recompute_tax_line': False,
+                'display_type': False,
+                'is_rounding_line': False,
+                'exclude_from_invoice_tab': True,
+                'purchase_line_id': False,
+                'predict_from_name': False,
+                'predict_override_default_account': False,
+                'l10n_mx_edi_customs_number': False,
+                'l10n_mx_edi_qty_umt': 0
+            }
+        ]
         return lineas.append(totals)
 
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         lineas = data_invoice['line_ids']
-        impuesto_def = self.env['account.tax'].search([('name','=',etiqueta_impuesto)])
+        impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         if impuesto_def:
-
             impuesto = [
                 0, '',
                 {
@@ -614,11 +611,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'sequence': 10,
                     'name': impuesto_def.name,
                     'quantity': 1,
-                    #'price_unit': 12.48,
+                    # 'price_unit': 12.48,
                     'price_unit': 0,
                     'discount': 0,
                     'debit': 0,
-                    #'credit': 12.48,
+                    # 'credit': 12.48,
                     'credit': 0,
                     'amount_currency': 0,
                     'date_maturity': False,
@@ -628,11 +625,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'product_id': False,
                     'payment_id': False,
                     'tax_ids': [[6, False, []]],
-                    #'tax_base_amount': 77.97,
+                    # 'tax_base_amount': 77.97,
                     'tax_base_amount': 77.97,
                     'tax_exigible': False,
                     'tax_repartition_line_id': 6,
-                    #'tag_ids': [[6, False, [938]]],
+                    # 'tag_ids': [[6, False, [938]]],
                     'analytic_account_id': False,
                     'analytic_tag_ids': [[6, False, []]],
                     'recompute_tax_line': False,
@@ -646,7 +643,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'l10n_mx_edi_qty_umt': 0,
                 }]
 
-        _logger.warning('SE AGREGO EL IMPUESTO'+str(lineas.append(impuesto)))
+        _logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
 
         return lineas
 
