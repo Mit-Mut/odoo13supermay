@@ -412,7 +412,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         orders = self.env['pos.order'].search(
             [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
-             ('amount_total', '>', 0), ('sucursal_id', '=', user_sucursal.id)])
+             ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
 
         self._add_invoice_lines(data_invoice, orders)
 
