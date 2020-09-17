@@ -237,7 +237,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         _logger.warning('FACTURA DE VARIOS PRODUCTOS')
         _logger.warning(str(Invoice))
 
-        #Invoice.compute_taxes()
+        # Invoice.compute_taxes()
 
         '''for tax_line in Invoice.tax_line_ids:
             tax_line.write({
@@ -245,7 +245,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             })'''
 
         # esta funcion valida la factura
-        #Invoice.action_invoice_open()
+        # Invoice.action_invoice_open()
 
         '''Invoice.write({
             'payment_ids': [(0, 0, {
@@ -274,9 +274,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             })
 
         # time.sleep(1)
-        #Invoice.action_invoice_open()
+        # Invoice.action_invoice_open()
         # time.sleep(5)
-        #Invoice.l10n_mx_edi_update_sat_status()
+        # Invoice.l10n_mx_edi_update_sat_status()
         # time.sleep(2)
         '''email_act = Invoice.action_invoice_sent()
 
@@ -285,7 +285,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             email_ctx.update(default_email_from=Invoice.company_id.email)
             Invoice.message_post_with_template(email_ctx.get('default_template_id'))'''
 
-        #return self.env.ref('account.account_invoices').report_action(Invoice)
+        # return self.env.ref('account.account_invoices').report_action(Invoice)
 
         '''return {
             'name': _('Customer Invoice'),
@@ -385,209 +385,209 @@ class GlobalInvoiceWizard(models.TransientModel):
             raise UserError('Existe mas de una cuenta analitica en los puntos de venta a facturar')
 
         data_invoice = {
-                'is_tax_closing': False,
-                'extract_state': 'no_extract_requested',
-                'l10n_mx_edi_payment_method_id': 22,
-                'l10n_mx_edi_usage': 'P01',
-                'invoice_date': False,
-                'date': '2020-09-17',
-                'journal_id': 15,
-                'currency_id': 33,
-                'invoice_user_id': 2,
-                'team_id': 1,
-                'invoice_incoterm_id': False,
-                'auto_post': False,
-                'to_check': False,
-                'tax_report_control_error': False,
-                'extract_status_code': 0,
-                'invoice_payment_state': 'not_paid',
-                'invoice_sequence_number_next': False,
-                'partner_id': 273,
-                'partner_shipping_id': 273,
-                'ref': False,
-                'l10n_mx_edi_partner_bank_id': False,
-                'invoice_vendor_bill_id': False,
-                'purchase_id': False,
-                'purchase_vendor_bill_id': False,
-                'invoice_payment_term_id': False,
-                'invoice_date_due': '2020-09-17',
-                'l10n_mx_edi_origin': False,
-                'narration': False,
-                'line_ids': [
-				    [
-					    0, 'virtual_4129',
-                        {
-                            'account_id': 23,
-                            'sequence': 10,
-                            'name': 'IVA(16%) VENTAS',
-                            'quantity': 1,
-                            'price_unit': 12.48,
-                            'discount': 0,
-                            'debit': 0,
-                            'credit': 12.48,
-                            'amount_currency': 0,
-                            'date_maturity': False,
-                            'currency_id': False,
-                            'partner_id': 273,
-                            'product_uom_id': False,
-                            'product_id': False,
-                            'payment_id': False,
-                            'tax_ids': [[6, False, []]],
-                            'tax_base_amount': 77.97,
-                            'tax_exigible': False,
-                            'tax_repartition_line_id': 6,
-                            'tag_ids': [[6, False, [938]]],
-                            'analytic_account_id': False,
-                            'analytic_tag_ids': [[6, False, []]],
-                            'recompute_tax_line': False,
-                            'display_type': False,
-                            'is_rounding_line': False,
-                            'exclude_from_invoice_tab': True,
-                            'purchase_line_id': False,
-                            'predict_from_name': False,
-                            'predict_override_default_account': False,
-                            'l10n_mx_edi_customs_number': False,
-                            'l10n_mx_edi_qty_umt': 0
-                        }
-				],
-				[
-					0, 'virtual_4140',
-					{
-						'account_id': 3,
-						'sequence': 10,
-						'name': False,
-						'quantity': 1,
-						'price_unit': -90.45,
-						'discount': 0,
-						'debit': 90.45,
-						'credit': 0,
-						'amount_currency': 0,
-						'date_maturity': '2020-09-17',
-						'currency_id': False,
-						'partner_id': 273,
-						'product_uom_id': False,
-						'product_id': False,
-						'payment_id': False,
-						'tax_ids': [[6, False, []]],
-						'tax_base_amount': 0,
-						'tax_exigible': True,
-						'tax_repartition_line_id': False,
-						'tag_ids': [[6, False, []]],
-						'analytic_account_id': False,
-						'analytic_tag_ids': [[6, False, []]],
-						'recompute_tax_line': False,
-						'display_type': False,
-						'is_rounding_line': False,
-						'exclude_from_invoice_tab': True,
-						'purchase_line_id': False,
-						'predict_from_name': False,
-						'predict_override_default_account': False,
-						'l10n_mx_edi_customs_number': False,
-						'l10n_mx_edi_qty_umt': 0
-					}
-				],
-				[
-					0, 'virtual_4102',
-					{
-						'account_id': 30,
-						'sequence': 10,
-						'name': '[012388000190] UTIL POLVO 1 KG',
-						'quantity': 1,
-						'price_unit': 25,
-						'discount': 0, 'debit': 0,
-						'credit': 21.55, 'amount_currency': 0,
-						'date_maturity': False,
-						'currency_id': False,
-						'partner_id': 273,
-						'product_uom_id': 1,
-						'product_id': 8381,
-						'payment_id': False,
-						'tax_ids': [[6, False, [2]]],
-						'tax_base_amount': 0,
-						'tax_exigible': False,
-						'tax_repartition_line_id': False,
-						'tag_ids': [[6, False, []]],
-						'analytic_account_id': False,
-						'analytic_tag_ids': [[6, False, []]],
-						'recompute_tax_line': False,
-						'display_type': False,
-						'is_rounding_line': False,
-						'exclude_from_invoice_tab': False,
-						'purchase_line_id': False,
-						'predict_from_name': False,
-						'predict_override_default_account': False,
-						'l10n_mx_edi_customs_number': False,
-						'l10n_mx_edi_qty_umt': 0}
-				],
-				[
-					0, 'virtual_4166',
-					{
-						'account_id': 30,
-						'sequence': 10,
-						'name': '[012388003481] LIRIO COCO ANTIBACT EXH/3 120 GR',
-						'quantity': 1,
-						'price_unit': 46.4,
-						'discount': 0,
-						'debit': 0,
-						'credit': 40,
-						'amount_currency': 0,
-						'date_maturity': False,
-						'currency_id': False,
-						'partner_id': 273,
-						'product_uom_id': 1,
-						'product_id': 8596,
-						'payment_id': False,
-						'tax_ids': [[6, False, [2]]],
-						'tax_base_amount': 0, 'tax_exigible': False,
-						'tax_repartition_line_id': False,
-						'tag_ids': [[6, False, []]],
-						'analytic_account_id': False,
-						'analytic_tag_ids': [[6, False, []]],
-						'recompute_tax_line': False,
-						'display_type': False,
-						'is_rounding_line': False,
-						'exclude_from_invoice_tab': False,
-						'purchase_line_id': False,
-						'predict_from_name': False,
-						'predict_override_default_account': False,
-						'l10n_mx_edi_customs_number': False,
-						'l10n_mx_edi_qty_umt': 0
-					}
-				],
-				[
-					0, 'virtual_4202',
-					{
-						'account_id': 30,
-						'sequence': 10,
-						'name': '[012388003290] BOLD 3 CARIÑITOS LIQ. 800 GR',
-						'quantity': 1,
-						'price_unit': 19.05,
-						'discount': 0,
-						'debit': 0,
-						'credit': 16.42,
-						'amount_currency': 0,
-						'date_maturity': False,
-						'currency_id': False,
-						'partner_id': 273,
-						'product_uom_id': 1,
-						'product_id': 8661,
-						'payment_id': False,
-						'tax_ids': [[6, False, [2]]],
-						'tax_base_amount': 0,
-						'tax_exigible': False,
-						'tax_repartition_line_id': False,
-						'tag_ids': [[6, False, []]],
-						'analytic_account_id': False,
-						'analytic_tag_ids': [[6, False, []]],
-						'recompute_tax_line': False,
-						'display_type': False,
-						'is_rounding_line': False,
-						'exclude_from_invoice_tab': False,
-						'purchase_line_id': False,
-						'predict_from_name': False,
-						'predict_override_default_account': False,
-						'l10n_mx_edi_customs_number': False,
-						'l10n_mx_edi_qty_umt': 0}
+            'is_tax_closing': False,
+            'extract_state': 'no_extract_requested',
+            'l10n_mx_edi_payment_method_id': 22,
+            'l10n_mx_edi_usage': 'P01',
+            'invoice_date': False,
+            'date': '2020-09-17',
+            'journal_id': 15,
+            'currency_id': 33,
+            'invoice_user_id': 2,
+            'team_id': 1,
+            'invoice_incoterm_id': False,
+            'auto_post': False,
+            'to_check': False,
+            'tax_report_control_error': False,
+            'extract_status_code': 0,
+            'invoice_payment_state': 'not_paid',
+            'invoice_sequence_number_next': False,
+            'partner_id': 273,
+            'partner_shipping_id': 273,
+            'ref': False,
+            'l10n_mx_edi_partner_bank_id': False,
+            'invoice_vendor_bill_id': False,
+            'purchase_id': False,
+            'purchase_vendor_bill_id': False,
+            'invoice_payment_term_id': False,
+            'invoice_date_due': '2020-09-17',
+            'l10n_mx_edi_origin': False,
+            'narration': False,
+            'line_ids': [
+                [
+                    0, '',
+                    {
+                        'account_id': 23,
+                        'sequence': 10,
+                        'name': 'IVA(16%) VENTAS',
+                        'quantity': 1,
+                        'price_unit': 12.48,
+                        'discount': 0,
+                        'debit': 0,
+                        'credit': 12.48,
+                        'amount_currency': 0,
+                        'date_maturity': False,
+                        'currency_id': False,
+                        'partner_id': 273,
+                        'product_uom_id': False,
+                        'product_id': False,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, []]],
+                        'tax_base_amount': 77.97,
+                        'tax_exigible': False,
+                        'tax_repartition_line_id': 6,
+                        'tag_ids': [[6, False, [938]]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': True,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0
+                    }
+                ],
+                [
+                    0, '',
+                    {
+                        'account_id': 3,
+                        'sequence': 10,
+                        'name': False,
+                        'quantity': 1,
+                        'price_unit': -90.45,
+                        'discount': 0,
+                        'debit': 90.45,
+                        'credit': 0,
+                        'amount_currency': 0,
+                        'date_maturity': '2020-09-17',
+                        'currency_id': False,
+                        'partner_id': 273,
+                        'product_uom_id': False,
+                        'product_id': False,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, []]],
+                        'tax_base_amount': 0,
+                        'tax_exigible': True,
+                        'tax_repartition_line_id': False,
+                        'tag_ids': [[6, False, []]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': True,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0
+                    }
+                ],
+                [
+                    0, '',
+                    {
+                        'account_id': 30,
+                        'sequence': 10,
+                        'name': '[012388000190] UTIL POLVO 1 KG',
+                        'quantity': 1,
+                        'price_unit': 25,
+                        'discount': 0, 'debit': 0,
+                        'credit': 21.55, 'amount_currency': 0,
+                        'date_maturity': False,
+                        'currency_id': False,
+                        'partner_id': 273,
+                        'product_uom_id': 1,
+                        'product_id': 8381,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, [2]]],
+                        'tax_base_amount': 0,
+                        'tax_exigible': False,
+                        'tax_repartition_line_id': False,
+                        'tag_ids': [[6, False, []]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': False,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0}
+                ],
+                [
+                    0, '',
+                    {
+                        'account_id': 30,
+                        'sequence': 10,
+                        'name': '[012388003481] LIRIO COCO ANTIBACT EXH/3 120 GR',
+                        'quantity': 1,
+                        'price_unit': 46.4,
+                        'discount': 0,
+                        'debit': 0,
+                        'credit': 40,
+                        'amount_currency': 0,
+                        'date_maturity': False,
+                        'currency_id': False,
+                        'partner_id': 273,
+                        'product_uom_id': 1,
+                        'product_id': 8596,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, [2]]],
+                        'tax_base_amount': 0, 'tax_exigible': False,
+                        'tax_repartition_line_id': False,
+                        'tag_ids': [[6, False, []]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': False,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0
+                    }
+                ],
+                [
+                    0, '',
+                    {
+                        'account_id': 30,
+                        'sequence': 10,
+                        'name': '[012388003290] BOLD 3 CARIÑITOS LIQ. 800 GR',
+                        'quantity': 1,
+                        'price_unit': 19.05,
+                        'discount': 0,
+                        'debit': 0,
+                        'credit': 16.42,
+                        'amount_currency': 0,
+                        'date_maturity': False,
+                        'currency_id': False,
+                        'partner_id': 273,
+                        'product_uom_id': 1,
+                        'product_id': 8661,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, [2]]],
+                        'tax_base_amount': 0,
+                        'tax_exigible': False,
+                        'tax_repartition_line_id': False,
+                        'tag_ids': [[6, False, []]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': False,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0}
                 ]],
             'invoice_origin': False,
             'fiscal_position_id': False,
@@ -600,12 +600,12 @@ class GlobalInvoiceWizard(models.TransientModel):
             'campaign_id': False,
             'medium_id': False,
             'source_id': False,
-            'l10n_mx_edi_external_trade': False, 
+            'l10n_mx_edi_external_trade': False,
             'l10n_mx_edi_cer_source': False,
             'message_main_attachment_id': False,
             'message_attachment_count': 0,
-            'message_follower_ids': [(0, 0, {'res_model': 'account.move', 'partner_id': 3, 'subtype_ids': [(6, 0, [1])]})]}
-
+            'message_follower_ids': [
+                (0, 0, {'res_model': 'account.move', 'partner_id': 3, 'subtype_ids': [(6, 0, [1])]})]}
 
         '''{'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
                         'l10n_mx_edi_payment_method_id': self.pay_method_id,
@@ -671,8 +671,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
 
-    def get_company(self):
-        return self.env.user.company_id.id
+
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
