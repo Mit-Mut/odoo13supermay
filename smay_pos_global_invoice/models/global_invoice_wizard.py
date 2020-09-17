@@ -610,7 +610,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
     def _get_info_tax(self, etiqueta_impuesto, data_invoice):
         _logger.warning('ETIQUETA DE TAX'+str(etiqueta_impuesto))
-        _logger.warning('ETIQUETAssssssssssss'+str(data_invoice[line_ids]))
+        _logger.warning('ETIQUETAssssssssssss'+str(data_invoice['line_ids']))
         impuesto = [
             0, '',
             {
