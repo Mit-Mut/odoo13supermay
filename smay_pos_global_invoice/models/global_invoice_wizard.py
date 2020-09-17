@@ -630,7 +630,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'tax_base_amount': 0,
                     'tax_exigible': False,
                     #'tax_repartition_line_id': 6,
-                    'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids),
+                    'tax_repartition_line_id': max(impuesto_def.invoice_repartition_line_ids).id,
                     # 'tag_ids': [[6, False, [938]]],
                     'analytic_account_id': False,
                     'analytic_tag_ids': [[6, False, []]],
