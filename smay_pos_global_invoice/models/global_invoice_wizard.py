@@ -505,7 +505,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                         price_unit_aux = abs(li[2]['price_unit'])
                         debit_aux = li[2]['debit']
                         li[2]['price_unit'] =  - (price_unit_aux + amount_total)
-                        li[2]['debit'] = debit_aux + subtotal
+                        li[2]['debit'] = debit_aux + amount_total
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
