@@ -464,7 +464,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'partner_id': self.env['res.company'].browse(
                         self.env.user.company_id.id).invoice_partner_id.id,
                     'product_uom_id': 1,
-                    'product_id': 8381,
+                    'product_id': self.env['res.company'].browse(
+                        self.env.user.company_id.id).invoice_product_id.id,
                     'payment_id': False,
                     'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
                     'tax_base_amount': 0,
