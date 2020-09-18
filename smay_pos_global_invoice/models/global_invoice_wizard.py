@@ -424,6 +424,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
 
         _logger.warning('GRP1111')
+        _logger.warning(str(orders))
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
