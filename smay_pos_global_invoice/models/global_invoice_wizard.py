@@ -424,78 +424,81 @@ class GlobalInvoiceWizard(models.TransientModel):
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
         for order in orders:
             order_taxes = {}
+
+            if order.state == 'invoiced' or order.amount_total <= 0:
+                continue
+
             for orderline in order.lines:
 
                 for tax in orderline.tax_ids:
                     order_taxes[int(tax.amount)] = tax.id
 
-            if order.state == 'invoiced' or order.amount_total <= 0:
-                continue
 
-            for order_tax in order_taxes:
-                description = order.pos_reference + '_' + str(order_tax)
-                amount_total = 0
-                subtotal = 0
-                for orderline_2 in order.lines:
-                    if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
-                        amount_total += orderline_2.price_subtotal_incl
-                        subtotal += orderline_2.price_subtotal
 
-                    if amount_total == 0:
-                        continue
+                for order_tax in order_taxes:
+                    description = order.pos_reference + '_' + str(order_tax)
+                    amount_total = 0
+                    subtotal = 0
+                    for orderline_2 in order.lines:
+                        if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
+                            amount_total += orderline_2.price_subtotal_incl
+                            subtotal += orderline_2.price_subtotal
 
-                # aqui debo de guardar cada linea de factura
+                        if amount_total == 0:
+                            continue
 
-                line = []
-                line.append(0)
-                line.append('')
-                line.append({
-                    'account_id': account_id,
-                    'sequence': 10,
-                    'name': description,
-                    'quantity': 1,
-                    'price_unit': amount_total,
-                    'discount': 0,
-                    'debit': 0,
-                    'credit': subtotal,
-                    'amount_currency': 0,
-                    'date_maturity': False,
-                    'currency_id': False,
-                    'partner_id': self.env['res.company'].browse(
-                        self.env.user.company_id.id).invoice_partner_id.id,
-                    'product_uom_id': 1,
-                    'product_id': self.env['res.company'].browse(
-                        self.env.user.company_id.id).invoice_product_id.id,
-                    'payment_id': False,
-                    'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
-                    'tax_base_amount': 0,
-                    'tax_exigible': False,
-                    'tax_repartition_line_id': False,
-                    'tag_ids': [[6, False, []]],
-                    'analytic_account_id': False,
-                    'analytic_tag_ids': [[6, False, []]],
-                    'recompute_tax_line': False,
-                    'display_type': False,
-                    'is_rounding_line': False,
-                    'exclude_from_invoice_tab': False,
-                    'purchase_line_id': False,
-                    'predict_from_name': False,
-                    'predict_override_default_account': False,
-                    'l10n_mx_edi_customs_number': False,
-                    'l10n_mx_edi_qty_umt': 0
-                })
+                    # aqui debo de guardar cada linea de factura
 
-                for li in data_invoice['line_ids']:
-                    _logger.warning('LINEASSSSSSS')
-                    _logger.warning(str(li[2]))
-                    if li[2]['name'] == False:
-                        price_unit_aux = li[2]['price_unit']
-                        debit_aux = li[2]['debit']
-                        li[2]['price_unit'] = price_unit_aux - amount_total
-                        li[2]['debit'] = debit_aux + subtotal
+                    line = []
+                    line.append(0)
+                    line.append('')
+                    line.append({
+                        'account_id': account_id,
+                        'sequence': 10,
+                        'name': description,
+                        'quantity': 1,
+                        'price_unit': amount_total,
+                        'discount': 0,
+                        'debit': 0,
+                        'credit': subtotal,
+                        'amount_currency': 0,
+                        'date_maturity': False,
+                        'currency_id': False,
+                        'partner_id': self.env['res.company'].browse(
+                            self.env.user.company_id.id).invoice_partner_id.id,
+                        'product_uom_id': 1,
+                        'product_id': self.env['res.company'].browse(
+                            self.env.user.company_id.id).invoice_product_id.id,
+                        'payment_id': False,
+                        'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
+                        'tax_base_amount': 0,
+                        'tax_exigible': False,
+                        'tax_repartition_line_id': False,
+                        'tag_ids': [[6, False, []]],
+                        'analytic_account_id': False,
+                        'analytic_tag_ids': [[6, False, []]],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': False,
+                        'purchase_line_id': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'l10n_mx_edi_customs_number': False,
+                        'l10n_mx_edi_qty_umt': 0
+                    })
 
-                lines = data_invoice['line_ids']
-                lines.append(line)
+                    for li in data_invoice['line_ids']:
+                        _logger.warning('LINEASSSSSSS')
+                        _logger.warning(str(li[2]))
+                        if li[2]['name'] == False:
+                            price_unit_aux = li[2]['price_unit']
+                            debit_aux = li[2]['debit']
+                            li[2]['price_unit'] = price_unit_aux - amount_total
+                            li[2]['debit'] = debit_aux + subtotal
+
+                    lines = data_invoice['line_ids']
+                    lines.append(line)
 
             _logger.warning(data_invoice)
 
