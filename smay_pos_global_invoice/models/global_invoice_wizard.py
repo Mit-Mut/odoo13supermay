@@ -446,7 +446,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
                 # aqui debo de guardar cada linea de factura
 
-                line = [
+                line = (
                            0, '',
                            {
                                'account_id': account_id,
@@ -461,7 +461,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                'date_maturity': False,
                                'currency_id': False,
                                'partner_id': self.env['res.company'].browse(
-                                   self.env.user.company_id.id).invoice_partner_id.property_account_receivable_id.id,
+                                   self.env.user.company_id.id).invoice_partner_id.id,
                                'product_uom_id': 1,
                                'product_id': 8381,
                                'payment_id': False,
@@ -482,7 +482,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                'l10n_mx_edi_customs_number': False,
                                'l10n_mx_edi_qty_umt': 0
                            }
-                       ],
+                       ),
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
