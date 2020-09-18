@@ -503,6 +503,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                         debit_aux = li[2]['debit']
                         li[2]['price_unit'] = - (price_unit_aux + amount_total)
                         li[2]['debit'] = debit_aux + amount_total
+                        break
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 _logger.warning('IMPUESTO' + str(order_taxes.get(order_tax)))
