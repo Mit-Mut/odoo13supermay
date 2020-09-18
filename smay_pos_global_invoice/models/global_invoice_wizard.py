@@ -441,20 +441,20 @@ class GlobalInvoiceWizard(models.TransientModel):
 
 
 
-                for order_tax in order_taxes:
-                    _logger.warning('GRP4444')
-                    description = order.pos_reference + '_' + str(order_tax)
-                    amount_total = 0
-                    subtotal = 0
-                    for orderline_2 in order.lines:
-                        if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
-                            amount_total += orderline_2.price_subtotal_incl
-                            subtotal += orderline_2.price_subtotal
+            for order_tax in order_taxes:
+                _logger.warning('GRP4444')
+                description = order.pos_reference + '_' + str(order_tax)
+                amount_total = 0
+                subtotal = 0
+                for orderline_2 in order.lines:
+                    if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
+                        amount_total += orderline_2.price_subtotal_incl
+                        subtotal += orderline_2.price_subtotal
 
-                        if amount_total == 0:
-                            continue
+                    if amount_total == 0:
+                        continue
 
-                    # aqui debo de guardar cada linea de factura
+                # aqui debo de guardar cada linea de factura
 
 
                     _logger.warning('GRP5555')
