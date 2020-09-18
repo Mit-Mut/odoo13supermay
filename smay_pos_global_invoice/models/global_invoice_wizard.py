@@ -485,11 +485,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                 })
 
                 for li in data_invoice['line_ids']:
-                    if li.name == False:
+                    if li[2].name == False:
                         price_unit_aux = line.price_unit
                         debit_aux = line.debit
-                        li['price_unit'] = price_unit_aux - amount_total
-                        li['debit'] = debit_aux + subtotal
+                        li[2]['price_unit'] = price_unit_aux - amount_total
+                        li[2]['debit'] = debit_aux + subtotal
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
