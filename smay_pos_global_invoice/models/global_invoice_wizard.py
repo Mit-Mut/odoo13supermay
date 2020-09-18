@@ -441,8 +441,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                         amount_total += orderline_2.price_subtotal_incl
                         subtotal += orderline_2.price_subtotal
 
-                if amount_total == 0:
-                    continue
+                    if amount_total == 0:
+                        continue
 
                 # aqui debo de guardar cada linea de factura
 
