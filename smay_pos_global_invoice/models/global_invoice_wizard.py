@@ -422,13 +422,18 @@ class GlobalInvoiceWizard(models.TransientModel):
     def _add_invoice_lines(self, data_invoice, orders):
         account_id = self.env['account.account'].search(
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
+
+        _logger.warning('GRP1111')
         for order in orders:
             order_taxes = {}
+            _logger.warning('GRP222')
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
 
             for orderline in order.lines:
+
+                _logger.warning('GRP333')
 
                 for tax in orderline.tax_ids:
                     order_taxes[int(tax.amount)] = tax.id
@@ -436,6 +441,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
 
                 for order_tax in order_taxes:
+                    _logger.warning('GRP4444')
                     description = order.pos_reference + '_' + str(order_tax)
                     amount_total = 0
                     subtotal = 0
@@ -448,6 +454,9 @@ class GlobalInvoiceWizard(models.TransientModel):
                             continue
 
                     # aqui debo de guardar cada linea de factura
+
+
+                    _logger.warning('GRP5555')
 
                     line = []
                     line.append(0)
