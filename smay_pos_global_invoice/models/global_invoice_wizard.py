@@ -451,18 +451,18 @@ class GlobalInvoiceWizard(models.TransientModel):
                         amount_total += orderline_2.price_subtotal_incl
                         subtotal += orderline_2.price_subtotal
 
-                    if amount_total == 0:
-                        continue
+                if amount_total == 0:
+                    continue
 
                 # aqui debo de guardar cada linea de factura
 
 
-                    _logger.warning('GRP5555')
+                _logger.warning('GRP5555')
 
-                    line = []
-                    line.append(0)
-                    line.append('')
-                    line.append({
+                line = []
+                line.append(0)
+                line.append('')
+                line.append({
                         'account_id': account_id,
                         'sequence': 10,
                         'name': description,
@@ -498,17 +498,17 @@ class GlobalInvoiceWizard(models.TransientModel):
                         'l10n_mx_edi_qty_umt': 0
                     })
 
-                    for li in data_invoice['line_ids']:
-                        _logger.warning('LINEASSSSSSS')
-                        _logger.warning(str(li[2]))
-                        if li[2]['name'] == False:
-                            price_unit_aux = li[2]['price_unit']
-                            debit_aux = li[2]['debit']
-                            li[2]['price_unit'] = price_unit_aux - amount_total
-                            li[2]['debit'] = debit_aux + subtotal
+                for li in data_invoice['line_ids']:
+                    _logger.warning('LINEASSSSSSS')
+                    _logger.warning(str(li[2]))
+                    if li[2]['name'] == False:
+                        price_unit_aux = li[2]['price_unit']
+                        debit_aux = li[2]['debit']
+                        li[2]['price_unit'] = price_unit_aux - amount_total
+                        li[2]['debit'] = debit_aux + subtotal
 
-                    lines = data_invoice['line_ids']
-                    lines.append(line)
+                lines = data_invoice['line_ids']
+                lines.append(line)
 
             _logger.warning(data_invoice)
 
