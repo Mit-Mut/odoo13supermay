@@ -507,10 +507,20 @@ class GlobalInvoiceWizard(models.TransientModel):
                         li[2]['price_unit'] =  - (price_unit_aux + amount_total)
                         li[2]['debit'] = debit_aux + amount_total
 
+                impuesto = self.env['account_tax'].browse(order_taxes.get(order_tax))
+                if impuesto.analytic == 'Tasa' and impuesto.amount > 0:
+                    for li in data_invoice['line_ids']:
+                        if li[2]['name'] == impuesto.name:
+                            _logger.warning('LINEA DE IMPUESTOS'+str(li))
+
+
+
+
+
                 lines = data_invoice['line_ids']
                 lines.append(line)
 
-            _logger.warning(data_invoice)
+            #_logger.warning(data_invoice)
 
     def _get_line_totals(self, data_invoice):
 
