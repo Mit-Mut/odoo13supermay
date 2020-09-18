@@ -421,7 +421,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
     def _add_invoice_lines(self, data_invoice, orders):
         account_id = self.env['account.account'].search(
-            [('name', '=', '401.01.01 Ventas y/o servicios gravados a la tasa general')]).id
+            [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
         for order in orders:
             order_taxes = {}
             for orderline in order.lines:
