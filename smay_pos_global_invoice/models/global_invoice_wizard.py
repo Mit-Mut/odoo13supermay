@@ -513,10 +513,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                         if li[2]['name'] == impuesto.name:
                             _logger.warning('LINEA DE IMPUESTOS'+str(li))
 
-
-
-
-
                 lines = data_invoice['line_ids']
                 lines.append(line)
 
