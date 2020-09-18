@@ -506,7 +506,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 _logger.warning('IMPUESTO' + str(order_taxes.get(order_tax)))
-                if impuesto.analytic == 'Tasa' and impuesto.amount > 0:
+                if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
                             _logger.warning('LINEA DE IMPUESTOS' + str(li))
