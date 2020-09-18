@@ -502,9 +502,9 @@ class GlobalInvoiceWizard(models.TransientModel):
                     _logger.warning('LINEASSSSSSS')
                     _logger.warning(str(li[2]))
                     if li[2]['name'] == False:
-                        price_unit_aux = li[2]['price_unit']
+                        price_unit_aux = abs(li[2]['price_unit'])
                         debit_aux = li[2]['debit']
-                        li[2]['price_unit'] = price_unit_aux - amount_total
+                        li[2]['price_unit'] =  - (price_unit_aux + amount_total)
                         li[2]['debit'] = debit_aux + subtotal
 
                 lines = data_invoice['line_ids']
