@@ -17,7 +17,7 @@ class smayAccountMoveReversal(models.Model):
     _inherit = 'account.move'
 
     def _reverse_movesSmay(self, order_to_refund, default_values_list=None, cancel=False):
-        if not default_values_list:
+        '''if not default_values_list:
             default_values_list = [{} for move in self]
 
         if cancel:
@@ -41,9 +41,15 @@ class smayAccountMoveReversal(models.Model):
             default_values.update({
                 'type': reverse_type_map[move.type],
                 'reversed_entry_id': move.id,
-            })
+            })'''
 
-        move_vals_list.append(move._reverse_move_vals(default_values, cancel=cancel))
+        move_vals_list = []
+
+        move_vals_list.append(move._reverse_move_vals(default_values_list, cancel=cancel))
+
+        _logger.warning('SALIDA CON ARREGLO')
+        _logger.warning(str(move_vals_list))
+
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
@@ -343,13 +349,15 @@ class SmayRefundPosOrder(models.Model):
 
             refund_order_id = order.pos_refund(order_to_refund)
 
-            '''if order.account_move:
+            if order.account_move:
                 invoice_order = self.env['account.move'].browse(order.account_move.id)
                 refund_order = self.env['pos.order'].browse(refund_order_id)
 
                 ref = {
                     'journal_id': invoice_order.journal_id.id,
                     'ref': ('Nota de Credito: %s') % (invoice_order.name),
+                    'type': 'out_refund',
+                    'reversed_entry_id': invoice_order.id,
                 }
 
                 #GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
@@ -379,7 +387,7 @@ class SmayRefundPosOrder(models.Model):
                 if email_act and email_act.get('context'):
                     email_ctx = email_act['context']
                     email_ctx.update(default_email_from=refund_invoice_order.company_id.email)
-                    refund_invoice_order.message_post_with_template(email_ctx.get('default_template_id'))'''
+                    refund_invoice_order.message_post_with_template(email_ctx.get('default_template_id'))
 
             return refund_order_id
         return -1
