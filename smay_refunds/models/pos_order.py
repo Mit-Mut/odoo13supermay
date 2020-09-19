@@ -16,8 +16,8 @@ class SmayRefundPosConfig(models.Model):
 class smayAccountMoveReversal(models.Model):
     _inherit = 'account.move'
 
-    def _reverse_movesSmay(self, order_to_refund, default_values_list=None, cancel=False):
-        move = self.env['pos.order'].browse(order_to_refund).account_move
+    def _reverse_movesSmay(self, order_to_refund,move_id, default_values_list=None, cancel=False):
+        move = self.env['pos.order'].browse(move_id).account_move
         _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
         _logger.warning(move)
         '''if not default_values_list:
@@ -364,7 +364,7 @@ class SmayRefundPosOrder(models.Model):
                 }
 
                 #GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
-                factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id, [ref], cancel=False, )
+                factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id,invoice_order.id, [ref], cancel=False, )
 
 
 
