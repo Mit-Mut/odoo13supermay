@@ -416,19 +416,19 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         self._add_invoice_lines(data_invoice, orders)
 
-        #_logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
+        # _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
 
     def _add_invoice_lines(self, data_invoice, orders):
         account_id = self.env['account.account'].search(
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
 
-        #_logger.warning('GRP1111')
-        #_logger.warning(str(orders))
+        # _logger.warning('GRP1111')
+        # _logger.warning(str(orders))
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
-            _logger.warning('ID'+str(order.id)+ '   TOTAL'+str(order.amount_total))
+            _logger.warning('ID' + str(order.id) + '   TOTAL' + str(order.amount_total))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
@@ -494,18 +494,18 @@ class GlobalInvoiceWizard(models.TransientModel):
                 })
 
                 for li in data_invoice['line_ids']:
-                    _logger.warning('LINEASSSSSSS')
+                    # _logger.warning('LINEASSSSSSS')
 
                     if li[2]['name'] == False:
                         price_unit_aux = abs(li[2]['price_unit'])
                         debit_aux = li[2]['debit']
                         li[2]['price_unit'] = - (price_unit_aux + amount_total)
                         li[2]['debit'] = debit_aux + amount_total
-                        _logger.warning('LINEA DE TOTALES')
-                        _logger.warning(str(li[2]))
+                        # _logger.warning('LINEA DE TOTALES')
+                        # _logger.warning(str(li[2]))
                         break
-                    _logger.warning('No encontro la linea de totales')
-                    _logger.warning(str(li[2]))
+                    # _logger.warning('No encontro la linea de totales')
+                    # _logger.warning(str(li[2]))
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 _logger.warning('IMPUESTO' + str(order_taxes.get(order_tax)))
