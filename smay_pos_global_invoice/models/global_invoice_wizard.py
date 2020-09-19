@@ -537,7 +537,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         ##aqui borro los impuestos que no son usados
         for line in data_invoice['line_ids']:
             if line[2]['name'] != False and line[2]['product_id'] == False and line[2]['credit']:
-                data_invoice['line_ids'].pop(line)
+                data_invoice['line_ids'].remove(line)
 
             # _logger.warning(data_invoice)
 
