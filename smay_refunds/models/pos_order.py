@@ -18,6 +18,8 @@ class smayAccountMoveReversal(models.Model):
 
     def _reverse_movesSmay(self, order_to_refund, default_values_list=None, cancel=False):
         move = self.env['pos.order'].browse(order_to_refund).account_move
+        _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
+        _logger.warning(move)
         '''if not default_values_list:
             default_values_list = [{} for move in self]
 
