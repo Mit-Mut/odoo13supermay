@@ -406,8 +406,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                 sucursal_ids[0]).name,
         }
 
-        #data_invoice['line_ids'].append(self._get_info_tax('IVA(16%) VENTAS', data_invoice))
-        #data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
+        # data_invoice['line_ids'].append(self._get_info_tax('IVA(16%) VENTAS', data_invoice))
+        # data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
 
         for impuesto in self.env['account.tax'].search(
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
@@ -415,8 +415,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             if impuesto.cash_basis_transition_account_id:
                 data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
 
-        #_logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
-
+        # _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
 
         data_invoice['line_ids'].append(self._get_line_totals(data_invoice))
 
@@ -438,7 +437,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
-            _logger.warning('ID' + str(order.id) + '   TOTAL' + str(order.amount_total)+ 'REFERNCE'+str(order.pos_reference))
+            _logger.warning(
+                'ID' + str(order.id) + '   TOTAL' + str(order.amount_total) + 'REFERNCE' + str(order.pos_reference))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
@@ -448,7 +448,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     order_taxes[int(tax.amount)] = tax.id
 
             for order_tax in order_taxes:
-                #_logger.warning('GRP4444')
+                # _logger.warning('GRP4444')
                 description = order.pos_reference + '_' + str(order_tax)
                 amount_total = 0
                 subtotal = 0
@@ -518,8 +518,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                     # _logger.warning(str(li[2]))
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
-                _logger.warning('DESDEDEDEDEDED'+str(description))
-                _logger.warning('IMPUESTO: ' + str(order_taxes.get(order_tax))+ ' NAME : '+str(impuesto.name))
+                _logger.warning('DESDEDEDEDEDED' + str(description))
+                _logger.warning('IMPUESTO: ' + str(order_taxes.get(order_tax)) + ' NAME : ' + str(impuesto.name))
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
@@ -527,16 +527,16 @@ class GlobalInvoiceWizard(models.TransientModel):
                             aux_price_unit = li[2]['price_unit']
                             aux_tax_base_amount = li[2]['tax_base_amount']
 
-                            li[2]['credit']= aux_credit+(amount_total-subtotal)
-                            li[2]['price_unit']= aux_price_unit+(amount_total-subtotal)
-                            li[2]['tax_base_amount']= aux_tax_base_amount+subtotal
+                            li[2]['credit'] = aux_credit + (amount_total - subtotal)
+                            li[2]['price_unit'] = aux_price_unit + (amount_total - subtotal)
+                            li[2]['tax_base_amount'] = aux_tax_base_amount + subtotal
                             _logger.warning('LINEA DE IMPUESTOS' + str(li))
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
         ##aqui borro los impuestos que no son usados
         for line in data_invoice['line_ids']:
-            if line['name'] != False and line['product_id'] == False and line['credit']:
+            if line[2]['name'] != False and line[2]['product_id'] == False and line[2]['credit']:
                 data_invoice['line_ids'].pop(line)
 
             # _logger.warning(data_invoice)
