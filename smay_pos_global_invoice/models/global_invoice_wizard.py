@@ -412,7 +412,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         for impuesto in self.env['account.tax'].search(
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
                  ('amount', '>', 0)]):
-            data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
+            if impuesto.cash_basis_transition_account_id:
+                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
 
         _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
 
