@@ -362,10 +362,12 @@ class SmayRefundPosOrder(models.Model):
                     'type': 'out_refund',
                     'reversed_entry_id': invoice_order.id,
                 }
-                return
+                
 
                 #GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
                 factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id,invoice_order.id, [ref], cancel=False, )
+
+                return refund_order_id
 
 
 
