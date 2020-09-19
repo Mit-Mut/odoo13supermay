@@ -313,7 +313,7 @@ class SmayRefundPosOrder(models.Model):
         return -1
 
     # se hizo esta funcion para la nota de credito pero no funciono, esta pendiente
-    @api.model
+    '''@api.model
     def limpia_factura(self, order_id):
         # return True
         nota_credito = self.env['pos.order'].browse(order_id).account_move
@@ -328,7 +328,7 @@ class SmayRefundPosOrder(models.Model):
             })
         # nota_credito._compute_amount()
         # nota_credito.action_post()
-        return True
+        return True'''
 
     @api.model
     def get_data_order(self, pos_reference, order_to_refund):
@@ -362,6 +362,7 @@ class SmayRefundPosOrder(models.Model):
                     'type': 'out_refund',
                     'reversed_entry_id': invoice_order.id,
                 }
+                return
 
                 #GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
                 factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id,invoice_order.id, [ref], cancel=False, )
