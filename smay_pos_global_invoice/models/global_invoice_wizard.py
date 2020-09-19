@@ -410,7 +410,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         #data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
 
         for impuesto in self.env['account.tax'].search(
-                [('cash_basis_transition_account_id', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
+                [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
                  ('amount', '>', 0)]):
             data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
 
