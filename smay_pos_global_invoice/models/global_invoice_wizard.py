@@ -415,7 +415,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             if impuesto.cash_basis_transition_account_id:
                 data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
 
-        _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
+        #_logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
 
 
         data_invoice['line_ids'].append(self._get_line_totals(data_invoice))
@@ -438,7 +438,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
-            _logger.warning('ID' + str(order.id) + '   TOTAL' + str(order.amount_total))
+            _logger.warning('ID' + str(order.id) + '   TOTAL' + str(order.amount_total)+ 'REFERNCE'+str(order.pos_reference))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
@@ -448,7 +448,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     order_taxes[int(tax.amount)] = tax.id
 
             for order_tax in order_taxes:
-                _logger.warning('GRP4444')
+                #_logger.warning('GRP4444')
                 description = order.pos_reference + '_' + str(order_tax)
                 amount_total = 0
                 subtotal = 0
