@@ -54,7 +54,7 @@ class smayAccountMoveReversal(models.Model):
         _logger.warning(str(move_vals_list))
 
 
-        reverse_moves = self.env['account.move'].create(move_vals_list)
+        '''reverse_moves = self.env['account.move'].create(move_vals_list)
 
         # I modify credits and debits for I can delete records
 
@@ -71,7 +71,7 @@ class smayAccountMoveReversal(models.Model):
                 continue
             if line.product_id:
                 product_line_ids[line.product_id.id] = line.id
-                continue
+                continue'''
 
         # I obtain the ID of taxes
         '''tax_line_ids = {}
@@ -85,7 +85,7 @@ class smayAccountMoveReversal(models.Model):
             if line.product_id:
                 product_line_ids[line.product_id.id] = line.id'''
 
-        refund_order = self.env['pos.order'].browse(order_to_refund)
+        '''refund_order = self.env['pos.order'].browse(order_to_refund)
 
         _logger.warning('LOS IDASSSS A TRABAJAR')
         _logger.warning('TACES' + str(tax_line_ids))
@@ -224,7 +224,7 @@ class smayAccountMoveReversal(models.Model):
                         .filtered(lambda line: line.account_id == account and line.balance) \
                         .reconcile()
 
-        return reverse_moves
+        return reverse_moves'''
 
 
 class SmayRefundPosOrder(models.Model):
