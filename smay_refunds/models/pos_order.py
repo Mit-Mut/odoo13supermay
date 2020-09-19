@@ -323,6 +323,8 @@ class SmayRefundPosOrder(models.Model):
 
     @api.model
     def get_data_order(self, pos_reference, order_to_refund):
+        _logger.warning('DEVOLUCIONAAAAAAAAA')
+        _logger.warning(str(order_to_refund))
         order = self.search(
             [('pos_reference', '=', pos_reference),  # ('is_refund', '=', False),
              ('amount_total', '>', '0')], limit=1, order="id asc")

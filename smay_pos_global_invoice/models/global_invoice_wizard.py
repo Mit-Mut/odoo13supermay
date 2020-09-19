@@ -8,26 +8,13 @@ import logging, time
 
 _logger = logging.getLogger(__name__)
 
-
-class herenciasMOVE(models.Model):
+'''class herenciasMOVE(models.Model):
     _inherit = 'account.move'
 
     @api.model
     def create(self, vals):
         res = super(herenciasMOVE, self).create(vals)
         _logger.warning('CREATEEEEEEEEEEEEEE FCTURA')
-        _logger.warning(str(res))
-        _logger.warning(str(vals))
-        return res
-
-
-class herenciasMOVEline(models.Model):
-    _inherit = 'account.move.line'
-
-    '''@api.model
-    def create(self, vals):
-        res = super(herenciasMOVEline, self).create(vals)
-        _logger.warning('CREATEEEEEEEEEEEEEE_LINEEEEEEEEEEEEE')
         _logger.warning(str(res))
         _logger.warning(str(vals))
         return res'''
@@ -166,7 +153,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                                                               ('config_id.sucursal_id.id', '=',
                                                                                user_sucursal.id)])
 
-        _logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
+        #_logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
 
         if sessions_not_invoicing_credit_notes:
             message = 'No se han realizado las notas de credito de las siguientes sesiones:\n'
