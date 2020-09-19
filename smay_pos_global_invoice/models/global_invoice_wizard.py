@@ -523,6 +523,13 @@ class GlobalInvoiceWizard(models.TransientModel):
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
+                            aux_credit = li[2]['credit']
+                            aux_price_unit = li[2]['price_unit']
+                            aux_tax_base_amount = li[2]['tax_base_amount']
+
+                            li[2]['credit']= aux_credit+(li[2]['price_unit']-li[2]['credit'])
+                            li[2]['price_unit']= aux_price_unit+(li[2]['price_unit']-li[2]['credit'])
+                            li[2]['base_amount']= aux_tax_base_amount+([2]['credit'])
                             _logger.warning('LINEA DE IMPUESTOS' + str(li))
 
                 lines = data_invoice['line_ids']
