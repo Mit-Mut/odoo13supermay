@@ -416,26 +416,24 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         self._add_invoice_lines(data_invoice, orders)
 
-        _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
+        #_logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
 
     def _add_invoice_lines(self, data_invoice, orders):
         account_id = self.env['account.account'].search(
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
 
-        _logger.warning('GRP1111')
-        _logger.warning(str(orders))
+        #_logger.warning('GRP1111')
+        #_logger.warning(str(orders))
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
+            _logger.warning('ID'+str(order.id)+ '   TOTAL'+str(amount_total))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
 
             for orderline in order.lines:
-
-                _logger.warning('GRP333')
-
                 for tax in orderline.tax_ids:
                     order_taxes[int(tax.amount)] = tax.id
 
@@ -497,13 +495,17 @@ class GlobalInvoiceWizard(models.TransientModel):
 
                 for li in data_invoice['line_ids']:
                     _logger.warning('LINEASSSSSSS')
-                    _logger.warning(str(li[2]))
+
                     if li[2]['name'] == False:
                         price_unit_aux = abs(li[2]['price_unit'])
                         debit_aux = li[2]['debit']
                         li[2]['price_unit'] = - (price_unit_aux + amount_total)
                         li[2]['debit'] = debit_aux + amount_total
+                        _logger.warning('LINEA DE TOTALES')
+                        _logger.warning(str(li[2]))
                         break
+                    _logger.warning('No encontro la linea de totales')
+                    _logger.warning(str(li[2]))
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 _logger.warning('IMPUESTO' + str(order_taxes.get(order_tax)))
@@ -946,14 +948,11 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
     def get_date(self, label):
 
         default_datetime = ''
-        _logger.warning('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
 
         if label == 'START':
             default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
         if label == 'END':
             default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
-
-        _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG' + default_datetime)
 
         if default_datetime != '':
             local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
