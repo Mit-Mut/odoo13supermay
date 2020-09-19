@@ -529,7 +529,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
                             li[2]['credit']= aux_credit+(li[2]['price_unit']-li[2]['credit'])
                             li[2]['price_unit']= aux_price_unit+(li[2]['price_unit']-li[2]['credit'])
-                            li[2]['base_amount']= aux_tax_base_amount+([2]['credit'])
+                            li[2]['base_amount']= aux_tax_base_amount+(li[2]['credit'])
                             _logger.warning('LINEA DE IMPUESTOS' + str(li))
 
                 lines = data_invoice['line_ids']
