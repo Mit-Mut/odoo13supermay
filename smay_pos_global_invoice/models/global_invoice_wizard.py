@@ -428,7 +428,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for order in orders:
             order_taxes = {}
             _logger.warning('GRP222')
-            _logger.warning('ID'+str(order.id)+ '   TOTAL'+str(amount_total))
+            _logger.warning('ID'+str(order.id)+ '   TOTAL'+str(order.amount_total))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
