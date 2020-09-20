@@ -60,6 +60,8 @@ class smayAccountMoveReversal(models.Model):
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id']==line_order.product_id:
                     line[2]['quantity']= line_order.qty
+                    _logger.warning('ENTROOOOOO')
+                    _logger.warning(str(line[2]))
                     break
 
 
