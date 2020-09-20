@@ -55,8 +55,8 @@ class smayAccountMoveReversal(models.Model):
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id']:
                 line[2]['debit']= line[2]['debit']/line[2]['quantity']
-                line[2]['price_subtotal']= line[2]['price_subtotal']/line[2]['price_subtotal']
-                line[2]['price_total']= line[2]['price_total']/line[2]['price_total']
+                line[2]['price_subtotal']= line[2]['price_subtotal']/line[2]['quantity']
+                line[2]['price_total']= line[2]['price_total']/line[2]['quantity']
                 line[2]['quantity']=0
 
 
