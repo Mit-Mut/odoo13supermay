@@ -53,6 +53,7 @@ class smayAccountMoveReversal(models.Model):
 
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
+            line[2]['quantity']=13
             _logger.warning('lineeeeeeee:'+str(line))
 
 
