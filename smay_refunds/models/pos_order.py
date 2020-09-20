@@ -48,7 +48,7 @@ class smayAccountMoveReversal(models.Model):
 
         move_vals_list = []
 
-        move_vals_list.append(move._reverse_move_vals(default_values_list, cancel))
+        move_vals_list.append(move._reverse_move_vals([], False))
 
         _logger.warning('SALIDA CON ARREGLO')
         _logger.warning(str(move_vals_list))
