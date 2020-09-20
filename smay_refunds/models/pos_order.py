@@ -63,6 +63,12 @@ class smayAccountMoveReversal(models.Model):
             if not line[2]['product_id'] and line[2]['name']:
                 line[2]['quantity'] = 0
 
+            if not line[2]['product_id'] and not line[2]['name']:
+                line[2]['price_unit'] = 0
+                line[2]['credit'] = 0
+                line[2]['price_subtotal'] = 0
+                line[2]['price_total'] = 0
+
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id'] == line_order.product_id.id:
@@ -72,6 +78,20 @@ class smayAccountMoveReversal(models.Model):
                     line[2]['price_total'] = line[2]['price_total'] * abs(line_order.qty)
                     tax_id = line[2]['tax_ids'][0][2][0]
                     tax = self.env['account.tax'].browse(tax_id)
+                    if tax.amount > 0:
+                        for line2 in move_vals_list[0]['line_ids']:
+                            if line2[2]['name'] == tax.name:
+                                line2[2]['quantity'] = 1
+                                aux_price_unit = line2[2]['price_unit']
+                                aux_debit = line2[2]['debit']
+                                aux_tax_base_amount = line2[2]['tax_base_amount']
+
+                                line2[2]['price_unit'] = aux_price_unit + (
+                                        line[2]['price_total'] - line[2]['price_subtotal'])
+                                line2[2]['price_unit'] = aux_debit + (
+                                        line[2]['price_total'] - line[2]['price_subtotal'])
+                                line2[2]['tax_base_amoun'] = aux_tax_base_amount + line[2]['price_total']
+
                     _logger.warning(str(tax))
                     break
 
@@ -82,7 +102,18 @@ class smayAccountMoveReversal(models.Model):
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
                 move_vals_list[0]['line_ids'].remove(line)
 
+        total = 0
         for line in move_vals_list[0]['line_ids']:
+            if line[2]['product_id']:
+                total += line[2]['price_total']
+
+        for line in move_vals_list[0]['line_ids']:
+            if not line[2]['product_id'] and not line[2]['name']:
+                line[2]['price_unit'] = - total
+                line[2]['credit'] = total
+                line[2]['price_subtotal'] = - total
+                line[2]['price_total'] = - total
+
             _logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
