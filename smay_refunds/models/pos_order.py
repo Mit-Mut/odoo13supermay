@@ -114,7 +114,10 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['price_subtotal'] = - total
                 line[2]['price_total'] = - total
 
-            _logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
+            #_logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
+
+        _logger.warning('SALIDAAAAAAAA')
+        _logger.warning(str(move_vals_list))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
