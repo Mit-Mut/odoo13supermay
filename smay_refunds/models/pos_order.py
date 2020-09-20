@@ -69,6 +69,12 @@ class smayAccountMoveReversal(models.Model):
                     line[2]['price_total']= line[2]['price_total'] *abs(line_order.qty)
                     break
 
+        #aqui remuevo las lineas en cero
+        for line in move_vals_list[0]['line_ids']:
+            if line[2]['product_id '] and line[2]['quantity']==0:
+                move_vals_list.remove(line)
+
+
 
         for line in move_vals_list[0]['line_ids']:
             _logger.warning('MODIFICADA lineeeeeeee:'+str(line[2]))
