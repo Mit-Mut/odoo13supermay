@@ -16,7 +16,7 @@ class SmayRefundPosConfig(models.Model):
 class smayAccountMoveReversal(models.Model):
     _inherit = 'account.move'
 
-    def _reverse_movesSmay(self, order_to_refund, move_id, default_values_list=None, cancel=False):
+    def _reverse_movesSmay(self, refund_order, move_id, default_values_list=None, cancel=False):
         move = self.env['account.move'].browse(move_id)
         _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
         _logger.warning(move)
@@ -54,8 +54,17 @@ class smayAccountMoveReversal(models.Model):
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id']:
-                line[2]['quantity']=13
-            _logger.warning('lineeeeeeee:'+str(line))
+                line[2]['quantity']=0
+
+        for line_order in refund_order.lines:
+            for line in move_vals_list[0]['line_ids']:
+                if line[2]['product_id']==line_order.product_id:
+                    line[2]['quantity']= line_order.qty
+                    break
+
+
+        for line in move_vals_list[0]['line_ids']:
+            _logger.warning('MODIFICADA lineeeeeeee:'+str(line[2]))
 
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
@@ -221,7 +230,7 @@ class SmayRefundPosOrder(models.Model):
                 }
 
                 # GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
-                factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id, invoice_order.id, [ref],
+                factura_devolucion = invoice_order._reverse_movesSmay(refund_order, invoice_order.id, [ref],
                                                                       cancel=False, )
 
                 return refund_order_id
