@@ -54,14 +54,16 @@ class smayAccountMoveReversal(models.Model):
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id']:
+                line[2]['debit']= line[2]['debit']/line[2]['quantity']
+                line[2]['price_subtotal']= line[2]['price_subtotal']/line[2]['price_subtotal']
+                line[2]['price_total']= line[2]['price_total']/line[2]['price_total']
                 line[2]['quantity']=0
+
 
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id']==line_order.product_id.id:
                     line[2]['quantity'] = abs(line_order.qty)
-                    _logger.warning('ENTROOOOOO')
-                    _logger.warning(str(line[2]))
                     break
 
 
