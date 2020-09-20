@@ -53,32 +53,37 @@ class smayAccountMoveReversal(models.Model):
 
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
+            # dejo en cero las lineas con producos
             if line[2]['product_id']:
-                line[2]['debit']= line[2]['debit']/line[2]['quantity']
-                line[2]['price_subtotal']= line[2]['price_subtotal']/line[2]['quantity']
-                line[2]['price_total']= line[2]['price_total']/line[2]['quantity']
-                line[2]['quantity']=0
+                line[2]['debit'] = line[2]['debit'] / line[2]['quantity']
+                line[2]['price_subtotal'] = line[2]['price_subtotal'] / line[2]['quantity']
+                line[2]['price_total'] = line[2]['price_total'] / line[2]['quantity']
+                line[2]['quantity'] = 0
 
+            if not line[2]['product_id'] and line[2]['name']:
+                line[2]['quantity'] = 0
 
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
-                if line[2]['product_id']==line_order.product_id.id:
+                if line[2]['product_id'] == line_order.product_id.id:
                     line[2]['quantity'] = abs(line_order.qty)
-                    line[2]['debit']= line[2]['debit'] *abs(line_order.qty)
-                    line[2]['price_subtotal']= line[2]['price_subtotal'] *abs(line_order.qty)
-                    line[2]['price_total']= line[2]['price_total'] *abs(line_order.qty)
+                    line[2]['debit'] = line[2]['debit'] * abs(line_order.qty)
+                    line[2]['price_subtotal'] = line[2]['price_subtotal'] * abs(line_order.qty)
+                    line[2]['price_total'] = line[2]['price_total'] * abs(line_order.qty)
+                    tax_id = line[2]['price_total'][0][2][0]
+                    tax = self.env['account.tax'].browse(tax_id)
+                    _logger.warning(str(tax))
                     break
 
-        #aqui remuevo las lineas en cero
+        # aqui remuevo las lineas en cero
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id'] and line[2]['quantity'] == 0:
                 move_vals_list[0]['line_ids'].remove(line)
-
-
+            if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
+                move_vals_list[0]['line_ids'].remove(line)
 
         for line in move_vals_list[0]['line_ids']:
-            _logger.warning('MODIFICADA lineeeeeeee:'+str(line[2]))
-
+            _logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
