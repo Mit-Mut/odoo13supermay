@@ -49,7 +49,7 @@ class smayAccountMoveReversal(models.Model):
         move_vals_list.append(move._reverse_move_vals(default_values, False))
 
         _logger.warning('SALIDA CON ARREGLO')
-        #_logger.warning(str(move_vals_list))
+        _logger.warning(str(move_vals_list))
 
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
@@ -59,7 +59,7 @@ class smayAccountMoveReversal(models.Model):
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id']==line_order.product_id.id:
-                    line[2]['quantity'] = line_order.qty
+                    line[2]['quantity'] = abs(line_order.qty)
                     _logger.warning('ENTROOOOOO')
                     _logger.warning(str(line[2]))
                     break
