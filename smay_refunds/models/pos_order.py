@@ -57,7 +57,7 @@ class smayAccountMoveReversal(models.Model):
 
 
 
-        for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
+        '''for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
             # Update amount_currency if the date has changed.
             if move.date != reverse_move.date:
                 for line in reverse_move.line_ids:
