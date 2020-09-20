@@ -16,7 +16,7 @@ class SmayRefundPosConfig(models.Model):
 class smayAccountMoveReversal(models.Model):
     _inherit = 'account.move'
 
-    def _reverse_movesSmay(self, order_to_refund,move_id, default_values_list=None, cancel=False):
+    def _reverse_movesSmay(self, order_to_refund, move_id, default_values_list=None, cancel=False):
         move = self.env['account.move'].browse(move_id)
         _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
         _logger.warning(move)
@@ -46,16 +46,12 @@ class smayAccountMoveReversal(models.Model):
                 'reversed_entry_id': move.id,
             })
 
-
         move_vals_list.append(move._reverse_move_vals(default_values, False))
 
         _logger.warning('SALIDA CON ARREGLO')
         _logger.warning(str(move_vals_list))
 
-
         reverse_moves = self.env['account.move'].create(move_vals_list)
-
-
 
         for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
             # Update amount_currency if the date has changed.
@@ -76,6 +72,7 @@ class smayAccountMoveReversal(models.Model):
                     (move.line_ids + reverse_move.line_ids) \
                         .filtered(lambda line: line.account_id == account and line.balance) \
                         .reconcile()
+        reverse_moves.action_post()
 
         return reverse_moves
 
@@ -216,14 +213,11 @@ class SmayRefundPosOrder(models.Model):
                     'reversed_entry_id': invoice_order.id,
                 }
 
-
-                #GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
-                factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id,invoice_order.id, [ref], cancel=False, )
+                # GENERA LA DEVOLUCION Y REGRESA EL REGISTRO
+                factura_devolucion = invoice_order._reverse_movesSmay(refund_order_id, invoice_order.id, [ref],
+                                                                      cancel=False, )
 
                 return refund_order_id
-
-
-
 
                 for invoice_line in factura_devolucion.invoice_line_ids:
                     _logger.warning('LINEA DE FACTURA')
@@ -234,12 +228,10 @@ class SmayRefundPosOrder(models.Model):
                     'account_move': factura_devolucion.id,
                     'state': 'invoiced',
                 })
-    
+
                 reverse._affect_tax_report()
                 reverse.action_post()
-                
-    
-                
+
                 refund_invoice_order.action_invoice_open()
                 # time.sleep(3)
                 email_act = refund_invoice_order.action_invoice_sent()
