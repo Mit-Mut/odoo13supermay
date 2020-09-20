@@ -49,7 +49,12 @@ class smayAccountMoveReversal(models.Model):
         move_vals_list.append(move._reverse_move_vals(default_values, False))
 
         _logger.warning('SALIDA CON ARREGLO')
-        _logger.warning(str(move_vals_list))
+        #_logger.warning(str(move_vals_list))
+
+        ###aqui modifico el arreglo para generar la nota de credito
+        for line in move_vals_list[0]['line_ids']:
+            _logger.warning('lineeeeeeee:'+str(line))
+
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
