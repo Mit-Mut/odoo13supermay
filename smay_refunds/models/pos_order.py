@@ -53,11 +53,11 @@ class smayAccountMoveReversal(models.Model):
         _logger.warning(str(move_vals_list))
 
 
-        #reverse_moves = self.env['account.move'].create(move_vals_list)
+        reverse_moves = self.env['account.move'].create(move_vals_list)
 
 
 
-        '''for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
+        for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
             # Update amount_currency if the date has changed.
             if move.date != reverse_move.date:
                 for line in reverse_move.line_ids:
@@ -77,7 +77,7 @@ class smayAccountMoveReversal(models.Model):
                         .filtered(lambda line: line.account_id == account and line.balance) \
                         .reconcile()
 
-        return reverse_moves'''
+        return reverse_moves
 
 
 class SmayRefundPosOrder(models.Model):
