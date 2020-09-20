@@ -20,7 +20,7 @@ class smayAccountMoveReversal(models.Model):
         move = self.env['account.move'].browse(move_id)
         _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
         _logger.warning(move)
-        '''if not default_values_list:
+        if not default_values_list:
             default_values_list = [{} for move in self]
 
         if cancel:
@@ -44,9 +44,8 @@ class smayAccountMoveReversal(models.Model):
             default_values.update({
                 'type': reverse_type_map[move.type],
                 'reversed_entry_id': move.id,
-            })'''
+            })
 
-        move_vals_list = []
 
         move_vals_list.append(move._reverse_move_vals([], False))
 
