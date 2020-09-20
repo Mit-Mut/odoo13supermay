@@ -72,7 +72,7 @@ class smayAccountMoveReversal(models.Model):
         #aqui remuevo las lineas en cero
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id'] and line[2]['quantity'] == 0:
-                move_vals_list[0].remove(line)
+                move_vals_list[0]['line_ids'].remove(line)
 
 
 
