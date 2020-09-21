@@ -86,6 +86,7 @@ class smayAccountMoveReversal(models.Model):
                             for line2 in move_vals_list[0]['line_ids']:
                                 if line2[2]['name'] == tax.name:
                                     _logger.warning('RECALCULA UN TAX'+str(tax.name))
+                                    _logger.warning('LINEAS'+str(line2))
                                     line2[2]['quantity'] = 1
                                     aux_price_unit = line2[2]['price_unit']
                                     aux_debit = line2[2]['debit']
