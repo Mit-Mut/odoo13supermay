@@ -115,9 +115,9 @@ class smayAccountMoveReversal(models.Model):
                 _logger.warning('ELIMINA PRODUCTO EN CERO')
                 _logger.warning(str(line[2]['product_id']))
                 _logger.warning(str(line[2]['quantity']))
-                move_vals_list[0]['line_ids'].remove(line)
+                #move_vals_list[0]['line_ids'].remove(line)
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
-                move_vals_list[0]['line_ids'].remove(line)
+                #move_vals_list[0]['line_ids'].remove(line)
 
         total = 0
         for line in move_vals_list[0]['line_ids']:
