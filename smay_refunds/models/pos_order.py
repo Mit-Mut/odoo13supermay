@@ -308,12 +308,12 @@ class SmayRefundPosOrder(models.Model):
                 factura_devolucion = invoice_order._reverse_movesSmay(refund_order, invoice_order.id, [ref],
                                                                       cancel=False, )
 
-                return refund_order_id
+                '''return refund_order_id
 
                 for invoice_line in factura_devolucion.invoice_line_ids:
                     _logger.warning('LINEA DE FACTURA')
                     _logger.warning(str(invoice_line.quantity))
-                    # invoice_line.unlink()
+                    # invoice_line.unlink()'''
 
                 refund_order.write({
                     'account_move': factura_devolucion.id,
