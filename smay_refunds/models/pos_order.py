@@ -165,7 +165,7 @@ class smayAccountMoveReversal(models.Model):
                         .reconcile()
         reverse_moves.action_post()
 
-        return reverse_moves
+        return refund_order.id
 
 
 class SmayRefundPosOrder(models.Model):
