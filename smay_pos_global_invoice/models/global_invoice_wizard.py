@@ -209,10 +209,6 @@ class GlobalInvoiceWizard(models.TransientModel):
         # Creacion de la factura
 
         Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs))
-
-        # self._prepare_global_invoice_line(Invoice, sessions_to_invoicing)
-        _logger.warning('FACTURA DE VARIOS PRODUCTOS')
-        _logger.warning(str(Invoice))
         return {
             'name': _('Customer Invoice'),
             'view_type': 'form',
@@ -226,113 +222,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'res_id': Invoice.id and Invoice.ids[0] or False,
         }
 
-        # Invoice.compute_taxes()
 
-        '''for tax_line in Invoice.tax_line_ids:
-            tax_line.write({
-                'account_analytic_id': self.env['pos.config'].browse(pos_configs[0]).x_cuenta_analitica.id,
-            })'''
-
-        # esta funcion valida la factura
-        # Invoice.action_invoice_open()
-
-        '''Invoice.write({
-            'payment_ids': [(0, 0, {
-                'amount': Invoice.amount_total,
-                'journal_id': Invoice.journal_id.id,  # 11,
-                'payment_date': str(date.today()),
-                # 'communication': Invoice.number,
-                'payment_type': 'inbound',
-                'partner_type': 'customer',
-                'partner_id': Invoice.partner_id.id,
-                'partner_bank_id': '',
-                'payment_method_id': self.env['account.payment.method'].search(
-                    [('code', '=', 'manual'), ('payment_type', '=', 'inbound')]).id
-            })]
-        })'''
-
-        # Invoice.invoice_validate()
-
-        '''for payment in Invoice.payment_ids:
-            payment.action_validate_invoice_payment()'''
-
-        for session in sessions_to_invoicing:
-            session.sudo().write({
-                'factura_global': True,
-                'global_invoice_name': Invoice.name,
-            })
-
-        # time.sleep(1)
-        # Invoice.action_invoice_open()
-        # time.sleep(5)
-        # Invoice.l10n_mx_edi_update_sat_status()
-        # time.sleep(2)
-        '''email_act = Invoice.action_invoice_sent()
-
-        if email_act and email_act.get('context'):
-            email_ctx = email_act['context']
-            email_ctx.update(default_email_from=Invoice.company_id.email)
-            Invoice.message_post_with_template(email_ctx.get('default_template_id'))'''
-
-        # return self.env.ref('account.account_invoices').report_action(Invoice)
-
-        '''return {
-            'name': _('Customer Invoice'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': self.env.ref('account.move_form').id,
-            'res_model': 'accpunt.move',
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': False,
-            'target': 'current',
-            'res_id': Invoice.id and Invoice.ids[0] or False,
-        }'''
-
-    '''def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
-        product = self.env.user.company_id.invoice_product_id
-        # invoice_amount_tax = 0
-        for session in sessions_to_invoicing:
-            for order in session.order_ids:
-
-                order_taxes = {}
-                for orderline in order.lines:
-                    for tax in orderline.tax_ids:
-                        order_taxes[int(tax.amount)] = tax.id
-
-                if order.state == 'invoiced' or order.amount_total <= 0:
-                    continue
-
-                # description = order.pos_reference
-
-                for order_tax in order_taxes:
-                    description = order.pos_reference + '_' + str(order_tax)
-                    amount_total = 0
-                    subtotal = 0
-                    for orderline_2 in order.lines:
-                        if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
-                            amount_total += orderline_2.price_subtotal_incl
-                            subtotal += orderline_2.price_subtotal
-
-                    if amount_total == 0:
-                        continue
-
-                    # aqui debo de guardar cada linea de factura
-
-                    data_line = {
-                        'name': '[' + product.name + ']  ' + description,
-                        'product_id': product.id,
-                        'invoice_id': invoice.id,
-                        'price_unit': amount_total,
-                        'price_subtotal': subtotal,
-                        'account_id': self.env['account.account'].search(
-                            [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id,
-                        'invoice_line_tax_ids': [(6, 0, [order_taxes.get(order_tax)])],
-                        'quantity': 1,
-                        'uom_id': product.uom_id.id,
-                        'account_analytic_id': session.config_id.x_cuenta_analitica.id,
-                    }
-                    self.env['account.move.line'].create(data_line)'''
 
     def _prepare_global_invoice(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
@@ -466,7 +356,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'tax_exigible': False,
                     'tax_repartition_line_id': False,
                     'tag_ids': [[6, False, []]],
-                    'analytic_account_id': False,
+                    'analytic_account_id': [[6, False, [order.session_id.config_id.x_cuenta_analitica.id]]],
                     'analytic_tag_ids': [[6, False, []]],
                     'recompute_tax_line': False,
                     'display_type': False,
