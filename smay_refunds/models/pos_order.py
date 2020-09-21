@@ -105,7 +105,7 @@ class smayAccountMoveReversal(models.Model):
                                     _logger.warning('LINEAS actualizada'+str(line2))
 
                         _logger.warning(str(tax))
-                    break
+                    #break
 
         # aqui remuevo las lineas en cero
         for line in move_vals_list[0]['line_ids']:
