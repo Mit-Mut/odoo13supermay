@@ -400,7 +400,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'tax_base_amount'] == 0:
                 lineas_borrar.append(line)
 
-        for line in data_invoice['line_ids']:
+        for line in lineas_borrar:
             data_invoice['line_ids'].remove(line)
 
         # _logger.warning(data_invoice)
@@ -842,7 +842,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
             local_dt = local.localize(fecha, is_dst=None)
             utc_dt = local_dt.astimezone(pytz.utc)
-            return str(utc_dt)
+            return str(utc_dt)[0:19]
         return '2017-02-02 17:30:00'
 
     def get_company(self):
