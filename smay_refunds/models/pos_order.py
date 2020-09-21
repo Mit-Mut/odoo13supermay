@@ -55,9 +55,9 @@ class smayAccountMoveReversal(models.Model):
         for line in move_vals_list[0]['line_ids']:
             # dejo en cero las lineas con producos
             if line[2]['product_id']:
-                line[2]['debit'] = line[2]['debit'] / line[2]['quantity']
-                line[2]['price_subtotal'] = line[2]['price_subtotal'] / line[2]['quantity']
-                line[2]['price_total'] = line[2]['price_total'] / line[2]['quantity']
+                line[2]['debit'] = round(line[2]['debit'] / line[2]['quantity'], 2)
+                line[2]['price_subtotal'] = round(line[2]['price_subtotal'] / line[2]['quantity'], 2)
+                line[2]['price_total'] = round(line[2]['price_total'] / line[2]['quantity'], 2)
                 line[2]['quantity'] = 0
 
             if not line[2]['product_id'] and line[2]['name']:
@@ -65,7 +65,6 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['debit'] = 0
                 line[2]['price_unit'] = 0
                 line[2]['tax_base_amount'] = 0
-
 
             if not line[2]['product_id'] and not line[2]['name']:
                 line[2]['price_unit'] = 0
@@ -76,39 +75,39 @@ class smayAccountMoveReversal(models.Model):
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id'] == line_order.product_id.id:
-                    #_logger.warning('Encontro coincidencia')
-                    #_logger.warning(str(line[2]['product_id']))
-                    #_logger.warning(str(line_order.product_id.id))
-                    line[2]['quantity'] = abs(line_order.qty)
-                    line[2]['debit'] = line[2]['debit'] * abs(line_order.qty)
-                    line[2]['price_subtotal'] = line[2]['price_subtotal'] * abs(line_order.qty)
-                    line[2]['price_total'] = line[2]['price_total'] * abs(line_order.qty)
+                    # _logger.warning('Encontro coincidencia')
+                    # _logger.warning(str(line[2]['product_id']))
+                    # _logger.warning(str(line_order.product_id.id))
+                    line[2]['quantity'] = round(abs(line_order.qty), 2)
+                    line[2]['debit'] = round(line[2]['debit'] * abs(line_order.qty), 2)
+                    line[2]['price_subtotal'] = round(line[2]['price_subtotal'] * abs(line_order.qty), 2)
+                    line[2]['price_total'] = round(line[2]['price_total'] * abs(line_order.qty), 2)
                     if line[2]['tax_ids'][0][2][0]:
                         tax_id = line[2]['tax_ids'][0][2][0]
                         tax = self.env['account.tax'].browse(tax_id)
                         if tax.amount > 0:
                             for line2 in move_vals_list[0]['line_ids']:
                                 if line2[2]['name'] == tax.name:
-                                    #_logger.warning('RECALCULA UN TAX'+str(tax.name))
-                                    #_logger.warning('LINEAS'+str(line2))
+                                    # _logger.warning('RECALCULA UN TAX'+str(tax.name))
+                                    # _logger.warning('LINEAS'+str(line2))
                                     line2[2]['quantity'] = 1
-                                    aux_price_unit = line2[2]['price_unit']
-                                    aux_debit = line2[2]['debit']
-                                    aux_tax_base_amount = line2[2]['tax_base_amount']
+                                    aux_price_unit = round(line2[2]['price_unit'], 2)
+                                    aux_debit = round(line2[2]['debit'], 2)
+                                    aux_tax_base_amount = round(line2[2]['tax_base_amount'], 2)
 
-                                    line2[2]['price_unit'] = aux_price_unit + (
+                                    line2[2]['price_unit'] = round(aux_price_unit + (
+                                            line[2]['price_total'] - line[2]['price_subtotal']), 2)
+                                    line2[2]['debit'] = round(aux_debit + (
                                             line[2]['price_total'] - line[2]['price_subtotal'])
-                                    line2[2]['debit'] = aux_debit + (
-                                            line[2]['price_total'] - line[2]['price_subtotal'])
-                                    line2[2]['tax_base_amount'] = aux_tax_base_amount + line[2]['price_subtotal']
+                                    line2[2]['tax_base_amount'] = aux_tax_base_amount + line[2]['price_subtotal'], 2)
 
-                                    _logger.warning('LINEAS actualizada'+str(line2))
+                                    _logger.warning('LINEAS actualizada' + str(line2))
 
                         _logger.warning(str(tax))
-                    #break
+                    # break
 
         # aqui remuevo las lineas en cero
-        lineas_eliminar =[]
+        lineas_eliminar = []
         for line in move_vals_list[0]['line_ids']:
             _logger.warning('LINEAS A BORRARRRRRRRR')
             _logger.warning(str(line))
@@ -117,11 +116,11 @@ class smayAccountMoveReversal(models.Model):
                 _logger.warning(str(line[2]['product_id']))
                 _logger.warning(str(line[2]['quantity']))
                 lineas_eliminar.append(line)
-                #move_vals_list[0]['line_ids'].remove(line)
+                # move_vals_list[0]['line_ids'].remove(line)
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
                 _logger.warning('test')
                 lineas_eliminar.append(line)
-                #move_vals_list[0]['line_ids'].remove(line)
+                # move_vals_list[0]['line_ids'].remove(line)
 
         for li in lineas_eliminar:
             move_vals_list[0]['line_ids'].remove(li)
@@ -138,7 +137,7 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['price_subtotal'] = - total
                 line[2]['price_total'] = - total
 
-            #_logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
+            # _logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
 
         _logger.warning('SALIDAAAAAAAA')
         _logger.warning(str(move_vals_list))
