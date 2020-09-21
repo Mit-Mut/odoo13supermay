@@ -369,6 +369,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 
 					    })
 					    });*/
+					    console.log('ID DE PEDIDO')
+					    console.log(data)
 
 					    self.pos.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                                     active_ids: [data],
