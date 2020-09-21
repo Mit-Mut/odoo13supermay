@@ -30,15 +30,16 @@ class PosInvoicePosOrder(models.Model):
             _logger.warning('ENVIO DE FACTURAS A CLIENTES')
             _logger.warning(str(invoice.origin))
             invoice.l10n_mx_edi_update_sat_status()
-            email_act = invoice.action_invoice_sent()
-            if email_act and email_act.get('context'):
-                email_ctx = email_act['context']
-                email_ctx.update(default_email_from=invoice.company_id.email)
-                invoice.message_post_with_template(email_ctx.get('default_template_id'))
-                invoice.write({
-                    'sent': True
-                })
-            # time.sleep(1)
+            if invoice.partner_id.vat:
+                email_act = invoice.action_invoice_sent()
+                if email_act and email_act.get('context'):
+                    email_ctx = email_act['context']
+                    email_ctx.update(default_email_from=invoice.company_id.email)
+                    invoice.message_post_with_template(email_ctx.get('default_template_id'))
+                    invoice.write({
+                        'sent': True
+                    })
+                # time.sleep(1)
         if invoices:
             self.env['mail.mail'].process_email_queue()
 

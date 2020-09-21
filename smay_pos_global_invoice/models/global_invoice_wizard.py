@@ -8,17 +8,6 @@ import logging, time
 
 _logger = logging.getLogger(__name__)
 
-'''class herenciasMOVE(models.Model):
-    _inherit = 'account.move'
-
-    @api.model
-    def create(self, vals):
-        res = super(herenciasMOVE, self).create(vals)
-        _logger.warning('CREATEEEEEEEEEEEEEE FCTURA')
-        _logger.warning(str(res))
-        _logger.warning(str(vals))
-        return res'''
-
 
 class GlobalInvoiceWizard(models.TransientModel):
     _name = "global.invoice.wizard"
@@ -153,7 +142,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                                                               ('config_id.sucursal_id.id', '=',
                                                                                user_sucursal.id)])
 
-        #_logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
+        # _logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
 
         if sessions_not_invoicing_credit_notes:
             message = 'No se han realizado las notas de credito de las siguientes sesiones:\n'
@@ -187,8 +176,6 @@ class GlobalInvoiceWizard(models.TransientModel):
         if orders == 0:
             return
 
-        _logger.warning("estas son las ordenes que se van a facturasrrrrr" + str(orders))
-
         # aqui verifico que no haya ordenes con cliente asignado y sin facturar
         orders_without_invoicing = []
         for session in sessions_to_invoicing:
@@ -215,9 +202,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             global_orders += orders
 
         if global_orders == 0:
-            return
+            # return
 
-            # raise UserWarning('No hay ordenes que facturar')
+            raise UserWarning('No hay ordenes que facturar')
 
         # Creacion de la factura
 
@@ -226,6 +213,18 @@ class GlobalInvoiceWizard(models.TransientModel):
         # self._prepare_global_invoice_line(Invoice, sessions_to_invoicing)
         _logger.warning('FACTURA DE VARIOS PRODUCTOS')
         _logger.warning(str(Invoice))
+        return {
+            'name': _('Customer Invoice'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('account.move_form').id,
+            'res_model': 'account.move',
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': False,
+            'target': 'current',
+            'res_id': Invoice.id and Invoice.ids[0] or False,
+        }
 
         # Invoice.compute_taxes()
 
@@ -290,7 +289,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'res_id': Invoice.id and Invoice.ids[0] or False,
         }'''
 
-    def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
+    '''def _prepare_global_invoice_line(self, invoice, sessions_to_invoicing):
         product = self.env.user.company_id.invoice_product_id
         # invoice_amount_tax = 0
         for session in sessions_to_invoicing:
@@ -333,7 +332,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                         'uom_id': product.uom_id.id,
                         'account_analytic_id': session.config_id.x_cuenta_analitica.id,
                     }
-                    self.env['account.move.line'].create(data_line)
+                    self.env['account.move.line'].create(data_line)'''
 
     def _prepare_global_invoice(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
@@ -393,18 +392,15 @@ class GlobalInvoiceWizard(models.TransientModel):
                 sucursal_ids[0]).name,
         }
 
-        # data_invoice['line_ids'].append(self._get_info_tax('IVA(16%) VENTAS', data_invoice))
-        # data_invoice['line_ids'].append(self._get_info_tax('IEPS(8%) VENTAS', data_invoice))
-
         for impuesto in self.env['account.tax'].search(
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
                  ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
-                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name, data_invoice))
+                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))#, data_invoice))
 
         # _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
 
-        data_invoice['line_ids'].append(self._get_line_totals(data_invoice))
+        data_invoice['line_ids'].append(self._get_line_totals())
 
         orders = self.env['pos.order'].search(
             [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
@@ -418,14 +414,8 @@ class GlobalInvoiceWizard(models.TransientModel):
     def _add_invoice_lines(self, data_invoice, orders):
         account_id = self.env['account.account'].search(
             [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id
-
-        # _logger.warning('GRP1111')
-        # _logger.warning(str(orders))
         for order in orders:
             order_taxes = {}
-            _logger.warning('GRP222')
-            _logger.warning(
-                'ID' + str(order.id) + '   TOTAL' + str(order.amount_total) + 'REFERNCE' + str(order.pos_reference))
 
             if order.state == 'invoiced' or order.amount_total <= 0:
                 continue
@@ -435,7 +425,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                     order_taxes[int(tax.amount)] = tax.id
 
             for order_tax in order_taxes:
-                # _logger.warning('GRP4444')
                 description = order.pos_reference + '_' + str(order_tax)
                 amount_total = 0
                 subtotal = 0
@@ -449,7 +438,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
                 # aqui debo de guardar cada linea de factura
 
-                _logger.warning('GRP5555')
+
 
                 line = []
                 line.append(0)
@@ -529,9 +518,9 @@ class GlobalInvoiceWizard(models.TransientModel):
 
             # _logger.warning(data_invoice)
 
-    def _get_line_totals(self, data_invoice):
+    def _get_line_totals(self):
 
-        lineas = data_invoice['line_ids']
+        #lineas = data_invoice['line_ids']
 
         totals = [
             0, '',
@@ -577,8 +566,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         return totals
         # return lineas.append(totals)
 
-    def _get_info_tax(self, etiqueta_impuesto, data_invoice):
-        lineas = data_invoice['line_ids']
+    def _get_info_tax(self, etiqueta_impuesto):#, data_invoice):
+        #lineas = data_invoice['line_ids']
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         repartition_id = 0
         for imp in impuesto_def.invoice_repartition_line_ids:
@@ -626,9 +615,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'l10n_mx_edi_customs_number': False,
                     'l10n_mx_edi_qty_umt': 0,
                 }]
-
-        # _logger.warning('SE AGREGO EL IMPUESTO' + str(lineas.append(impuesto)))
-
         return impuesto
 
 

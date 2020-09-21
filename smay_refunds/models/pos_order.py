@@ -18,8 +18,6 @@ class smayAccountMoveReversal(models.Model):
 
     def _reverse_movesSmay(self, refund_order, move_id, default_values_list=None, cancel=False):
         move = self.env['account.move'].browse(move_id)
-        _logger.warning('GGGGGGGGGGGGGGGGGGGGGGGGGGG')
-        _logger.warning(move)
         if not default_values_list:
             default_values_list = [{} for move in self]
 
@@ -48,9 +46,6 @@ class smayAccountMoveReversal(models.Model):
 
         move_vals_list.append(move._reverse_move_vals(default_values, False))
 
-        _logger.warning('SALIDA CON ARREGLO')
-        _logger.warning(str(move_vals_list))
-
         ###aqui modifico el arreglo para generar la nota de credito
         for line in move_vals_list[0]['line_ids']:
             # dejo en cero las lineas con producos
@@ -75,9 +70,6 @@ class smayAccountMoveReversal(models.Model):
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id'] == line_order.product_id.id:
-                    # _logger.warning('Encontro coincidencia')
-                    # _logger.warning(str(line[2]['product_id']))
-                    # _logger.warning(str(line_order.product_id.id))
                     line[2]['quantity'] = round(abs(line_order.qty), 2)
                     line[2]['debit'] = round(line[2]['debit'] * abs(line_order.qty), 2)
                     line[2]['price_subtotal'] = round(line[2]['price_subtotal'] * abs(line_order.qty), 2)
@@ -88,8 +80,6 @@ class smayAccountMoveReversal(models.Model):
                         if tax.amount > 0:
                             for line2 in move_vals_list[0]['line_ids']:
                                 if line2[2]['name'] == tax.name:
-                                    # _logger.warning('RECALCULA UN TAX'+str(tax.name))
-                                    # _logger.warning('LINEAS'+str(line2))
                                     line2[2]['quantity'] = 1
                                     aux_price_unit = round(line2[2]['price_unit'], 2)
                                     aux_debit = round(line2[2]['debit'], 2)
@@ -98,29 +88,17 @@ class smayAccountMoveReversal(models.Model):
                                     line2[2]['price_unit'] = round(aux_price_unit + (
                                             line[2]['price_total'] - line[2]['price_subtotal']), 2)
                                     line2[2]['debit'] = round(aux_debit + (
-                                            line[2]['price_total'] - line[2]['price_subtotal']),2)
-                                    line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'], 2)
-
-                                    _logger.warning('LINEAS actualizada' + str(line2))
-
-                        _logger.warning(str(tax))
-                    # break
+                                            line[2]['price_total'] - line[2]['price_subtotal']), 2)
+                                    line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'],
+                                                                        2)
 
         # aqui remuevo las lineas en cero
         lineas_eliminar = []
         for line in move_vals_list[0]['line_ids']:
-            _logger.warning('LINEAS A BORRARRRRRRRR')
-            _logger.warning(str(line))
             if line[2]['product_id'] and line[2]['quantity'] == 0:
-                _logger.warning('ELIMINA PRODUCTO EN CERO')
-                _logger.warning(str(line[2]['product_id']))
-                _logger.warning(str(line[2]['quantity']))
                 lineas_eliminar.append(line)
-                # move_vals_list[0]['line_ids'].remove(line)
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
-                _logger.warning('test')
                 lineas_eliminar.append(line)
-                # move_vals_list[0]['line_ids'].remove(line)
 
         for li in lineas_eliminar:
             move_vals_list[0]['line_ids'].remove(li)
@@ -136,11 +114,6 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['credit'] = total
                 line[2]['price_subtotal'] = - total
                 line[2]['price_total'] = - total
-
-            # _logger.warning('MODIFICADA lineeeeeeee:' + str(line[2]))
-
-        _logger.warning('SALIDAAAAAAAA')
-        _logger.warning(str(move_vals_list))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
@@ -253,28 +226,8 @@ class SmayRefundPosOrder(models.Model):
             return order.id
         return -1
 
-    # se hizo esta funcion para la nota de credito pero no funciono, esta pendiente
-    '''@api.model
-    def limpia_factura(self, order_id):
-        # return True
-        nota_credito = self.env['pos.order'].browse(order_id).account_move
-
-        for line in nota_credito.line_ids:
-            if line.quantity == 0 and (line.product_id):
-                line.unlink()
-                continue
-
-            line.write({
-                'balance': line.debit - line.credit,
-            })
-        # nota_credito._compute_amount()
-        # nota_credito.action_post()
-        return True'''
-
     @api.model
     def get_data_order(self, pos_reference, order_to_refund):
-        _logger.warning('DEVOLUCIONAAAAAAAAA')
-        _logger.warning(str(order_to_refund))
         order = self.search(
             [('pos_reference', '=', pos_reference),  # ('is_refund', '=', False),
              ('amount_total', '>', '0')], limit=1, order="id asc")
@@ -308,22 +261,7 @@ class SmayRefundPosOrder(models.Model):
                 factura_devolucion = invoice_order._reverse_movesSmay(refund_order, invoice_order.id, [ref],
                                                                       cancel=False, )
 
-                '''return refund_order_id
-
-                for invoice_line in factura_devolucion.invoice_line_ids:
-                    _logger.warning('LINEA DE FACTURA')
-                    _logger.warning(str(invoice_line.quantity))
-                    # invoice_line.unlink()'''
-
-                refund_order.write({
-                    'account_move': factura_devolucion.id,
-                    'state': 'invoiced',
-                })
-
-                '''reverse._affect_tax_report()
-                reverse.action_post()'''
-
-                #refund_invoice_order.action_invoice_open()
+                # refund_invoice_order.action_invoice_open()
                 # time.sleep(3)
                 email_act = factura_devolucion.action_invoice_sent()
                 if email_act and email_act.get('context'):
