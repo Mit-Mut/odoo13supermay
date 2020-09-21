@@ -222,8 +222,6 @@ class GlobalInvoiceWizard(models.TransientModel):
             'res_id': Invoice.id and Invoice.ids[0] or False,
         }
 
-
-
     def _prepare_global_invoice(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
         equipo_ventas = []
@@ -286,7 +284,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
                  ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
-                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))#, data_invoice))
+                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))  # , data_invoice))
 
         # _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
 
@@ -327,8 +325,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                     continue
 
                 # aqui debo de guardar cada linea de factura
-
-
 
                 line = []
                 line.append(0)
@@ -384,8 +380,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                     # _logger.warning(str(li[2]))
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
-                _logger.warning('DESDEDEDEDEDED' + str(description))
-                _logger.warning('IMPUESTO: ' + str(order_taxes.get(order_tax)) + ' NAME : ' + str(impuesto.name))
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
@@ -393,24 +387,27 @@ class GlobalInvoiceWizard(models.TransientModel):
                             aux_price_unit = li[2]['price_unit']
                             aux_tax_base_amount = li[2]['tax_base_amount']
 
-                            li[2]['credit'] = aux_credit + (amount_total - subtotal)
-                            li[2]['price_unit'] = aux_price_unit + (amount_total - subtotal)
-                            li[2]['tax_base_amount'] = aux_tax_base_amount + subtotal
-                            _logger.warning('LINEA DE IMPUESTOS' + str(li))
+                            li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
+                            li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
+                            li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
         ##aqui borro los impuestos que no son usados
+        lineas_borrar = []
         for line in data_invoice['line_ids']:
             if line[2]['name'] != False and line[2]['product_id'] == False and line[2]['credit'] and line[2][
                 'tax_base_amount'] == 0:
-                data_invoice['line_ids'].remove(line)
+                lineas_borrar.append(line)
 
-            # _logger.warning(data_invoice)
+        for line in data_invoice['line_ids']:
+            data_invoice['line_ids'].remove(line)
+
+        # _logger.warning(data_invoice)
 
     def _get_line_totals(self):
 
-        #lineas = data_invoice['line_ids']
+        # lineas = data_invoice['line_ids']
 
         totals = [
             0, '',
@@ -456,8 +453,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         return totals
         # return lineas.append(totals)
 
-    def _get_info_tax(self, etiqueta_impuesto):#, data_invoice):
-        #lineas = data_invoice['line_ids']
+    def _get_info_tax(self, etiqueta_impuesto):  # , data_invoice):
+        # lineas = data_invoice['line_ids']
         impuesto_def = self.env['account.tax'].search([('name', '=', etiqueta_impuesto)])
         repartition_id = 0
         for imp in impuesto_def.invoice_repartition_line_ids:
