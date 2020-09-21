@@ -22,7 +22,7 @@ class PosConfig(models.Model):
         return True
 
     def open_session_cb(self):
-        if self.user_has_groups('point_of_sale.group_pos_user') and self.env.user.partner_id.name.upper() != 'CHECADOR':
+        if not self.user_has_groups('point_of_sale.group_pos_manager') and self.env.user.partner_id.name.upper() != 'CHECADOR':
             sessions = self.env['pos.session'].search(
                 [('user_id', '=', self.env.user.id), ('state', '!=', 'closed'), ('config_id', '!=', self.id)])
             for session in sessions:
