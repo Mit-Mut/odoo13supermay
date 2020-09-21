@@ -100,7 +100,7 @@ class smayAccountMoveReversal(models.Model):
                                             line[2]['price_total'] - line[2]['price_subtotal'])
                                     line2[2]['price_unit'] = aux_debit + (
                                             line[2]['price_total'] - line[2]['price_subtotal'])
-                                    line2[2]['tax_base_amount'] = aux_tax_base_amount + line[2]['price_total']
+                                    line2[2]['tax_base_amount'] = aux_tax_base_amount + line[2]['price_subtotal']
 
                                     _logger.warning('LINEAS actualizada'+str(line2))
 
