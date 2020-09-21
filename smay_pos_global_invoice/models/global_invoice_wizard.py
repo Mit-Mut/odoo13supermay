@@ -398,9 +398,13 @@ class GlobalInvoiceWizard(models.TransientModel):
         for line in data_invoice['line_ids']:
             if line[2]['name'] != False and line[2]['product_id'] == False and line[2]['credit'] and line[2][
                 'tax_base_amount'] == 0:
+                _logger.warning('GEGEGEGEGEG')
+                _logger.warning(str(line))
                 lineas_borrar.append(line)
 
         for line in lineas_borrar:
+            _logger.warning('BORRRARRARARARAR')
+            _logger.warning(str(line))
             data_invoice['line_ids'].remove(line)
 
         # _logger.warning(data_invoice)
