@@ -31,9 +31,9 @@ class PosSessionSmayCloseSession(models.Model):
                 return -2
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
-        if self.user_has_groups('point_of_sale.group_pos_user'):
+        '''if self.user_has_groups('point_of_sale.group_pos_user'):
             time.sleep(10)
-            return 0
+            return 0'''
         session.action_pos_session_closing_control()
 
     @api.model

@@ -22,14 +22,15 @@ class PosConfig(models.Model):
         return True
 
     def open_session_cb(self):
-        sessions = self.env['pos.session'].search(
-            [('user_id', '=', self.env.user.id), ('state', '!=', 'closed'), ('config_id', '!=', self.id)])
-        for session in sessions:
-            raise UserError('Ya tienes sesión abierta en el punto de venta: ' + session.config_id.name)
-        if not self.env.user.sucursal_id:
-            raise UserError('No puedes abrir el punto de venta porque no tienes sucursal asignada')
-        if self.env.user.sucursal_id.id != self.sucursal_id.id:
-            raise UserError(
-                'No puedes abrir el punto de venta porque pertenece a otra sucursal. Tu sucursal asignada es ' + str(
-                    self.env.user.sucursal_id.name) + ' y del punto de venta ' + str(self.sucursal_id.name))
+        if self.user_has_groups('point_of_sale.group_pos_user') and self.env.user.partner_id.name.upper() != 'CHECADOR':
+            sessions = self.env['pos.session'].search(
+                [('user_id', '=', self.env.user.id), ('state', '!=', 'closed'), ('config_id', '!=', self.id)])
+            for session in sessions:
+                raise UserError('Ya tienes sesión abierta en el punto de venta: ' + session.config_id.name)
+            if not self.env.user.sucursal_id:
+                raise UserError('No puedes abrir el punto de venta porque no tienes sucursal asignada')
+            if self.env.user.sucursal_id.id != self.sucursal_id.id:
+                raise UserError(
+                    'No puedes abrir el punto de venta porque pertenece a otra sucursal. Tu sucursal asignada es ' + str(
+                        self.env.user.sucursal_id.name) + ' y del punto de venta ' + str(self.sucursal_id.name))
         return super(PosConfig, self).open_session_cb()
