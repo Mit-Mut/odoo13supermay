@@ -109,6 +109,8 @@ class smayAccountMoveReversal(models.Model):
 
         # aqui remuevo las lineas en cero
         for line in move_vals_list[0]['line_ids']:
+            _logger.warning('LINEAS A BORRARRRRRRRR')
+            _logger.warning(str(line))
             if line[2]['product_id'] and line[2]['quantity'] == 0:
                 _logger.warning('ELIMINA PRODUCTO EN CERO')
                 _logger.warning(str(line[2]['product_id']))
