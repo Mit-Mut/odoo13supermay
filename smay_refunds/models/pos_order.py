@@ -117,6 +117,7 @@ class smayAccountMoveReversal(models.Model):
                 _logger.warning(str(line[2]['quantity']))
                 #move_vals_list[0]['line_ids'].remove(line)
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
+                _logger.warning('test')
                 #move_vals_list[0]['line_ids'].remove(line)
 
         total = 0
