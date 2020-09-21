@@ -356,7 +356,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'tax_exigible': False,
                     'tax_repartition_line_id': False,
                     'tag_ids': [[6, False, []]],
-                    'analytic_account_id': [[6, False, [order.session_id.config_id.x_cuenta_analitica.id]]],
+                    'analytic_account_id': order.session_id.config_id.x_cuenta_analitica.id,
                     'analytic_tag_ids': [[6, False, []]],
                     'recompute_tax_line': False,
                     'display_type': False,
