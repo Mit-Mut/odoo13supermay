@@ -320,8 +320,8 @@ class SmayRefundPosOrder(models.Model):
                     'state': 'invoiced',
                 })
 
-                reverse._affect_tax_report()
-                reverse.action_post()
+                '''reverse._affect_tax_report()
+                reverse.action_post()'''
 
                 refund_invoice_order.action_invoice_open()
                 # time.sleep(3)
