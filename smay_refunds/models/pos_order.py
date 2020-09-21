@@ -64,6 +64,8 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['quantity'] = 0
                 line[2]['debit'] = 0
                 line[2]['price_unit'] = 0
+                line[2]['tax_base_amount'] = 0
+
 
             if not line[2]['product_id'] and not line[2]['name']:
                 line[2]['price_unit'] = 0
