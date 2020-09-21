@@ -370,6 +370,12 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 					    })
 					    });*/
 
+					    self.pos.chrome.do_action('aces_pos_x_report.report_pos_sales_pdf_front',{additional_context:{
+                                    active_ids: data,
+                                }}).catch(function(){
+                                    self.pos.gui.show_popup('error','No se pudo imprimir la nota de credito');
+                                });
+
 
 
 
