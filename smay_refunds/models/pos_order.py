@@ -76,23 +76,24 @@ class smayAccountMoveReversal(models.Model):
                     line[2]['debit'] = line[2]['debit'] * abs(line_order.qty)
                     line[2]['price_subtotal'] = line[2]['price_subtotal'] * abs(line_order.qty)
                     line[2]['price_total'] = line[2]['price_total'] * abs(line_order.qty)
-                    tax_id = line[2]['tax_ids'][0][2][0]
-                    tax = self.env['account.tax'].browse(tax_id)
-                    if tax.amount > 0:
-                        for line2 in move_vals_list[0]['line_ids']:
-                            if line2[2]['name'] == tax.name:
-                                line2[2]['quantity'] = 1
-                                aux_price_unit = line2[2]['price_unit']
-                                aux_debit = line2[2]['debit']
-                                aux_tax_base_amount = line2[2]['tax_base_amount']
+                    if line[2]['tax_ids'][0][2][0]:
+                        tax_id = line[2]['tax_ids'][0][2][0]
+                        tax = self.env['account.tax'].browse(tax_id)
+                        if tax.amount > 0:
+                            for line2 in move_vals_list[0]['line_ids']:
+                                if line2[2]['name'] == tax.name:
+                                    line2[2]['quantity'] = 1
+                                    aux_price_unit = line2[2]['price_unit']
+                                    aux_debit = line2[2]['debit']
+                                    aux_tax_base_amount = line2[2]['tax_base_amount']
 
-                                line2[2]['price_unit'] = aux_price_unit + (
-                                        line[2]['price_total'] - line[2]['price_subtotal'])
-                                line2[2]['price_unit'] = aux_debit + (
-                                        line[2]['price_total'] - line[2]['price_subtotal'])
-                                line2[2]['tax_base_amoun'] = aux_tax_base_amount + line[2]['price_total']
+                                    line2[2]['price_unit'] = aux_price_unit + (
+                                            line[2]['price_total'] - line[2]['price_subtotal'])
+                                    line2[2]['price_unit'] = aux_debit + (
+                                            line[2]['price_total'] - line[2]['price_subtotal'])
+                                    line2[2]['tax_base_amoun'] = aux_tax_base_amount + line[2]['price_total']
 
-                    _logger.warning(str(tax))
+                        _logger.warning(str(tax))
                     break
 
         # aqui remuevo las lineas en cero
