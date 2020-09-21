@@ -323,13 +323,13 @@ class SmayRefundPosOrder(models.Model):
                 '''reverse._affect_tax_report()
                 reverse.action_post()'''
 
-                refund_invoice_order.action_invoice_open()
+                #refund_invoice_order.action_invoice_open()
                 # time.sleep(3)
-                email_act = refund_invoice_order.action_invoice_sent()
+                email_act = factura_devolucion.action_invoice_sent()
                 if email_act and email_act.get('context'):
                     email_ctx = email_act['context']
-                    email_ctx.update(default_email_from=refund_invoice_order.company_id.email)
-                    refund_invoice_order.message_post_with_template(email_ctx.get('default_template_id'))
+                    email_ctx.update(default_email_from=factura_devolucion.company_id.email)
+                    factura_devolucion.message_post_with_template(email_ctx.get('default_template_id'))
 
             return refund_order_id
         return -1
