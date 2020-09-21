@@ -98,8 +98,8 @@ class smayAccountMoveReversal(models.Model):
                                     line2[2]['price_unit'] = round(aux_price_unit + (
                                             line[2]['price_total'] - line[2]['price_subtotal']), 2)
                                     line2[2]['debit'] = round(aux_debit + (
-                                            line[2]['price_total'] - line[2]['price_subtotal'])
-                                    line2[2]['tax_base_amount'] = aux_tax_base_amount + line[2]['price_subtotal'], 2)
+                                            line[2]['price_total'] - line[2]['price_subtotal']),2)
+                                    line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'], 2)
 
                                     _logger.warning('LINEAS actualizada' + str(line2))
 
