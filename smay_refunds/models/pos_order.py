@@ -76,9 +76,9 @@ class smayAccountMoveReversal(models.Model):
         for line_order in refund_order.lines:
             for line in move_vals_list[0]['line_ids']:
                 if line[2]['product_id'] == line_order.product_id.id:
-                    _logger.warning('Encontro coincidencia')
-                    _logger.warning(str(line[2]['product_id']))
-                    _logger.warning(str(line_order.product_id.id))
+                    #_logger.warning('Encontro coincidencia')
+                    #_logger.warning(str(line[2]['product_id']))
+                    #_logger.warning(str(line_order.product_id.id))
                     line[2]['quantity'] = abs(line_order.qty)
                     line[2]['debit'] = line[2]['debit'] * abs(line_order.qty)
                     line[2]['price_subtotal'] = line[2]['price_subtotal'] * abs(line_order.qty)
@@ -89,8 +89,8 @@ class smayAccountMoveReversal(models.Model):
                         if tax.amount > 0:
                             for line2 in move_vals_list[0]['line_ids']:
                                 if line2[2]['name'] == tax.name:
-                                    _logger.warning('RECALCULA UN TAX'+str(tax.name))
-                                    _logger.warning('LINEAS'+str(line2))
+                                    #_logger.warning('RECALCULA UN TAX'+str(tax.name))
+                                    #_logger.warning('LINEAS'+str(line2))
                                     line2[2]['quantity'] = 1
                                     aux_price_unit = line2[2]['price_unit']
                                     aux_debit = line2[2]['debit']
@@ -110,6 +110,9 @@ class smayAccountMoveReversal(models.Model):
         # aqui remuevo las lineas en cero
         for line in move_vals_list[0]['line_ids']:
             if line[2]['product_id'] and line[2]['quantity'] == 0:
+                _logger.warning('ELIMINA PRODUCTO EN CERO')
+                _logger.warning(str(line[2]['product_id']))
+                _logger.warning(str(line[2]['quantity']))
                 move_vals_list[0]['line_ids'].remove(line)
             if not line[2]['product_id'] and line[2]['name'] and line[2]['quantity'] == 0:
                 move_vals_list[0]['line_ids'].remove(line)
