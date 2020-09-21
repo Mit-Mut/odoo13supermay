@@ -217,7 +217,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': self.env.ref('account.move_form').id,
+            'view_id': self.env.ref('account.view_move_form').id,
             'res_model': 'account.move',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
