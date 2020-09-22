@@ -35,6 +35,7 @@ class PosSessionSmayCloseSession(models.Model):
             time.sleep(10)
             return 0'''
         session.action_pos_session_closing_control()
+        return True
 
     @api.model
     def get_cash_register_total_entry_encoding(self, id_session):
