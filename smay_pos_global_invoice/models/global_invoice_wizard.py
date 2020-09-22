@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError,UserWarning
+from odoo.exceptions import UserError
 from datetime import datetime, date, time, timedelta
 import pytz
 import logging, time
@@ -204,7 +204,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         if global_orders == 0:
             # return
 
-            raise UserWarning('No hay ordenes que facturar')
+            raise UserError('No hay ordenes que facturar')
 
         # Creacion de la factura
 
