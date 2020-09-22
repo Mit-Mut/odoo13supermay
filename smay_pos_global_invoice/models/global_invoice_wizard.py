@@ -208,7 +208,18 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # Creacion de la factura
 
-        Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs))
+        orders = self.env['pos.order'].search(
+            [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
+             ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
+
+        Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs,orders))
+
+        for order in orders:
+            order.write({
+                'account_move': Invoice.id
+            })
+
+
         return {
             'name': _('Customer Invoice'),
             'view_type': 'form',
@@ -222,7 +233,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             'res_id': Invoice.id and Invoice.ids[0] or False,
         }
 
-    def _prepare_global_invoice(self, config_ids):
+    def _prepare_global_invoice(self, config_ids, orders):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
         equipo_ventas = []
         journal_ids = []
@@ -290,9 +301,9 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         data_invoice['line_ids'].append(self._get_line_totals())
 
-        orders = self.env['pos.order'].search(
+        '''orders = self.env['pos.order'].search(
             [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
-             ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
+             ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])'''
 
         self._add_invoice_lines(data_invoice, orders)
 
