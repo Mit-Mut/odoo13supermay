@@ -401,7 +401,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                             li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
                             li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
                             li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
-                            #li[2]['quantity'] = 1
+                            # li[2]['quantity'] = 1
                 elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
@@ -415,7 +415,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for line in data_invoice['line_ids']:
             _logger.warning('LINEAAAAAA' + str(line[2]['name']))
             if line[2]['name'] and not line[2]['product_id'] and line[2]['credit'] == 0 and line[2][
-                'tax_base_amount'] == 0 :
+                'tax_base_amount'] == 0 and line[2]['quantity'] == -1:
                 _logger.warning('GEGEGEGEGEG')
                 _logger.warning(str(line))
                 lineas_borrar.append(line)
