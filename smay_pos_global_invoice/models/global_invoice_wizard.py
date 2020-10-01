@@ -212,14 +212,13 @@ class GlobalInvoiceWizard(models.TransientModel):
             [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
              ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
 
-        Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs,orders))
+        Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs, orders))
 
         for order in orders:
             order.write({
                 'account_move': Invoice.id,
-                'state':'invoiced'
+                'state': 'invoiced'
             })
-
 
         return {
             'name': _('Customer Invoice'),
@@ -293,8 +292,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         }
 
         for impuesto in self.env['account.tax'].search(
-                [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'),
-                 ('amount', '>', 0)]):
+                [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'), ]):
+            # ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
                 data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))  # , data_invoice))
 
@@ -406,6 +405,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 lines = data_invoice['line_ids']
                 lines.append(line)
         ##aqui borro los impuestos que no son usados
+        _logger.warning("empieza el borrado")
         lineas_borrar = []
         for line in data_invoice['line_ids']:
             if line[2]['name'] and not line[2]['product_id'] and line[2]['credit'] and line[2]['tax_base_amount'] == 0:
