@@ -408,8 +408,8 @@ class GlobalInvoiceWizard(models.TransientModel):
         _logger.warning("empieza el borrado")
         lineas_borrar = []
         for line in data_invoice['line_ids']:
-            _logger.warning('LINEAAAAAA'+str(line))
-            if line[2]['name']:# and not line[2]['product_id'] and line[2]['credit'] and line[2]['tax_base_amount'] == 0:
+            _logger.warning('LINEAAAAAA'+str(line[2]['name']))
+            if line[2]['name'] and not line[2]['product_id'] and line[2]['credit']==0 and line[2]['tax_base_amount'] == 0:
                 _logger.warning('GEGEGEGEGEG')
                 _logger.warning(str(line))
                 lineas_borrar.append(line)
