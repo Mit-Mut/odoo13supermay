@@ -410,7 +410,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 lines = data_invoice['line_ids']
                 lines.append(line)
         ##aqui borro los impuestos que no son usados
-        _logger.warning("empieza el borrado")
+        '''_logger.warning("empieza el borrado")
         lineas_borrar = []
         for line in data_invoice['line_ids']:
             _logger.warning('LINEAAAAAA' + str(line[2]['name']))
@@ -423,7 +423,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for line in lineas_borrar:
             _logger.warning('BORRRARRARARARARrr')
             _logger.warning(str(line))
-            data_invoice['line_ids'].remove(line)
+            data_invoice['line_ids'].remove(line)'''
 
         # _logger.warning(data_invoice)
 
