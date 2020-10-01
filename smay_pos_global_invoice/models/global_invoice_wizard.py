@@ -415,7 +415,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 lineas_borrar.append(line)
 
         for line in lineas_borrar:
-            _logger.warning('BORRRARRARARARAR')
+            _logger.warning('BORRRARRARARARARrr')
             _logger.warning(str(line))
             #data_invoice['line_ids'].remove(line)
 
