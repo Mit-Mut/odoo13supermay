@@ -216,7 +216,8 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         for order in orders:
             order.write({
-                'account_move': Invoice.id
+                'account_move': Invoice.id,
+                'state':'invoiced'
             })
 
 
