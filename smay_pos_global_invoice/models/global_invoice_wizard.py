@@ -401,7 +401,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                             li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
                             li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
                             li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
-                            li[2]['quantity'] = 1
+                            #li[2]['quantity'] = 1
                 '''elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
@@ -490,7 +490,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'account_id': impuesto_def.cash_basis_transition_account_id.id,
                     'sequence': 10,
                     'name': impuesto_def.name,
-                    'quantity': -1,
+                    'quantity': 1,
                     # 'price_unit': 12.48,
                     'price_unit': 0,
                     'discount': 0,
