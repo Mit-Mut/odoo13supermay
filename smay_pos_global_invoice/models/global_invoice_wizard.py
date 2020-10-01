@@ -402,15 +402,15 @@ class GlobalInvoiceWizard(models.TransientModel):
                             li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
                             li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
                             #li[2]['quantity'] = 1
-                '''elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
+                elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
-                            li[2]['quantity'] = 1'''
+                            li[2]['quantity'] = 1
 
                 lines = data_invoice['line_ids']
                 lines.append(line)
         ##aqui borro los impuestos que no son usados
-        '''_logger.warning("empieza el borrado")
+        _logger.warning("empieza el borrado")
         lineas_borrar = []
         for line in data_invoice['line_ids']:
             _logger.warning('LINEAAAAAA' + str(line[2]['name']))
@@ -423,7 +423,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for line in lineas_borrar:
             _logger.warning('BORRRARRARARARARrr')
             _logger.warning(str(line))
-            data_invoice['line_ids'].remove(line)'''
+            data_invoice['line_ids'].remove(line)
 
         # _logger.warning(data_invoice)
 
@@ -490,7 +490,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'account_id': impuesto_def.cash_basis_transition_account_id.id,
                     'sequence': 10,
                     'name': impuesto_def.name,
-                    'quantity': 1,
+                    'quantity': -1,
                     # 'price_unit': 12.48,
                     'price_unit': 0,
                     'discount': 0,
