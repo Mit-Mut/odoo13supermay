@@ -142,16 +142,15 @@ class GlobalInvoiceWizard(models.TransientModel):
                                                                               ('config_id.sucursal_id.id', '=',
                                                                                user_sucursal.id)])
 
-        # _logger.warning("Faltan las notas de credito de estas sessiones" + str(sessions_not_invoicing_credit_notes))
-
         if sessions_not_invoicing_credit_notes:
             message = 'No se han realizado las notas de credito de las siguientes sesiones:\n'
             for session in sessions_not_invoicing_credit_notes:
                 message += str(session.name) + ' - ' + str(session.start_at)[0:10] + '\n'
             raise UserError(message)
 
+        # revisa que haya sessines sin haber generado la factura global y que ya esten cerradas
         sessions_to_invoicing = self.env['pos.session'].search([
-            # ('state', '=', 'closed'),
+            ('state', '=', 'closed'),
             ('start_at', '>=', self.start_date),
             ('start_at', '<=', self.end_date),
             ('user_id.company_id', '=', self.env.user.company_id.id),
@@ -160,12 +159,10 @@ class GlobalInvoiceWizard(models.TransientModel):
             ('factura_global', '=', False),
         ])
 
-        _logger.warning("estas sessiones seran las que se facturaran" + str(sessions_to_invoicing))
+        '''if not sessions_to_invoicing:
+            raise UserError('No existen sesiones para facturar en las fechas indicadas')'''
 
-        if not sessions_to_invoicing:
-            raise UserError('No existen sesiones para facturar en las fechas indicadas')
-
-        orders = 0
+        '''orders = 0
         for session in sessions_to_invoicing:
             orders += len(session.order_ids)
             if len(session.order_ids) == 0:
@@ -174,7 +171,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 })
 
         if orders == 0:
-            return
+            return'''
 
         # aqui verifico que no haya ordenes con cliente asignado y sin facturar
         orders_without_invoicing = []
@@ -189,28 +186,26 @@ class GlobalInvoiceWizard(models.TransientModel):
 
             raise UserError(message)
 
-        orders = 0
-        global_orders = 0
+        '''orders = 0
+        global_orders = 0'''
         for session in sessions_to_invoicing:
-            for order in session.order_ids:
+            '''for order in session.order_ids:
                 if order.state != 'invoiced':
                     orders += 1
-            if orders == 0:
-                session.sudo(True).write({
-                    'factura_global': True
-                })
-            global_orders += orders
-
-        if global_orders == 0:
-            # return
-
-            raise UserError('No hay ordenes que facturar')
+            if orders == 0:'''
+            session.sudo(True).write({
+                'factura_global': True
+            })
+            # global_orders += orders
 
         # Creacion de la factura
 
         orders = self.env['pos.order'].search(
             [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
              ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
+
+        if len(orders) == 0:
+            raise UserError('No hay ordenes que facturar')
 
         Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs, orders))
 
@@ -295,19 +290,11 @@ class GlobalInvoiceWizard(models.TransientModel):
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'), ]):
             # ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
-                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))  # , data_invoice))
-
-        # _logger.warning('TODO S LOS IMPUESTOS'+str(data_invoice))
+                data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))
 
         data_invoice['line_ids'].append(self._get_line_totals())
 
-        '''orders = self.env['pos.order'].search(
-            [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
-             ('amount_total', '>', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])'''
-
         self._add_invoice_lines(data_invoice, orders)
-
-        # _logger.warning('Dicccionario para crear la facrtura ' + str(data_invoice))
         return data_invoice
 
     def _add_invoice_lines(self, data_invoice, orders):
