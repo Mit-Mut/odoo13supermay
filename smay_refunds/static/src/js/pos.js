@@ -339,7 +339,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 
 					    console.log('ID DE PEDIDO')
 					    console.log(data)
-					    console.log(self.pos.get_order())
+					    //console.log(self.pos.get_order())
 
 					    rpc.query({
 					        model: 'pos.order',

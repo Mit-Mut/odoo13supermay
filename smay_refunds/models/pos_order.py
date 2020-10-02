@@ -267,11 +267,11 @@ class SmayRefundPosOrder(models.Model):
                     'state': 'invoiced',
                     'account_move': factura_devolucion.id,
                 })
-                email_act = factura_devolucion.action_invoice_sent()
+                '''email_act = factura_devolucion.action_invoice_sent()
                 if email_act and email_act.get('context'):
                     email_ctx = email_act['context']
                     email_ctx.update(default_email_from=factura_devolucion.company_id.email)
-                    factura_devolucion.message_post_with_template(email_ctx.get('default_template_id'))
+                    factura_devolucion.message_post_with_template(email_ctx.get('default_template_id'))'''
 
             return refund_order_id
         return -1
