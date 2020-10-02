@@ -41,7 +41,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                       ('20', 'Aplicación de anticipos'),
                                       ('21', 'Intermediario pagos'),
                                       ('22', 'Por definir'),
-                                      ], 'Metodo de pago', default=22, required=True)
+                                      ], 'Metodo de pago', default='22', required=True)
 
     uso_cfdi_id = fields.Selection([('G01', 'Adquisición de mercancías.'),
                                     ('G02', 'Devoluciones, descuentos o bonificaciones.'),
