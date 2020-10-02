@@ -10,6 +10,20 @@ class PosSessionTempClose(models.Model):
 
     session_id = fields.Integer('id de session',required=True)
 
+    @api.model
+    def close_session_automatically(self):
+        sessions = self.env['pos.session.temp.close'].search([('session_id','>',0)])
+
+        for session in sessions:
+            order_without_invoice = self.env['pos.order'].search([('session_id','=',session.id),('state','!=','invoiced')])
+            if order_without_invoice:
+                _logger.warning("Existen orden que no estan en estado FACTURADO")
+                continue
+            else:
+                session.action_pos_session_closing_control()
+                _logger.warning('Se cerro exitosamente la session :' +str(session.session_id))
+                session.unlink()
+
 
 
 
@@ -19,6 +33,7 @@ class PosSessionSmayCloseSession(models.Model):
 
     @api.model
     def get_session_start_at(self, session_id):
+
         return self.browse(session_id).start_at
 
     @api.model
