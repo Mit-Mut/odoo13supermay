@@ -37,10 +37,10 @@ class GlobalInvoiceWizard(models.TransientModel):
                                       ('16', 'Prescripción o caducidad'),
                                       ('17', 'A satisfacción del cliente'),
                                       ('18', 'Tarjeta de Débito'),
-                                      (19, 'Tarjeta de Servicio'),
-                                      (20, 'Aplicación de anticipos'),
-                                      (21, 'Intermediario pagos'),
-                                      (22, 'Por definir'),
+                                      ('19', 'Tarjeta de Servicio'),
+                                      ('20', 'Aplicación de anticipos'),
+                                      ('21', 'Intermediario pagos'),
+                                      ('22', 'Por definir'),
                                       ], 'Metodo de pago', default=22, required=True)
 
     uso_cfdi_id = fields.Selection([('G01', 'Adquisición de mercancías.'),
@@ -277,7 +277,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         data_invoice = {
             'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
-            'l10n_mx_edi_payment_method_id': self.pay_method_id,
+            'l10n_mx_edi_payment_method_id': int(self.pay_method_id),
             'l10n_mx_edi_usage': self.uso_cfdi_id,
             'user_id': self.env.user.id,
             'team_id': equipo_ventas[0],
