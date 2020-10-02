@@ -269,7 +269,7 @@ class SmayRefundPosOrder(models.Model):
                     email_ctx.update(default_email_from=factura_devolucion.company_id.email)
                     factura_devolucion.message_post_with_template(email_ctx.get('default_template_id'))
 
-            return refund_order.id
+            return refund_order_id
         return -1
 
     # @api.multi
