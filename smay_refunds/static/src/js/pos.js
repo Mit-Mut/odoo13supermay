@@ -371,8 +371,32 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 					    });*/
 					    console.log('ID DE PEDIDO')
 					    console.log(data)
+					    console.log(self.pos.get_order())
 
-					    
+					    rpc.query({
+					    model: 'pos.order',
+						    method: '_order_has_invoice',
+						    args: [data],
+                            timeout: 5000,
+
+					    }).then(function(data){
+					    if(data >0){
+					    self.pos.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                                    active_ids: [data],
+                                }}).catch(function(){
+                                    self.pos.gui.show_popup('error','No se pudo imprimir la nota de credito');
+                                });
+					    }
+
+					    })
+
+					    /*self.pos.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                                    active_ids: [data],
+                                }}).catch(function(){
+                                    self.pos.gui.show_popup('error','No se pudo imprimir la nota de credito');
+                                });*/
+
+
 
 
 
