@@ -30,7 +30,7 @@ class PosInvoicePosOrder(models.Model):
             _logger.warning('ENVIO DE FACTURAS A CLIENTES')
             _logger.warning(str(invoice.origin))
             invoice.l10n_mx_edi_update_sat_status()
-            if invoice.partner_id.vat:
+            if invoice.partner_id.vat and invoice.partner_id.email and invoice.l10n_mx_edi_pac_status == 'signed':
                 email_act = invoice.action_invoice_sent()
                 if email_act and email_act.get('context'):
                     email_ctx = email_act['context']
