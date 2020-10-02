@@ -374,8 +374,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 					    console.log(self.pos.get_order())
 
 					    rpc.query({
-					    model: 'pos.order',
-						    method: '_order_has_invoice',
+					        model: 'pos.order',
+						    method: 'order_has_invoice',
 						    args: [data],
                             timeout: 5000,
 

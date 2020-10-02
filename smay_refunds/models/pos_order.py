@@ -220,7 +220,7 @@ class SmayRefundPosOrder(models.Model):
         return -2  # don't exist the order that user input
 
     @api.model
-    def _order_has_invoice(self, order_id):
+    def order_has_invoice(self, order_id):
         order = self.env['pos.order'].browse(order_id)
         if order.account_move:
             return order.id
