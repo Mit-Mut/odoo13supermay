@@ -206,6 +206,8 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         if len(orders) == 0:
             raise UserError('No hay ordenes que facturar')
+        _logger.warning('AQUI EL RESULTADO')
+        _logger.warning(str(self._prepare_global_invoice(pos_configs, orders)))
 
         Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs, orders))
 
