@@ -335,40 +335,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                     if(data > 0){
                         self.pos.refund_order = true;
                         self.pos.gui.show_screen('receipt',{refund:'true'})
-                        var data2=data
-
-                        /*rpc.query({
-					   	    model: 'pos.order',
-						    method: '_order_has_invoice',
-						    args: [data],
-                            timeout: 5000,
-					    }).then(function(order_id){
-                            if (order_id>0){
-                                self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
-                                active_ids:[order_id],}});
-                            }
-					    });*/
 
 
-					    //aqui mando llamar a la funcion de limpieza
-                        /*rpc.query({
-					   	    model: 'pos.order',
-						    method: 'limpia_factura',
-						    args: [data],
-                            timeout: 5000,
-					    }).then(function(data2){
-					    console.log('GEnero la nota de credito con exito')
-
-
-					    }).catch(function(){
-
-
-					    self.pos.gui.show_popup('error',{
-                                title: 'Devolución',
-                                body: 'Error en la limpeza.',
-
-					    })
-					    });*/
 					    console.log('ID DE PEDIDO')
 					    console.log(data)
 					    console.log(self.pos.get_order())

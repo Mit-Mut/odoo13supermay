@@ -263,6 +263,10 @@ class SmayRefundPosOrder(models.Model):
 
                 # refund_invoice_order.action_invoice_open()
                 # time.sleep(3)
+                refund_order.sudo(True).write({
+                    'state': 'invoiced',
+                    'account_move': factura_devolucion.id,
+                })
                 email_act = factura_devolucion.action_invoice_sent()
                 if email_act and email_act.get('context'):
                     email_ctx = email_act['context']
