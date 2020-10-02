@@ -5,28 +5,27 @@ import logging, time
 
 _logger = logging.getLogger(__name__)
 
+
 class PosSessionTempClose(models.Model):
     _name = 'pos.session.temp.close'
 
-    session_id = fields.Integer('id de session',required=True)
+    session_id = fields.Integer('id de session', required=True)
 
     @api.model
     def close_session_automatically(self):
-        sessions = self.env['pos.session.temp.close'].search([('session_id','>',0)])
+        sessions = self.env['pos.session.temp.close'].search([('session_id', '>', 0)])
 
         for session in sessions:
-            order_without_invoice = self.env['pos.order'].search([('session_id','=',session.session_id),('state','!=','invoiced')])
+            order_without_invoice = self.env['pos.order'].search(
+                [('session_id', '=', session.session_id), ('state', '!=', 'invoiced')])
             if order_without_invoice:
                 _logger.warning("Existen orden que no estan en estado FACTURADO")
                 continue
             else:
                 session_to_close = self.env['pos.session'].browse(session.session_id)
                 session_to_close.action_pos_session_closing_control()
-                _logger.warning('Se cerro exitosamente la session :' +str(session.session_id))
+                _logger.warning('Se cerro exitosamente la session :' + str(session.session_id))
                 session.unlink()
-
-
-
 
 
 class PosSessionSmayCloseSession(models.Model):
@@ -43,7 +42,8 @@ class PosSessionSmayCloseSession(models.Model):
         unsigned_orders = {}
         for orders in session.order_ids:
             for order in orders:
-                if (order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign') and order.partner_id.id != self.env.user.company_id.invoice_partner_id.id:
+                if (
+                        order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign') and order.partner_id.id != self.env.user.company_id.invoice_partner_id.id:
                     unsigned_orders[order.pos_reference] = order.account_move.name
         return unsigned_orders
 
@@ -58,11 +58,14 @@ class PosSessionSmayCloseSession(models.Model):
         if self.user_has_groups('point_of_sale.group_pos_user'):
             time.sleep(10)
 
-            self.env['pos.session.temp.close'].sudo(True).create({'session_id':session.id})
+            self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
 
             session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
             return True
-        #session.action_pos_session_closing_control()
+        # session.action_pos_session_closing_control()
+        self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
+
+        session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
         return True
 
     @api.model
