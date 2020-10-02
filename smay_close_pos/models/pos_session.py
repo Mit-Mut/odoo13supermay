@@ -18,13 +18,14 @@ class PosSessionTempClose(models.Model):
         for session in sessions:
             order_without_invoice = self.env['pos.order'].search(
                 [('session_id', '=', session.session_id), ('state', '!=', 'invoiced')])
+            session_to_close = self.env['pos.session'].browse(session.session_id)
             if order_without_invoice:
-                _logger.warning("Existen orden que no estan en estado FACTURADO")
+                _logger.warning(
+                    "Existen ordenes que no se han agregado a una fatura global: " + str(session_to_close.name))
                 continue
             else:
-                session_to_close = self.env['pos.session'].browse(session.session_id)
                 session_to_close.action_pos_session_closing_control()
-                _logger.warning('Se cerro exitosamente la session :' + str(session.session_id))
+                _logger.warning('Se cerro exitosamente la session :' + str(session_to_close.name))
                 session.unlink()
 
 
