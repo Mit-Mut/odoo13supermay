@@ -5,6 +5,14 @@ import logging, time
 
 _logger = logging.getLogger(__name__)
 
+class PosSessionTempClose(models.Model):
+    _name = 'pos.session.temp.close'
+
+    session_id = fields.Integer('id de session',required=True)
+
+
+
+
 
 class PosSessionSmayCloseSession(models.Model):
     _inherit = 'pos.session'
@@ -31,9 +39,13 @@ class PosSessionSmayCloseSession(models.Model):
                 return -2
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
-        '''if self.user_has_groups('point_of_sale.group_pos_user'):
+        if self.user_has_groups('point_of_sale.group_pos_user'):
             time.sleep(10)
-            return 0'''
+            
+            self.env['pos.session.temp.close'].write({'session_id':session.id})
+
+            session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
+            return True
         session.action_pos_session_closing_control()
         return True
 
