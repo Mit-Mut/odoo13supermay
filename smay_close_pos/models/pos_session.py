@@ -42,7 +42,7 @@ class PosSessionSmayCloseSession(models.Model):
         if self.user_has_groups('point_of_sale.group_pos_user'):
             time.sleep(10)
 
-            self.env['pos.session.temp.close'].sudo(True).write({'session_id':session.id})
+            self.env['pos.session.temp.close'].sudo(True).create({'session_id':session.id})
 
             session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
             return True
