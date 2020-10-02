@@ -15,12 +15,13 @@ class PosSessionTempClose(models.Model):
         sessions = self.env['pos.session.temp.close'].search([('session_id','>',0)])
 
         for session in sessions:
-            order_without_invoice = self.env['pos.order'].search([('session_id','=',session.id),('state','!=','invoiced')])
+            order_without_invoice = self.env['pos.order'].search([('session_id','=',session.session_id),('state','!=','invoiced')])
             if order_without_invoice:
                 _logger.warning("Existen orden que no estan en estado FACTURADO")
                 continue
             else:
-                session.action_pos_session_closing_control()
+                session_to_close = self.env['pos.session'].browse(session.session_id)
+                session_to_close.action_pos_session_closing_control()
                 _logger.warning('Se cerro exitosamente la session :' +str(session.session_id))
                 session.unlink()
 
