@@ -19,7 +19,7 @@ class PosSessionSmayCloseSession(models.Model):
         unsigned_orders = {}
         for orders in session.order_ids:
             for order in orders:
-                if order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign' and order.partner_id.id != self.env.user.company_id.invoice_partner_id.id:
+                if (order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign') and order.partner_id.id != self.env.user.company_id.invoice_partner_id.id:
                     unsigned_orders[order.pos_reference] = order.account_move.name
         return unsigned_orders
 
