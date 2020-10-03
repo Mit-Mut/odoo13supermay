@@ -337,7 +337,7 @@
 								</t>
                                 <th style="text-align:left">
 									$ <t
-                                        t-esc="Math.abs(widget.options.session['cash_register_total_entry_encoding'])"/>
+                                        t-esc="Math.round(Math.abs(widget.options.session['cash_register_total_entry_encoding'])*100,2)*100"/>
 								</th>
 							</tr>
                             <tr>
