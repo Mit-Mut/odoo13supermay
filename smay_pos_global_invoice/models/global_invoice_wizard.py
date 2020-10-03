@@ -194,7 +194,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # si no hay ordenes se termina el proceso
         if len(orders) == 0:
-            raise UserError('No hay ordenes que facturar')
+            return
 
         # Genero la factura global
         Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs, orders))
@@ -623,55 +623,74 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             raise UserError(message)
 
         sessions_without_invoice = self.env['pos.session'].search(
-            [  ('state', '=', 'closed'),
-                ('start_at', '>=', self.start_date),
-                ('start_at', '<=', self.end_date),
-                ('user_id.company_id', '=', self.env.user.company_id.id),
-                ('config_id', 'in', pos_configs),
-                ('config_id.sucursal_id.id', '=', user_sucursal.id),
-                #('notas_credito_global', '=', False),
-                ('factura_global', '=', False)
-            ])
+            [('state', '=', 'closed'),
+             ('start_at', '>=', self.start_date),
+             ('start_at', '<=', self.end_date),
+             ('user_id.company_id', '=', self.env.user.company_id.id),
+             ('config_id', 'in', pos_configs),
+             ('config_id.sucursal_id.id', '=', user_sucursal.id),
+             # ('notas_credito_global', '=', False),
+             ('factura_global', '=', False)
+             ])
 
         if sessions_without_invoice:
             raise UserError('Es necesario que primero realices la Facturación Global.')
 
         sessions_to_invoicing = self.env['pos.session'].search(
-            [  # ('state', '=', 'closed'),
-                ('start_at', '>=', self.start_date),
-                ('start_at', '<=', self.end_date),
-                ('user_id.company_id', '=', self.env.user.company_id.id),
-                ('config_id', 'in', pos_configs),
-                ('config_id.sucursal_id.id', '=', user_sucursal.id),
-                ('notas_credito_global', '=', False),
-            ])
+            [('state', '=', 'closed'),
+             ('start_at', '>=', self.start_date),
+             ('start_at', '<=', self.end_date),
+             ('user_id.company_id', '=', self.env.user.company_id.id),
+             ('config_id', 'in', pos_configs),
+             ('config_id.sucursal_id.id', '=', user_sucursal.id),
+             ('notas_credito_global', '=', False),
+             ])
 
         if not sessions_to_invoicing:
             raise UserError('No existen sesiones para generar notas de credito en las fechas indicadas')
 
-        orders = 0
+        # orders = 0
         for session in sessions_to_invoicing:
             refund_orders_without_cr = self.env['pos.order'].search(
                 [('session_id', '=', session.id),
                  ('amount_total', '<', 0),
                  ('state', '!=', 'invoiced')])
-            orders += len(refund_orders_without_cr)
+            # orders += len(refund_orders_without_cr)
             if len(refund_orders_without_cr) == 0:
                 session.sudo().write({
                     'notas_credito_global': True
                 })
 
-        if orders == 0:
+        orders = self.env['pos.order'].search(
+            [('date_order', '>=', self.start_date), ('date_order', '<=', self.end_date), ('state', '!=', 'invoiced'),
+             ('amount_total', '<', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
+
+        if len(orders) == 0:
             return
 
-        pos_references = []
+        '''pos_references = []
         for session in sessions_to_invoicing:
             refund_orders_without_cr = self.env['pos.order'].search(
                 [('session_id', '=', session.id),
                  ('amount_total', '<', 0),
                  ('state', '!=', 'invoiced')])
             for refund_order in refund_orders_without_cr:
-                pos_references.append(refund_order.pos_reference)
+                pos_references.append(refund_order.pos_reference)'''
+
+        # ----------------
+
+        invoices_to_refund = {}
+        for order in orders:
+            invoice_id = self.env['account.move.line'].search(
+                [('name', 'like', order.pos_reference), ('move_id.type', '=', 'out_invoice')]).move_id.id
+            if invoice_id:
+                if not invoices_to_refund[invoice_id]:
+                    invoices_to_refund[invoice_id] = []
+                else:
+                    invoices_to_refund[invoice_id].append(order.id)
+
+        _logger.warning('RELACION DE DEVOLUCIOES')
+        _logger.warning(str(invoices_to_refund))
 
         list_invoices = []
 
@@ -680,6 +699,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 [('session_id', '=', session.id),
                  ('amount_total', '<', 0),
                  ('state', '!=', 'invoiced')])
+
             for refund_order in refund_orders_without_cr:
                 invoice_line_ids = self.env['account.move.line'].search(
                     [('name', 'like', refund_order.pos_reference),
