@@ -492,6 +492,15 @@ class GlobalInvoiceWizard(models.TransientModel):
         return impuesto
 
 
+class smaynota(models.Model):
+    _inherit = 'account.move'
+
+    @api.model
+    def create(self, vals):
+        _logger.warning(str(vals))
+        return super(smaynota, self).create(vals)
+
+
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
     _name = "global.invoice.credit.notes.wizard"
     _description = 'Save data for global the credit notes'
