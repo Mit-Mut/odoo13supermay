@@ -692,6 +692,13 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         _logger.warning('RELACION DE DEVOLUCIOES')
         _logger.warning(str(invoices_to_refund))
 
+        for factura_id in invoices_to_refund.keys():
+            _logger.warning('Aqui empiezo la factura'+str(factura_id))
+            for order in invoices_to_refund[factura_id]:
+                _logger.warning('la orden '+str(order))
+
+
+
         list_invoices = []
 
         for session in sessions_to_invoicing:
