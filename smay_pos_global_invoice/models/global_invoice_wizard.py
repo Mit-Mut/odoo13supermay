@@ -497,6 +497,7 @@ class smaynota(models.Model):
 
     @api.model
     def create(self, vals):
+        _logger.warning('FUNCION CREATEEEEE')
         _logger.warning(str(vals))
         return super(smaynota, self).create(vals)
 
