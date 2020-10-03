@@ -623,13 +623,13 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             raise UserError(message)
 
         sessions_without_invoice = self.env['pos.session'].search(
-            [  # ('state', '=', 'closed'),
+            [  ('state', '=', 'closed'),
                 ('start_at', '>=', self.start_date),
                 ('start_at', '<=', self.end_date),
                 ('user_id.company_id', '=', self.env.user.company_id.id),
                 ('config_id', 'in', pos_configs),
                 ('config_id.sucursal_id.id', '=', user_sucursal.id),
-                ('notas_credito_global', '=', False),
+                #('notas_credito_global', '=', False),
                 ('factura_global', '=', False)
             ])
 
