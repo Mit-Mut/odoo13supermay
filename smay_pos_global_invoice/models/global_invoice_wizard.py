@@ -684,7 +684,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             invoice_id = self.env['account.move.line'].search(
                 [('name', 'like', order.pos_reference), ('move_id.type', '=', 'out_invoice')]).move_id.id
             if invoice_id:
-                if not invoices_to_refund[invoice_id]:
+                if invoice_id not in invoices_to_refund:
                     invoices_to_refund[invoice_id] = []
                 else:
                     invoices_to_refund[invoice_id].append(order.id)
