@@ -171,6 +171,20 @@ class GlobalInvoiceWizard(models.TransientModel):
                 message += str(ord) + ',\n'
             raise UserError(message)
 
+        opened_sessions = self.env['pos.session'].search([
+            ('state', '=', 'opened'),
+            ('start_at', '>=', self.start_date),
+            ('start_at', '<=', self.end_date),
+            ('user_id.company_id', '=', self.env.user.company_id.id),
+            ('config_id', 'in', pos_configs),
+            ('config_id.sucursal_id.id', '=', user_sucursal.id),
+            ('factura_global', '=', False),
+        ])
+
+        if opened_sessions:
+            raise UserError(
+                'Existen sessiones sin cerrar, para continuar con el proceso de facturacion debes cerrar todas las sesiones.')
+
         # Creacion de la factura
 
         # obtengo las ordenes a facturar
