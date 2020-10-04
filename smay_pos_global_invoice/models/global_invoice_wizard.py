@@ -806,7 +806,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         return
 
     def _add_invoice_lines(self,data_invoice,invoice_id,order_ids):
-        orders = sele.env['pos.order'].search([('id','in',order_ids)])
+        orders = self.env['pos.order'].search([('id','in',order_ids)])
+        for order in orders:
+            _logger.warning(str(order))
         _logger.warning('ORDERSSSSS')
         _logger.warning(str(orders))
         return
