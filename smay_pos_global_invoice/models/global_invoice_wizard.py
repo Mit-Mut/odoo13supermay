@@ -861,8 +861,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             0,
             0,
             {
-                'move_id': invoice_to_refund.id,
-                'account_id': self.env['account.account'].search([('name','=','Clientes nacionales')]).id,
+                'move_id': invoice_totals_line.move_id.id,
+                'account_id': invoice_totals_line.account_id.id,
                 'sequence': 0,
                 'name': '',
                 'quantity': 1.0,
