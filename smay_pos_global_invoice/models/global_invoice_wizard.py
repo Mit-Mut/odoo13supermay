@@ -808,7 +808,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         data_invoice = {
             'ref': 'Nota de Credito : ' + str(invoice_to_refund.name),
             #'date': datetime.date(2020, 10, 3),
-            'invoice_date': datetime.date(2020, 10, 3),
+            #'invoice_date': datetime.date(2020, 10, 3),
             'journal_id': invoice_to_refund.journal_id.id,
             'invoice_payment_term_id': None,
             'auto_post': False,
