@@ -700,8 +700,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
-            for order in invoices_to_refund[factura_id]:
-                _logger.warning('la orden ' + str(order))
+            '''for order in invoices_to_refund[factura_id]:
+                _logger.warning('la orden ' + str(order))'''
 
         list_invoices = []
 
@@ -881,6 +881,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         _logger.warning('ORDERSSSSS')
         _logger.warning(str(orders))
         for order in orders:
+            for line in order.lines:
+                _logger.warning('TAXXXXXXXXXXXXX')
+                _logger.warning(str(line.tax_ids))
             _logger.warning(str(order))
 
         return True
