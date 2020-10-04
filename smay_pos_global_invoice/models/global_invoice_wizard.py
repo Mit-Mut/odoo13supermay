@@ -949,7 +949,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
 
 
-        return True
+        return data_invoice
 
     def prepare_invoice(self, invoice_id):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
