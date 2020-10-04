@@ -854,7 +854,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
     def _get_line_totals(self, invoice_id):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
-        invoice_totals_line = self.env['account.move.line'].search([('product_id','=', 'null'),('tax_line_id','=','null'),('move_id','=',invoice_id)])
+        invoice_totals_line = self.env['account.move.line'].search([('product_id','=', None),('tax_line_id','=',None),('move_id','=',invoice_id)])
         _logger.warning('LINEA DE TTOTALS')
         _logger.warning(str(invoice_totals_line))
         totals = (
