@@ -805,6 +805,13 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             return self.env.ref('account.account_invoices').report_action(refund_invoices)
         return
 
+    def add_tax_line(self,data_invoice,invoice_id):
+        #aqui
+        taxe_ids = self.env['account.move.line'].search([('product_id','=',None),('tax_line_id','>',0)])
+        for tax in taxe_ids:
+            _logger.warning('TAXXXXXXXXXXXX')
+            _logger.warning(str(tax))
+
     def _add_invoice_lines(self,data_invoice,invoice_id,order_ids):
         orders = self.env['pos.order'].search([('id','in',order_ids)])
         for order in orders:
