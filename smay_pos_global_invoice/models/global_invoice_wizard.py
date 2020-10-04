@@ -807,8 +807,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
         data_invoice = {
             'ref': 'Nota de Credito : ' + str(invoice_to_refund.name),
-            #'date': datetime.date(2020, 10, 3),
-            #'invoice_date': datetime.date(2020, 10, 3),
+            'date': str(date.today()),
+            'invoice_date': str(date.today()),
             'journal_id': invoice_to_refund.journal_id.id,
             'invoice_payment_term_id': None,
             'auto_post': False,
@@ -841,7 +841,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             'is_tax_closing': False,
             'tax_report_control_error': False,
             'l10n_mx_edi_partner_bank_id': False,
-            'l10n_mx_edi_payment_method_id': invoice_to_refund.l10n_mx_edi_payment_method_id,
+            'l10n_mx_edi_payment_method_id': invoice_to_refund.l10n_mx_edi_payment_method_id.id,
             'l10n_mx_edi_usage': invoice_to_refund.l10n_mx_edi_usage,
             'l10n_mx_edi_cer_source': False,
             'team_id': invoice_to_refund.team_id.id,
