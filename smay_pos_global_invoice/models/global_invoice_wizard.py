@@ -928,21 +928,28 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'amount_currency': 0.0,
                     'price_subtotal': abs(subtotal),
                     'price_total':abs(amount_total),
-
-
-
-
-
-                    'date_maturity': False,
+                    'blocked': False,
+                    'date_maturity':  str(date.today()),
                     'currency_id': False,
                     'partner_id': self.env['res.company'].browse(
                         self.env.user.company_id.id).invoice_partner_id.id,
-                    'product_uom_id': 1,
+                    'product_uom_id': _original_line.product_uom_id.id,
                     'product_id': self.env['res.company'].browse(
                         self.env.user.company_id.id).invoice_product_id.id,
-                    'payment_id': False,
                     'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
-                    'tax_base_amount': 0,
+                    'tax_base_amount': 0.0,
+
+
+
+
+
+
+
+
+
+                    'payment_id': False,
+
+
                     'tax_exigible': False,
                     'tax_repartition_line_id': False,
                     'tag_ids': [[6, False, []]],
