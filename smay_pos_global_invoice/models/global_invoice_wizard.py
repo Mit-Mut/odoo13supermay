@@ -696,8 +696,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
-            self.add_tax_line(data_invoice,invoice_id)
-            data_invoice = self._add_invoice_lines(data_invoice,invoice_id,invoices_to_refund[factura_id])
+            self.add_tax_line(data_invoice, invoice_id)
+            data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
             for order in invoices_to_refund[factura_id]:
@@ -806,14 +806,17 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             return self.env.ref('account.account_invoices').report_action(refund_invoices)
         return
 
-    def add_tax_line(self,data_invoice,invoice_id):
-        #aqui
-        taxe_ids = self.env['account.move.line'].search([('product_id','=',None),('tax_line_id','!=',None),('move_id','=',invoice_id)])
+    def add_tax_line(self, data_invoice, invoice_id):
+        # aqui
+        taxe_ids = self.env['account.move.line'].search(
+            [('product_id', '=', None), ('tax_line_id', '!=', None), ('move_id', '=', invoice_id)])
         for tax in taxe_ids:
             existe_tax = False
             for line in data_invoice['line_ids']:
-                if line[2]['name']== tax.name:
-                    existe_tax= True
+                _logger.warning('LINEEEEE')
+                _logger.warning(str(line))
+                if line[2]['name'] == tax.name:
+                    existe_tax = True
                     break
 
             if not existe_tax:
@@ -825,16 +828,16 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         'account_id': tax.account_id.id,
                         'sequence': 0,
                         'name': tax.name, 'quantity': - 1.0,
-                        #'price_unit': 9601.54,
+                        # 'price_unit': 9601.54,
                         'price_unit': 0.00,
                         'discount': 0.0,
-                        #'debit': 9601.54,
+                        # 'debit': 9601.54,
                         'debit': 0.00,
                         'credit': 0.0,
                         'amount_currency': -0.0,
-                        #'price_subtotal': 9601.54,
+                        # 'price_subtotal': 9601.54,
                         'price_subtotal': 0.00,
-                        #'price_total': 9601.54,
+                        # 'price_total': 9601.54,
                         'price_total': 0.00,
                         'blocked': False,
                         'date_maturity': str(date.today()),
@@ -842,9 +845,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         'partner_id': self.env.user.company_id.invoice_partner_id.id,
                         'product_uom_id': False,
                         'produuct_id': False,
-                        #'tax_ids': [(6, 0, [1, 13])],
+                        # 'tax_ids': [(6, 0, [1, 13])],
                         'tax_ids': [(6, 0, [tax.id])],
-                        #'tax_base_amount': 60009.71,
+                        # 'tax_base_amount': 60009.71,
                         'tax_base_amount': 0.00,
                         'tax_exigible': False,
                         'tax_repartition_line_id': tax.tax_repartition_line_id.id,
@@ -873,8 +876,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning('TAXXXXXXXXXXXX')
             _logger.warning(str(tax.name))
 
-    def _add_invoice_lines(self,data_invoice,invoice_id,order_ids):
-        orders = self.env['pos.order'].search([('id','in',order_ids)])
+    def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
+        orders = self.env['pos.order'].search([('id', 'in', order_ids)])
         for order in orders:
             _logger.warning(str(order))
         _logger.warning('ORDERSSSSS')
