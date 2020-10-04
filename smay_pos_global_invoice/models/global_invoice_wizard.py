@@ -695,7 +695,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
-            data_invoice['line_ids'].append(self._get_line_totals(factura_id))
+            #data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             #self.add_tax_line(data_invoice, invoice_id)
             #data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
