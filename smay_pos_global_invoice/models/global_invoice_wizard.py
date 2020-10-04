@@ -695,6 +695,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
+            data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
             for order in invoices_to_refund[factura_id]:
@@ -850,6 +851,55 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             'line_ids': []
         }
         return data_invoice
+
+    def _get_line_totals(self, invoice_id):
+        invoice_to_refund = self.env['account.move'].browse(invoice_id)
+        totals = (
+            0,
+            0,
+            {
+                'move_id': invoice_to_refund.id,
+                'account_id': self.env['account.account'].search([('name','=','Clientes nacionales')]).id,
+                'sequence': 0,
+                'name': '',
+                'quantity': 1.0,
+                'price_unit': 0.0,
+                'discount': 0.0,
+                'debit': 0.0,
+                #'credit': 120339.87,
+                'credit': 0.00,
+                'amount_currency': -0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'blocked': False,
+                'date_maturity': str(date.today()),
+                'currency_id': False,
+                'partner_id': self.env.user.company_id.invoice_partner_id.id,
+                'product_uom_id': False,
+                'product_id': False,
+                'tax_ids': [(6, 0, [])],
+                'tax_base_amount': 0.0,
+                'tax_exigible': True,
+                'tax_repartition_line_id': False,
+                'tag_ids': [(6, 0, [])],
+                'analytic_account_id': False,
+                'analytic_tag_ids': [(6, 0, [])],
+                'recompute_tax_line': False,
+                'display_type': False,
+                'is_rounding_line': False,
+                'exclude_from_invoice_tab': True,
+                'purchase_line_id': False,
+                'is_anglo_saxon_line': False,
+                'predict_from_name': False,
+                'predict_override_default_account': False,
+                'expected_pay_date': False,
+                'internal_note': False,
+                'next_action_date': False,
+                'l10n_mx_edi_qty_umt': 0.0,
+                'l10n_mx_edi_price_unit_umt': 0.0,
+                'sale_line_ids': [(6, None, [])]
+            }),
+        return totals
 
     def validate_user(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
