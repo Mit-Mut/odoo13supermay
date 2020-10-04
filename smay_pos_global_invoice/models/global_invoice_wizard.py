@@ -910,7 +910,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 line.append(0)
                 line.append('')
                 line.append({
-                    'account_id': account_id,
+                    #'account_id': account_id,
+                    'account_id': 1,
                     'sequence': 10,
                     'name': description,
                     'quantity': 1,
