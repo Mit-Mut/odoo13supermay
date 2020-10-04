@@ -695,7 +695,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
-            #data_invoice['line_ids'].append(self._get_line_totals(factura_id))
+            data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             #self.add_tax_line(data_invoice, invoice_id)
             #data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
@@ -936,7 +936,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
         invoice_totals_line = self.env['account.move.line'].search(
             [('product_id', '=', None), ('tax_line_id', '=', None), ('move_id', '=', invoice_id)])
-        totals = (
+        totals = [
                      0,
                      0,
                      {
@@ -980,7 +980,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                          'l10n_mx_edi_qty_umt': 0.0,
                          'l10n_mx_edi_price_unit_umt': 0.0,
                          'sale_line_ids': [(6, None, [])]
-                     }),
+                     }],
         return totals
 
     def validate_user(self, config_ids):
