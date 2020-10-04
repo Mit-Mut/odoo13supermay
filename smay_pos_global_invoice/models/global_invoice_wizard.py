@@ -844,9 +844,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         'currency_id': False,
                         'partner_id': self.env.user.company_id.invoice_partner_id.id,
                         'product_uom_id': False,
-                        'produuct_id': False,
+                        'product_id': False,
                         # 'tax_ids': [(6, 0, [1, 13])],
-                        'tax_ids': [(6, 0, [tax.id])],
+                        'tax_ids': [(6, 0, [])],
                         # 'tax_base_amount': 60009.71,
                         'tax_base_amount': 0.00,
                         'tax_exigible': False,
@@ -908,7 +908,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
                 line = []
                 line.append(0)
-                line.append('')
+                line.append(0)
                 line.append({
                     #'account_id': account_id,
                     'account_id': 1,
@@ -945,7 +945,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'l10n_mx_edi_customs_number': False,
                     'l10n_mx_edi_qty_umt': 0
                 })
-                data_invoice['line_ids'].append(line)
+                data_invoice['line_ids'].append(tuple(line))
 
 
 
