@@ -694,7 +694,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
-            data_invoice = {}
             data_invoice = self.prepare_invoice(factura_id)
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
@@ -808,7 +807,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
         data_invoice = {
             'ref': 'Nota de Credito : ' + str(invoice_to_refund.name),
-            'date': datetime.date(2020, 10, 3),
+            #'date': datetime.date(2020, 10, 3),
             'invoice_date': datetime.date(2020, 10, 3),
             'journal_id': invoice_to_refund.journal_id.id,
             'invoice_payment_term_id': None,
