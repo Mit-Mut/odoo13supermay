@@ -883,6 +883,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for order in orders:
             order_taxes = {}
 
+            _logger.warning('pos_reference')
+            _logger.warning(str(order.pos_reference))
+
             # omite las que ya se facturaron
             if order.state == 'invoiced' or order.amount_total >= 0:
                 continue
@@ -901,7 +904,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         amount_total += orderline_2.price_subtotal_incl
                         subtotal += orderline_2.price_subtotal
 
-                if amount_total == 0:
+                if amount_total >= 0:
                     continue
 
                 # aqui debo de guardar cada linea de factura
