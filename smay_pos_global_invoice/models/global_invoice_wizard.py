@@ -811,7 +811,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         taxe_ids = self.env['account.move.line'].search([('product_id','=',None),('tax_line_id','!=',None)])
         for tax in taxe_ids:
             _logger.warning('TAXXXXXXXXXXXX')
-            _logger.warning(str(tax))
+            _logger.warning(str(tax.name))
 
     def _add_invoice_lines(self,data_invoice,invoice_id,order_ids):
         orders = self.env['pos.order'].search([('id','in',order_ids)])
