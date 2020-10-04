@@ -881,10 +881,72 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         _logger.warning('ORDERSSSSS')
         _logger.warning(str(orders))
         for order in orders:
-            for line in order.lines:
-                _logger.warning('TAXXXXXXXXXXXXX')
-                _logger.warning(str(line.tax_ids))
-            _logger.warning(str(order))
+            order_taxes = {}
+
+            # omite las que ya se facturaron
+            if order.state == 'invoiced' or order.amount_total >= 0:
+                continue
+
+            # reviso que taxes tiene cada linea de pedido
+            for orderline in order.lines:
+                for tax in orderline.tax_ids:
+                    order_taxes[int(tax.amount)] = tax.id
+
+            for order_tax in order_taxes:
+                description = order.pos_reference + '_' + str(order_tax)
+                amount_total = 0
+                subtotal = 0
+                for orderline_2 in order.lines:
+                    if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
+                        amount_total += orderline_2.price_subtotal_incl
+                        subtotal += orderline_2.price_subtotal
+
+                if amount_total == 0:
+                    continue
+
+                # aqui debo de guardar cada linea de factura
+
+                line = []
+                line.append(0)
+                line.append('')
+                line.append({
+                    'account_id': account_id,
+                    'sequence': 10,
+                    'name': description,
+                    'quantity': 1,
+                    'price_unit': amount_total,
+                    'discount': 0,
+                    'debit': 0,
+                    'credit': subtotal,
+                    'amount_currency': 0,
+                    'date_maturity': False,
+                    'currency_id': False,
+                    'partner_id': self.env['res.company'].browse(
+                        self.env.user.company_id.id).invoice_partner_id.id,
+                    'product_uom_id': 1,
+                    'product_id': self.env['res.company'].browse(
+                        self.env.user.company_id.id).invoice_product_id.id,
+                    'payment_id': False,
+                    'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
+                    'tax_base_amount': 0,
+                    'tax_exigible': False,
+                    'tax_repartition_line_id': False,
+                    'tag_ids': [[6, False, []]],
+                    'analytic_account_id': order.session_id.config_id.x_cuenta_analitica.id,
+                    'analytic_tag_ids': [[6, False, []]],
+                    'recompute_tax_line': False,
+                    'display_type': False,
+                    'is_rounding_line': False,
+                    'exclude_from_invoice_tab': False,
+                    'purchase_line_id': False,
+                    'predict_from_name': False,
+                    'predict_override_default_account': False,
+                    'l10n_mx_edi_customs_number': False,
+                    'l10n_mx_edi_qty_umt': 0
+                })
+                data_invoice.append(line)
+
+
 
         return True
 
