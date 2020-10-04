@@ -945,7 +945,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'l10n_mx_edi_customs_number': False,
                     'l10n_mx_edi_qty_umt': 0
                 })
-                data_invoice.append(line)
+                data_invoice['line_ids'].append(line)
 
 
 
