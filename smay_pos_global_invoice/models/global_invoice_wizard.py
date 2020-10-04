@@ -983,7 +983,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                          'l10n_mx_edi_price_unit_umt': 0.0,
                          'sale_line_ids': [(6, None, [])]
                      }],
-        return totals
+        return tuple(totals[0])
 
     def validate_user(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
