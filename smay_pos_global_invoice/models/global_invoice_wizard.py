@@ -909,20 +909,30 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
                 # aqui debo de guardar cada linea de factura
 
+                _original_line = self.env['account.move.line'].search([('move_id','=',invoice_id),('name','=',description)])
+
                 line = []
                 line.append(0)
                 line.append(0)
                 line.append({
+                    'move_id': _original_line.move_id.id,
                     #'account_id': account_id,
-                    'account_id': 1,
-                    'sequence': 10,
+                    'account_id': _original_line.account_id.id,
+                    'sequence': _original_line.sequence,
                     'name': description,
-                    'quantity': 1,
-                    'price_unit': amount_total,
-                    'discount': 0,
-                    'debit': 0,
-                    'credit': subtotal,
-                    'amount_currency': 0,
+                    'quantity': 1.0,
+                    'price_unit': abs(amount_total),
+                    'discount': 0.0,
+                    'debit': 0.0,
+                    'credit': abs(subtotal),
+                    'amount_currency': 0.0,
+                    'price_subtotal': abs(subtotal),
+                    'price_total':abs(amount_total),
+
+
+
+
+
                     'date_maturity': False,
                     'currency_id': False,
                     'partner_id': self.env['res.company'].browse(
