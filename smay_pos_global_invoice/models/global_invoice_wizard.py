@@ -695,11 +695,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
-            _logger.warning('TOTAOTOAOTTAO')
-            _logger.warning(str(self._get_line_totals(factura_id)))
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             self.add_tax_line(data_invoice, invoice_id)
-            #data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
+            data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
             for order in invoices_to_refund[factura_id]:
@@ -880,11 +878,12 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
-        for order in orders:
-            _logger.warning(str(order))
         _logger.warning('ORDERSSSSS')
         _logger.warning(str(orders))
-        return
+        for order in orders:
+            _logger.warning(str(order))
+
+        return True
 
     def prepare_invoice(self, invoice_id):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
