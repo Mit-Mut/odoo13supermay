@@ -810,6 +810,66 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         #aqui
         taxe_ids = self.env['account.move.line'].search([('product_id','=',None),('tax_line_id','!=',None),('move_id','=',invoice_id)])
         for tax in taxe_ids:
+            existe_tax = False
+            for line in data_invoice['line_ids']:
+                if line[2]['name']== tax.name:
+                    existe_tax= True
+                    break
+
+            if not existe_tax:
+                tax_line = (
+                    0,
+                    0,
+                    {
+                        'move_id': tax.move_id.id,
+                        'account_id': tax.account_id.id,
+                        'sequence': 0,
+                        'name': tax.name, 'quantity': - 1.0,
+                        #'price_unit': 9601.54,
+                        'price_unit': 0.00,
+                        'discount': 0.0,
+                        #'debit': 9601.54,
+                        'debit': 0.00,
+                        'credit': 0.0,
+                        'amount_currency': -0.0,
+                        #'price_subtotal': 9601.54,
+                        'price_subtotal': 0.00,
+                        #'price_total': 9601.54,
+                        'price_total': 0.00,
+                        'blocked': False,
+                        'date_maturity': str(date.today()),
+                        'currency_id': False,
+                        'partner_id': self.env.user.company_id.invoice_partner_id.id,
+                        'product_uom_id': False,
+                        'produuct_id': False,
+                        #'tax_ids': [(6, 0, [1, 13])],
+                        'tax_ids': [(6, 0, [tax.id])],
+                        #'tax_base_amount': 60009.71,
+                        'tax_base_amount': 0.00,
+                        'tax_exigible': False,
+                        'tax_repartition_line_id': tax.tax_repartition_line_id.id,
+                        'tag_ids': [(6, 0, [])],
+                        'analytic_account_id': tax.analytic_account_id.id,
+                        'analytic_tag_ids': [(6, 0, [])],
+                        'recompute_tax_line': False,
+                        'display_type': False,
+                        'is_rounding_line': False,
+                        'exclude_from_invoice_tab': True,
+                        'purchase_line_id': False,
+                        'is_anglo_saxon_line': False,
+                        'predict_from_name': False,
+                        'predict_override_default_account': False,
+                        'expected_pay_date': False,
+                        'internal_note': False,
+                        'next_action_date': False,
+                        'l10n_mx_edi_qty_umt': 0.0,
+                        'l10n_mx_edi_price_unit_umt': 0.0,
+                        'sale_line_ids': [(6, None, [])]
+                    }
+                )
+
+                data_invoice['line_ids'].append(tax_line)
+
             _logger.warning('TAXXXXXXXXXXXX')
             _logger.warning(str(tax.name))
 
