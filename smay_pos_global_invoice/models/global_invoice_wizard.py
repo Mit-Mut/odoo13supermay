@@ -677,8 +677,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             for refund_order in refund_orders_without_cr:
                 pos_references.append(refund_order.pos_reference)'''
 
-        # ----------------
-
         invoices_to_refund = {}
         for order in orders:
             invoice_id = self.env['account.move.line'].search(
@@ -692,12 +690,16 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         _logger.warning('RELACION DE DEVOLUCIOES')
         _logger.warning(str(invoices_to_refund))
 
+        # ----------------
+
         for factura_id in invoices_to_refund.keys():
-            _logger.warning('Aqui empiezo la factura'+str(factura_id))
+            _logger.warning('Aqui empiezo la factura' + str(factura_id))
+            data_invoice = {}
+            data_invoice = self.prepare_invoice(factura_id)
+            _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
+            _logger.warning(str(data_invoice))
             for order in invoices_to_refund[factura_id]:
-                _logger.warning('la orden '+str(order))
-
-
+                _logger.warning('la orden ' + str(order))
 
         list_invoices = []
 
@@ -801,6 +803,54 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 })
             return self.env.ref('account.account_invoices').report_action(refund_invoices)
         return
+
+    def prepare_invoice(self, invoice_id):
+        invoice_to_refund = self.env['account.move'].browse(invoice_id)
+        data_invoice = {
+            'ref': 'Nota de Credito : ' + str(invoice_to_refund.name),
+            'date': datetime.date(2020, 10, 3),
+            'invoice_date': datetime.date(2020, 10, 3),
+            'journal_id': invoice_to_refund.journal_id.id,
+            'invoice_payment_term_id': None,
+            'auto_post': False,
+            'invoice_user_id': invoice_to_refund.create_uid.id,
+            'campaign_id': False,
+            'medium_id': False,
+            'source_id': False,
+            'type': 'out_refund',
+            'reversed_entry_id': invoice_to_refund.id,
+            'state': 'draft',
+            'narration': False,
+            'to_check': False,
+            'currency_id': invoice_to_refund.currency_id.id,
+            'partner_id': self.env.user.company_id.invoice_partner_id.id,
+            'tax_cash_basis_rec_id': False,
+            'fiscal_position_id': invoice_to_refund.fiscal_position_id.id,
+            'invoice_origin': invoice_to_refund.invoice_origin,
+            'invoice_partner_bank_id': invoice_to_refund.invoice_partner_bank_id.id,
+            'invoice_incoterm_id': False,
+            'invoice_vendor_bill_id': False,
+            'invoice_source_email': False,
+            'invoice_cash_rounding_id': False,
+            'duplicated_vendor_ref': False,
+            'purchase_vendor_bill_id': False,
+            'purchase_id': False,
+            'stock_move_id': False,
+            'release_to_pay_manual': False,
+            'force_release_to_pay': False,
+            'transfer_model_id': False,
+            'is_tax_closing': False,
+            'tax_report_control_error': False,
+            'l10n_mx_edi_partner_bank_id': False,
+            'l10n_mx_edi_payment_method_id': invoice_to_refund.l10n_mx_edi_payment_method_id,
+            'l10n_mx_edi_usage': invoice_to_refund.l10n_mx_edi_usage,
+            'l10n_mx_edi_cer_source': False,
+            'team_id': invoice_to_refund.team_id.id,
+            'partner_shipping_id': False,
+            'l10n_mx_closing_move': False,
+            'line_ids': []
+        }
+        return data_invoice
 
     def validate_user(self, config_ids):
         config_ids = self.env['pos.config'].search([('id', 'in', config_ids)])
