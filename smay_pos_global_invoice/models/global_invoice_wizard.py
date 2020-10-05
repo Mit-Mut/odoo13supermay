@@ -706,7 +706,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             '''for order in invoices_to_refund[factura_id]:
                 _logger.warning('la orden ' + str(order))'''
 
-        list_invoices = []
+        '''list_invoices = []
 
         for session in sessions_to_invoicing:
             refund_orders_without_cr = self.env['pos.order'].search(
@@ -806,7 +806,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 inv.write({
                     'origin': inv.origin + ' Devoluciones ' + str(self.start_date)[0:10]
                 })
-            return self.env.ref('account.account_invoices').report_action(refund_invoices)
+            return self.env.ref('account.account_invoices').report_action(refund_invoices)'''
         return
 
     def add_tax_line(self, data_invoice, invoice_id):
