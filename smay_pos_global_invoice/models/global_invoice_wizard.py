@@ -878,13 +878,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
-        _logger.warning('ORDERSSSSS')
-        _logger.warning(str(orders))
         for order in orders:
             order_taxes = {}
-
-            _logger.warning('pos_reference')
-            _logger.warning(str(order.pos_reference))
 
             # omite las que ya se facturaron
             if order.state == 'invoiced' or order.amount_total >= 0:
@@ -922,10 +917,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'sequence': _original_line.sequence,
                     'name': description,
                     'quantity': 1.0,
-                    'price_unit': abs(amount_total),
+                    'price_unit': round(abs(amount_total),2),
                     'discount': 0.0,
-                    'debit': 0.0,
-                    'credit': abs(subtotal),
+                    'debit': round(abs(subtotal),2),
+                    'credit': 0.0,#abs(subtotal),
                     'amount_currency': 0.0,
                     'price_subtotal': abs(subtotal),
                     'price_total': abs(amount_total),
@@ -959,6 +954,31 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'l10n_mx_edi_price_unit_umt': 0.0,
                     'sale_line_ids': [(6, None, [])]
                 })
+
+                for li in data_invoice['line_ids']:
+                    if li[2]['name'] == False:
+                        price_unit_aux = round(abs(li[2]['price_unit']), 2)
+                        debit_aux = li[2]['debit']
+                        li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
+                        li[2]['debit'] = round(debit_aux + amount_total, 2)
+                        break
+
+                impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
+                if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
+                    for li in data_invoice['line_ids']:
+                        if li[2]['name'] == impuesto.name:
+                            aux_credit = li[2]['credit']
+                            aux_price_unit = li[2]['price_unit']
+                            aux_tax_base_amount = li[2]['tax_base_amount']
+
+                            li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
+                            li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
+                            li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
+                elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
+                    for li in data_invoice['line_ids']:
+                        if li[2]['name'] == impuesto.name:
+                            li[2]['quantity'] = 1
+                            
                 data_invoice['line_ids'].append(tuple(line))
 
         return data_invoice
