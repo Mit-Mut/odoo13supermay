@@ -962,8 +962,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     if li[2]['name'] == False:
                         price_unit_aux = round(abs(li[2]['price_unit']), 2)
                         debit_aux = li[2]['debit']
-                        li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
-                        li[2]['debit'] = round(debit_aux + amount_total, 2)
+                        #li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
+                        #li[2]['debit'] = round(debit_aux + amount_total, 2)
+                        li[2]['credit'] = round(debit_aux + amount_total, 2)
                         break
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
