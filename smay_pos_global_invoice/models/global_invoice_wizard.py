@@ -909,14 +909,15 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
                 # aqui debo de guardar cada linea de factura
 
-                _original_line = self.env['account.move.line'].search([('move_id','=',invoice_id),('name','=',description)])
+                _original_line = self.env['account.move.line'].search(
+                    [('move_id', '=', invoice_id), ('name', '=', description)])
 
                 line = []
                 line.append(0)
                 line.append(0)
                 line.append({
                     'move_id': _original_line.move_id.id,
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'account_id': _original_line.account_id.id,
                     'sequence': _original_line.sequence,
                     'name': description,
@@ -927,9 +928,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'credit': abs(subtotal),
                     'amount_currency': 0.0,
                     'price_subtotal': abs(subtotal),
-                    'price_total':abs(amount_total),
+                    'price_total': abs(amount_total),
                     'blocked': False,
-                    'date_maturity':  str(date.today()),
+                    'date_maturity': str(date.today()),
                     'currency_id': False,
                     'partner_id': self.env['res.company'].browse(
                         self.env.user.company_id.id).invoice_partner_id.id,
@@ -938,18 +939,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         self.env.user.company_id.id).invoice_product_id.id,
                     'tax_ids': [[6, False, [order_taxes.get(order_tax)]]],
                     'tax_base_amount': 0.0,
-
-
-
-
-
-
-
-
-
-                    'payment_id': False,
-
-
                     'tax_exigible': False,
                     'tax_repartition_line_id': False,
                     'tag_ids': [[6, False, []]],
@@ -960,14 +949,17 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'is_rounding_line': False,
                     'exclude_from_invoice_tab': False,
                     'purchase_line_id': False,
+                    'is_anglo_saxon_line': False,
                     'predict_from_name': False,
                     'predict_override_default_account': False,
-                    'l10n_mx_edi_customs_number': False,
-                    'l10n_mx_edi_qty_umt': 0
+                    'expected_pay_date': False,
+                    'internal_note': False,
+                    'next_action_date': False,
+                    'l10n_mx_edi_qty_umt': 0.0,
+                    'l10n_mx_edi_price_unit_umt': 0.0,
+                    'sale_line_ids': [(6, None, [])]
                 })
                 data_invoice['line_ids'].append(tuple(line))
-
-
 
         return data_invoice
 
