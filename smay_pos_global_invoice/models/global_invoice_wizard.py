@@ -964,16 +964,16 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         debit_aux = li[2]['debit']
                         #li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
                         #li[2]['debit'] = round(debit_aux + amount_total, 2)
-                        li[2]['credit'] = round(debit_aux + amount_total, 2)
+                        li[2]['credit'] = abs(round(debit_aux + amount_total, 2))
                         break
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
-                            aux_credit = li[2]['credit']
-                            aux_price_unit = li[2]['price_unit']
-                            aux_tax_base_amount = li[2]['tax_base_amount']
+                            aux_credit = abs(li[2]['credit'])
+                            aux_price_unit = abs(li[2]['price_unit'])
+                            aux_tax_base_amount = abs(li[2]['tax_base_amount'])
 
                             li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
                             li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
