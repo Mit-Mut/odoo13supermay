@@ -978,7 +978,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
                             li[2]['quantity'] = 1
-                            
+
                 data_invoice['line_ids'].append(tuple(line))
 
         return data_invoice
@@ -1042,7 +1042,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                          'move_id': invoice_totals_line.move_id.id,
                          'account_id': invoice_totals_line.account_id.id,
                          'sequence': 0,
-                         'name': '',
+                         'name': False,
                          'quantity': 1.0,
                          'price_unit': 0.0,
                          'discount': 0.0,
