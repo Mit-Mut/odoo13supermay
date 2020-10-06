@@ -91,6 +91,7 @@ class smayAccountMoveReversal(models.Model):
                                             line[2]['price_total'] - line[2]['price_subtotal']), 2)
                                     line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'],
                                                                         2)
+                                    line2[2]['sequence']=0
 
         # aqui remuevo las lineas en cero
         lineas_eliminar = []
