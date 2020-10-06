@@ -91,7 +91,7 @@ class smayAccountMoveReversal(models.Model):
                                             line[2]['price_total'] - line[2]['price_subtotal']), 2)
                                     line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'],
                                                                         2)
-                                    line2[2]['sequence']=0
+                                    line2[2]['sequence'] = 0
 
         # aqui remuevo las lineas en cero
         lineas_eliminar = []
@@ -115,6 +115,7 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['credit'] = total
                 line[2]['price_subtotal'] = - total
                 line[2]['price_total'] = - total
+                line2[2]['sequence'] = 0
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
 
