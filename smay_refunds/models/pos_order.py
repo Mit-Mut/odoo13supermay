@@ -74,6 +74,7 @@ class smayAccountMoveReversal(models.Model):
                     line[2]['debit'] = round(line[2]['debit'] * abs(line_order.qty), 2)
                     line[2]['price_subtotal'] = round(line[2]['price_subtotal'] * abs(line_order.qty), 2)
                     line[2]['price_total'] = round(line[2]['price_total'] * abs(line_order.qty), 2)
+                    line[2]['date_maturity'] = move.invoice_date
                     if line[2]['tax_ids'][0][2][0]:
                         tax_id = line[2]['tax_ids'][0][2][0]
                         tax = self.env['account.tax'].browse(tax_id)
