@@ -94,6 +94,7 @@ class smayAccountMoveReversal(models.Model):
                                     line2[2]['sequence'] = 0
                                     line2[2]['price_total'] = line2[2]['price_unit']
                                     line2[2]['price_subtotal'] = line2[2]['price_unit']
+                                    line[2]['date_maturity'] = move.date_invoice
 
         # aqui remuevo las lineas en cero
         lineas_eliminar = []
