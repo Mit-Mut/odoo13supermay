@@ -273,8 +273,9 @@ class GlobalInvoiceWizard(models.TransientModel):
             'fiscal_position_id': position_fiscal_ids[0],
             'type': 'out_invoice',
             'company_id': self.env.user.company_id.id,
-            'l10n_mx_edi_payment_method_id': 1,
+            #'l10n_mx_edi_payment_method_id': 1,
             'invoice_date': str(date.today()),  # - timedelta(days=2)),
+            'invoice_payment_term_id': 1,
             # 'date_due': str(date.today()),
             'line_ids': [
             ],
