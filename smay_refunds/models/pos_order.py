@@ -115,10 +115,10 @@ class smayAccountMoveReversal(models.Model):
 
         for line in move_vals_list[0]['line_ids']:
             if not line[2]['product_id'] and not line[2]['name']:
-                #line[2]['price_unit'] = - total
+                # line[2]['price_unit'] = - total
                 line[2]['price_unit'] = 0.0
                 line[2]['credit'] = total
-                #line[2]['price_subtotal'] = - total
+                # line[2]['price_subtotal'] = - total
                 line[2]['price_subtotal'] = 0.0
                 line[2]['price_total'] = 0.0
                 line2[2]['sequence'] = 0
