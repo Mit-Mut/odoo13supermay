@@ -56,10 +56,10 @@ class smayAccountMoveReversal(models.Model):
                 line[2]['quantity'] = 0
 
             if not line[2]['product_id'] and line[2]['name']:
-                line[2]['quantity'] = 0
-                line[2]['debit'] = 0
-                line[2]['price_unit'] = 0
-                line[2]['tax_base_amount'] = 0
+                line[2]['quantity'] = 0.0
+                line[2]['debit'] = 0.0
+                line[2]['price_unit'] = 0.0
+                line[2]['tax_base_amount'] = 0.0
 
             if not line[2]['product_id'] and not line[2]['name']:
                 line[2]['price_unit'] = 0
@@ -80,7 +80,7 @@ class smayAccountMoveReversal(models.Model):
                         if tax.amount > 0:
                             for line2 in move_vals_list[0]['line_ids']:
                                 if line2[2]['name'] == tax.name:
-                                    line2[2]['quantity'] = 1
+                                    line2[2]['quantity'] = 1.0
                                     aux_price_unit = round(line2[2]['price_unit'], 2)
                                     aux_debit = round(line2[2]['debit'], 2)
                                     aux_tax_base_amount = round(line2[2]['tax_base_amount'], 2)
@@ -92,6 +92,8 @@ class smayAccountMoveReversal(models.Model):
                                     line2[2]['tax_base_amount'] = round(aux_tax_base_amount + line[2]['price_subtotal'],
                                                                         2)
                                     line2[2]['sequence'] = 0
+                                    line2[2]['price_total'] = line2[2]['price_unit']
+                                    line2[2]['price_subtotal'] = line2[2]['price_unit']
 
         # aqui remuevo las lineas en cero
         lineas_eliminar = []

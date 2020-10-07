@@ -816,8 +816,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for tax in taxe_ids:
             existe_tax = False
             for line in data_invoice['line_ids']:
-                _logger.warning('LINEEEEE')
-                _logger.warning(str(line))
                 if line[2]['name'] == tax.name:
                     existe_tax = True
                     break
@@ -920,10 +918,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     'sequence': _original_line.sequence,
                     'name': description,
                     'quantity': 1.0,
-                    'price_unit': round(abs(amount_total),2),
+                    'price_unit': round(abs(amount_total), 2),
                     'discount': 0.0,
-                    'debit': round(abs(subtotal),2),
-                    'credit': 0.0,#abs(subtotal),
+                    'debit': round(abs(subtotal), 2),
+                    'credit': 0.0,  # abs(subtotal),
                     'amount_currency': 0.0,
                     'price_subtotal': abs(subtotal),
                     'price_total': abs(amount_total),
@@ -966,8 +964,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         _logger.warning('ENTRO A ACTUALIZAR TOTALES')
                         _logger.warning(str(credit_aux))
                         _logger.warning(str(amount_total))
-                        #li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
-                        #li[2]['debit'] = round(debit_aux + amount_total, 2)
+                        # li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
+                        # li[2]['debit'] = round(debit_aux + amount_total, 2)
                         li[2]['credit'] = abs(round(credit_aux + abs(amount_total), 2))
                         break
 
