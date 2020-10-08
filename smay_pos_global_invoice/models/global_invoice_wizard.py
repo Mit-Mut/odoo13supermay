@@ -200,6 +200,15 @@ class GlobalInvoiceWizard(models.TransientModel):
         # Genero la factura global
         Invoice = self.env['account.move'].create(self._prepare_global_invoice(pos_configs, orders))
 
+        for move, Invoice in zip(self, Invoice.with_context(check_move_validity=False)):
+            # Update amount_currency if the date has changed.
+            if move.date != Invoice.date:
+                for line in Invoice.line_ids:
+                    if line.currency_id:
+                        line._onchange_currency()
+            Invoice._recompute_dynamic_lines(recompute_all_taxes=False)
+        Invoice._check_balanced()
+
         for order in orders:
             order.write({
                 'account_move': Invoice.id,
