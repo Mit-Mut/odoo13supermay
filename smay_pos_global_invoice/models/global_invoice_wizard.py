@@ -194,6 +194,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # si no hay ordenes se termina el proceso
         if len(orders) == 0:
+            _logger.warning("termino el proceoso")
             return
 
         # Genero la factura global
