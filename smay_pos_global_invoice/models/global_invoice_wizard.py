@@ -194,7 +194,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # si no hay ordenes se termina el proceso
         if len(orders) == 0:
-            _logger.warning("termino el proceoso")
+            _logger.warning("Termino el proceso, no hay ordenes por facturar.")
             return
 
         # Genero la factura global
@@ -209,7 +209,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         for order in orders:
             order.write({
                 'account_move': Invoice.id,
-                #'state': 'invoiced'
+                # 'state': 'invoiced'
             })
         Invoice.action_post()
         for session in sessions_to_invoicing:
@@ -270,25 +270,34 @@ class GlobalInvoiceWizard(models.TransientModel):
         if len(list(set(analytic_account_ids))) > 1:
             raise UserError('Existe más de una cuenta analitica en los puntos de venta a facturar')
 
+        payment_tem_id = self.env['account.payment.term'].search([('name', '=', 'Immediate Payment')]).id
+
+        if not payment_tem_id:
+            payment_tem_id = 1
+
         data_invoice = {
-            'partner_id': self.env['res.company'].browse(self.env.user.company_id.id).invoice_partner_id.id,
+            'partner_id': self.env.user.company_id.invoice_partner_id.id,
             'l10n_mx_edi_payment_method_id': int(self.pay_method_id),
             'l10n_mx_edi_usage': self.uso_cfdi_id,
             'user_id': self.env.user.id,
             'team_id': equipo_ventas[0],
             'journal_id': journal_ids[0],
+            'currency_id': self.env.user.company_id.currency_id.id,
+            'invoice_user_id': self.env.user.id,
             'fiscal_position_id': position_fiscal_ids[0],
             'type': 'out_invoice',
             'company_id': self.env.user.company_id.id,
-            #'l10n_mx_edi_payment_method_id': 1,
+            # 'l10n_mx_edi_payment_method_id': 1,
             'invoice_date': str(date.today()),  # - timedelta(days=2)),
-            'invoice_payment_term_id': 1,
+            'date': str(date.today()),
+            'invoice_payment_term_id': payment_tem_id,
             # 'date_due': str(date.today()),
             'line_ids': [
             ],
             'ref': 'Factura Global - ' + str(self.start_date)[0:10] + ' - ' + self.env[
                 'res.partner'].browse(
                 sucursal_ids[0]).name,
+            'invoice_date_due': str(date.today()),
         }
 
         # Agrego todos los impuestos
