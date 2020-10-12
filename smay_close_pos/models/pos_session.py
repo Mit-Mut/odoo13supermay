@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class PosSessionTempClose(models.Model):
     _name = 'pos.session.temp.close'
+    _description = 'guarda las sessiones que seran cerradas de manera automatica.'
 
     session_id = fields.Integer('id de session', required=True)
 
