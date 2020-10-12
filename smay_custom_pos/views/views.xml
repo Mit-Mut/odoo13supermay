@@ -58,7 +58,7 @@
     </record>
 
 
-    <record id="view_pos_session_form_user" model="ir.ui.view">
+    <!--<record id="view_pos_session_form_user" model="ir.ui.view">
         <field name="name">view.pos.session.form.user</field>
         <field name="model">pos.session</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
@@ -197,7 +197,7 @@
                 <field name="config_id" options="{'no_open': True}"/>
             </xpath>
         </field>
-    </record>
+    </record>-->
 
 
 
