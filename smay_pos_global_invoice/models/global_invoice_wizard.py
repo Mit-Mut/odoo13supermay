@@ -952,7 +952,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             'partner_id': self.env.user.company_id.invoice_partner_id.id,
             'tax_cash_basis_rec_id': False,
             'fiscal_position_id': invoice_to_refund.fiscal_position_id.id,
-            'invoice_origin': invoice_to_refund.invoice_origin,
+            #'invoice_origin': invoice_to_refund.invoice_origin,
             'invoice_partner_bank_id': invoice_to_refund.invoice_partner_bank_id.id,
             'invoice_incoterm_id': False,
             'invoice_vendor_bill_id': False,
