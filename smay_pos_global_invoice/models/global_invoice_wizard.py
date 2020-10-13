@@ -728,6 +728,12 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning(str(data_invoice))
             _logger.warning(str(credit_note))
 
+            for line in credit_note.line_ids:
+                if line.currency_id:
+                    line._onchange_currency()
+            credit_note._recompute_dynamic_lines(recompute_all_taxes=False)
+            credit_note._check_balanced()
+
         return
 
     def add_tax_line(self, data_invoice, invoice_id):
