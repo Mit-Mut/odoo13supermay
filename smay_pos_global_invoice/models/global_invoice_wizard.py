@@ -705,6 +705,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             if invoice_id:
                 if invoice_id not in invoices_to_refund:
                     invoices_to_refund[invoice_id] = []
+                    invoices_to_refund[invoice_id].append(order.id)
                 else:
                     invoices_to_refund[invoice_id].append(order.id)
 
