@@ -896,9 +896,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                             aux_price_unit = abs(li[2]['price_unit'])
                             aux_tax_base_amount = abs(li[2]['tax_base_amount'])
 
-                            li[2]['credit'] = round(aux_credit + (amount_total - subtotal), 2)
-                            li[2]['price_unit'] = round(aux_price_unit + (amount_total - subtotal), 2)
-                            li[2]['tax_base_amount'] = round(aux_tax_base_amount + subtotal, 2)
+                            li[2]['credit'] = abs(round(aux_credit + (amount_total - subtotal), 2))
+                            li[2]['price_unit'] = abs(round(aux_price_unit + (amount_total - subtotal), 2))
+                            li[2]['tax_base_amount'] = abs(round(aux_tax_base_amount + subtotal, 2))
+                            li[2]['quantity'] = 1
                 elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
                     for li in data_invoice['line_ids']:
                         if li[2]['name'] == impuesto.name:
