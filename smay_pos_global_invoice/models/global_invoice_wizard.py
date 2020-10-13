@@ -717,6 +717,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             data_invoice = self.prepare_invoice(factura_id)
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             self.add_tax_line(data_invoice, invoice_id)
+            _logger.warning(str('tetetetetetet'))
+            _logger.warning(str(invoices_to_refund))
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
             credit_note = self.env['account.move'].create(data_invoice)
 
