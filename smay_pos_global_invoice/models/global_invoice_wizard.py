@@ -791,13 +791,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
                 data_invoice['line_ids'].append(tax_line)
 
-            _logger.warning('TAXXXXXXXXXXXX')
-            _logger.warning(str(tax.name))
-            _logger.warning(str(data_invoice))
-
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
         for order in orders:
+            _logger.warning(str(order.pos_reference))
             order_taxes = {}
 
             # omite las que ya se facturaron
