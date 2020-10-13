@@ -211,7 +211,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'account_move': Invoice.id,
                 # 'state': 'invoiced'
             })
-        #Invoice.action_post()
+        # Invoice.action_post()
         for session in sessions_to_invoicing:
             session.sudo(True).write({
                 'factura_global': True,
@@ -723,110 +723,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
             _logger.warning(str(credit_note))
-            '''for order in invoices_to_refund[factura_id]:
-                _logger.warning('la orden ' + str(order))'''
 
-        '''list_invoices = []
-
-        for session in sessions_to_invoicing:
-            refund_orders_without_cr = self.env['pos.order'].search(
-                [('session_id', '=', session.id),
-                 ('amount_total', '<', 0),
-                 ('state', '!=', 'invoiced')])
-
-            for refund_order in refund_orders_without_cr:
-                invoice_line_ids = self.env['account.move.line'].search(
-                    [('name', 'like', refund_order.pos_reference),
-                     ('invoice_id.type', '=', 'out_invoice'),
-                     ('invoice_id', '>', 140),
-                     ('invoice_id.state', '!=', 'draft')])
-                if not invoice_line_ids:
-                    continue
-
-                invoice_line_id = []
-                for line in invoice_line_ids:
-                    invoice_line_id.append(line.id)
-
-                invoice = self.env['account.move'].search(
-                    [('invoice_line_ids', 'in', invoice_line_id)])
-                invoice.l10n_mx_edi_update_sat_status()
-
-                refund_invoice = self.env['account.move'].search(
-                    [('origin', 'like', invoice.origin),
-                     ('type', '=', 'out_refund'),
-                     ('id', '>', 140),
-                     ('state', '=', 'draft')])
-
-                if not refund_invoice:
-                    refund_invoice = invoice.refund()
-                    refund_invoice.write({
-                        'journal_id': invoice.journal_id.id,
-                        'origin': invoice.origin
-                    })
-                    for line in refund_invoice.invoice_line_ids:
-                        line.unlink()
-
-                order_taxes = {}
-                for line in refund_order.lines:
-                    for tax in line.tax_ids:
-                        order_taxes[int(tax.amount)] = tax.id
-
-                for order_tax in order_taxes:
-                    description = refund_order.pos_reference + '_' + str(order_tax)
-                    amount_total = 0
-                    subtotal = 0
-                    for orderline_2 in refund_order.lines:
-                        if order_taxes.get(order_tax) == orderline_2.tax_ids.id:
-                            amount_total += abs(orderline_2.price_subtotal_incl)
-                            subtotal += abs(orderline_2.price_subtotal)
-
-                    if amount_total == 0:
-                        continue
-
-                    product = self.env.user.company_id.invoice_product_id
-
-                    data_line = {
-                        'name': '[' + product.name + ']  ' + description,
-                        'product_id': product.id,
-                        'invoice_id': refund_invoice.id,
-                        'price_unit': amount_total,
-                        'price_subtotal': subtotal,
-                        'account_id': self.env['account.account'].search(
-                            [('name', '=', 'Ventas y/o servicios gravados a la tasa general')]).id,
-                        'invoice_line_tax_ids': [(6, 0, [order_taxes.get(order_tax)])],
-                        'quantity': 1,
-                        'uom_id': product.uom_id.id,
-                        'account_analytic_id': session.config_id.x_cuenta_analitica.id,
-                    }
-                    self.env['account.move.line'].sudo().create(data_line)
-
-                refund_invoice.compute_taxes()
-
-                for tax_line in refund_invoice.tax_line_ids:
-                    tax_line.write({
-                        'account_analytic_id': self.env['pos.config'].browse(pos_configs[0]).x_cuenta_analitica.id,
-                    })
-                list_invoices.append(refund_invoice.id)
-        for session in sessions_to_invoicing:
-            session.write({
-                'notas_credito_global': True
-            })
-
-        invoices = list(set(list_invoices))
-
-        if len(invoices) > 0:
-            refund_invoices = self.env['account.move'].search([('id', 'in', invoices)])
-            for inv in refund_invoices:
-                inv.action_invoice_open()
-
-            # time.sleep(3)
-            for invoice_id in invoices:
-                inv = self.env['account.move'].browse(invoice_id)
-                # inv.action_invoice_sent()
-                inv.write({
-                    'origin': inv.origin + ' Devoluciones ' + str(self.start_date)[0:10]
-                })
-            return self.env.ref('account.account_invoices').report_action(refund_invoices)'''
         return
 
     def add_tax_line(self, data_invoice, invoice_id):
@@ -896,6 +793,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
             _logger.warning('TAXXXXXXXXXXXX')
             _logger.warning(str(tax.name))
+            _logger.warning(str(data_invoice))
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
