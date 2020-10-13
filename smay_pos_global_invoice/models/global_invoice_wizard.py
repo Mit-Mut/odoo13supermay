@@ -270,10 +270,10 @@ class GlobalInvoiceWizard(models.TransientModel):
         if len(list(set(analytic_account_ids))) > 1:
             raise UserError('Existe más de una cuenta analitica en los puntos de venta a facturar')
 
-        payment_tem_id = self.env['account.payment.term'].search([('name', '=', 'Immediate Payment')]).id
+        payment_term_id = self.env['account.payment.term'].search([('name', '=', 'Immediate Payment')]).id
 
-        if not payment_tem_id:
-            payment_tem_id = 1
+        if not payment_term_id:
+            payment_term_id = 1
 
         data_invoice = {
             'partner_id': self.env.user.company_id.invoice_partner_id.id,
@@ -290,7 +290,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             # 'l10n_mx_edi_payment_method_id': 1,
             'invoice_date': str(date.today()),  # - timedelta(days=2)),
             'date': str(date.today()),
-            'invoice_payment_term_id': payment_tem_id,
+            'invoice_payment_term_id': payment_term_id,
             # 'date_due': str(date.today()),
             'line_ids': [
             ],
@@ -922,12 +922,16 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
     def prepare_invoice(self, invoice_id):
         invoice_to_refund = self.env['account.move'].browse(invoice_id)
+        payment_term_id = self.env['account.payment.term'].search([('name', '=', 'Immediate Payment')]).id
+
+        if not payment_term_id:
+            payment_term_id = 1
         data_invoice = {
             'ref': 'Nota de Credito : ' + str(invoice_to_refund.name),
             'date': str(date.today()),
             'invoice_date': str(date.today()),
             'journal_id': invoice_to_refund.journal_id.id,
-            'invoice_payment_term_id': None,
+            'invoice_payment_term_id': payment_term_id,
             'auto_post': False,
             'invoice_user_id': invoice_to_refund.create_uid.id,
             'campaign_id': False,
