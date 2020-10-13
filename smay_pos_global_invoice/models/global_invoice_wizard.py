@@ -211,7 +211,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'account_move': Invoice.id,
                 # 'state': 'invoiced'
             })
-        Invoice.action_post()
+        #Invoice.action_post()
         for session in sessions_to_invoicing:
             session.sudo(True).write({
                 'factura_global': True,
