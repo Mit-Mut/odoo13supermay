@@ -885,7 +885,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         _logger.warning(str(amount_total))
                         # li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
                         # li[2]['debit'] = round(debit_aux + amount_total, 2)
-                        li[2]['credit'] = abs(round(credit_aux + abs(amount_total), 2))
+                        li[2]['credit'] = round(abs(credit_aux) + abs(amount_total), 2)
                         break
 
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
@@ -896,9 +896,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                             aux_price_unit = abs(li[2]['price_unit'])
                             aux_tax_base_amount = abs(li[2]['tax_base_amount'])
 
-                            li[2]['credit'] = abs(round(aux_credit + (amount_total - subtotal), 2))
-                            li[2]['price_unit'] = abs(round(aux_price_unit + (amount_total - subtotal), 2))
-                            li[2]['tax_base_amount'] = abs(round(aux_tax_base_amount + subtotal, 2))
+                            li[2]['credit'] = round(abs(aux_credit) + (abs(amount_total) - abs(subtotal)), 2)
+                            li[2]['price_unit'] = round(abs(aux_price_unit) + (abs(amount_total) - abs(subtotal)), 2)
+                            li[2]['tax_base_amount'] = round(abs(aux_tax_base_amount) + abs(subtotal), 2)
                             li[2]['quantity'] = 1
                 elif impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount == 0:
                     for li in data_invoice['line_ids']:
