@@ -933,9 +933,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         if not payment_term_id:
             payment_term_id = 1
         data_invoice = {
-            'invoice_origin': 'Nota de Credito Global : '  + str(self.start_date)[0:10] + ' - ' + self.env[
-                'res.partner'].browse(
-                sucursal_ids[0]).name,
+            'invoice_origin': 'Nota de Credito Global : '  + str(self.start_date)[0:10] + ' - ' + sucursal_id,
             'date': str(date.today()),
             'invoice_date': str(date.today()),
             'journal_id': invoice_to_refund.journal_id.id,
