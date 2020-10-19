@@ -703,7 +703,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for order in orders:
             _logger.warning(str(order.pos_reference))
             invoice_id = self.env['account.move.line'].search(
-                [('name', 'like', order.pos_reference.replace('Predido ', '').replace('Orden ', '')),
+                [('name', 'like', order.pos_reference),
                  ('move_id.type', '=', 'out_invoice'),
                  ],limit=1, order ='id asc').move_id.id
             _logger.warning(str(invoice_id))
