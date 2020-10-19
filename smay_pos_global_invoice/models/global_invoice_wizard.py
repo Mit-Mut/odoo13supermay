@@ -703,8 +703,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         for order in orders:
             _logger.warning(str(order.pos_reference))
             invoice_id = self.env['account.move.line'].search(
-                [('name', 'like', order.pos_reference.replace('Predido ','').replace('Orden ','')), ('move_id.type', '=', 'out_invoice'),
-                 ('create_date', '<=', self.start_date)]).move_id.id
+                [('name', 'like', order.pos_reference.replace('Predido ', '').replace('Orden ', '')),
+                 ('move_id.type', '=', 'out_invoice'),
+                 ]).move_id.id
             _logger.warning(str(invoice_id))
             if invoice_id:
                 if invoice_id not in invoices_to_refund:
@@ -740,7 +741,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             credit_note._check_balanced()
 
         if credit_note:
-
             return {
                 'name': _('Customer Invoice'),
                 'view_type': 'form',
