@@ -134,7 +134,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 pos_configs.append(pos_config.id)
 
         # revisa que se hayan hecho las notas de credito en dias anteriores
-        sessions_not_invoicing_credit_notes = self.env['pos.session'].search([('start_at', '<', self.start_date),
+        sessions_not_invoicing_credit_notes = self.env['pos.session'].search([('start_at', '<=', self.start_date),
                                                                               ('user_id.company_id', '=',
                                                                                self.env.user.company_id.id),
                                                                               ('config_id', 'in', pos_configs),
