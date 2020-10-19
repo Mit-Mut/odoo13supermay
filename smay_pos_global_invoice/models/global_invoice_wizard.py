@@ -857,7 +857,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 _logger.warning(str(str(description)))
 
                 _original_line = self.env['account.move.line'].search(
-                    [('move_id', '=', invoice_id), ('name', '=', description)])
+                    [('move_id', '=', invoice_id),('move_id.type', '=', 'out_invoice'), ('name', '=', description)],limit=1, order ='id asc')
+
+               
 
                 line = []
                 line.append(0)
