@@ -731,7 +731,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
-            
+
             credit_note = self.env['account.move'].create(data_invoice)
 
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
@@ -851,6 +851,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     continue
 
                 # aqui debo de guardar cada linea de factura
+
+                _logger.warning('REFEREFEFEFEF')
+                _logger.warning(str(str(invoice_id)))
+                _logger.warning(str(str(description)))
 
                 _original_line = self.env['account.move.line'].search(
                     [('move_id', '=', invoice_id), ('name', '=', description)])
