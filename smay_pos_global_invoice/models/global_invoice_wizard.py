@@ -728,6 +728,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning(str('tetetetetetet'))
             _logger.warning(str(invoices_to_refund))
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
+
+            _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
+            _logger.warning(str(data_invoice))
+            
             credit_note = self.env['account.move'].create(data_invoice)
 
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
