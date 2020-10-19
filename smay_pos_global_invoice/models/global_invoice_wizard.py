@@ -712,8 +712,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 else:
                     invoices_to_refund[invoice_id].append(order.id)
 
-        # _logger.warning('RELACION DE DEVOLUCIOES')
-        # _logger.warning(str(invoices_to_refund))
+        _logger.warning('RELACION DE DEVOLUCIOES')
+        _logger.warning(str(invoices_to_refund))
 
         # ----------------
 
