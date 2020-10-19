@@ -737,7 +737,20 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             credit_note._recompute_dynamic_lines(recompute_all_taxes=False)
             credit_note._check_balanced()
 
-        return
+        if credit_note:
+
+            return {
+                'name': _('Customer Invoice'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('account.view_move_form').id,
+                'res_model': 'account.move',
+                'context': "{'type':'out_invoice'}",
+                'type': 'ir.actions.act_window',
+                'nodestroy': False,
+                'target': 'current',
+                'res_id': Invoice.id and Invoice.ids[0] or False,
+            }
 
     def add_tax_line(self, data_invoice, invoice_id):
         # aqui
