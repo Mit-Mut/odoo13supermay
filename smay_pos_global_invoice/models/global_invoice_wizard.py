@@ -209,10 +209,12 @@ class GlobalInvoiceWizard(models.TransientModel):
         for order in orders:
             order.write({
                 'account_move': Invoice.id,
-                # 'state': 'invoiced'
+                'state': 'invoiced'
             })
         Invoice.action_post()
         for session in sessions_to_invoicing:
+            _logger.warning('ACTUALIAA SESSIONS')
+            _logger.warning(str(Invoice.name))
             session.sudo(True).write({
                 'factura_global': True,
                 'global_invoice_name': Invoice.name,
