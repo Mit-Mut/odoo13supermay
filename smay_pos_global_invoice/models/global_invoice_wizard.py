@@ -717,6 +717,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
         # ----------------
 
+        credit_note = None
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
