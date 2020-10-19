@@ -211,7 +211,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                 'account_move': Invoice.id,
                 # 'state': 'invoiced'
             })
-        # Invoice.action_post()
+        Invoice.action_post()
         for session in sessions_to_invoicing:
             session.sudo(True).write({
                 'factura_global': True,
@@ -305,8 +305,8 @@ class GlobalInvoiceWizard(models.TransientModel):
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'), ]):
             # ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
-                _logger.warning('IMPUESTSSSSSS')
-                _logger.warning(str(impuesto.name))
+                #_logger.warning('IMPUESTSSSSSS')
+                #_logger.warning(str(impuesto.name))
                 data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))
 
         # Agrego la linea de totales
@@ -699,7 +699,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
         invoices_to_refund = {}
         for order in orders:
-            _logger.warning(str(order.pos_reference))
+            #_logger.warning(str(order.pos_reference))
             invoice_id = self.env['account.move.line'].search(
                 [('name', 'like', order.pos_reference), ('move_id.type', '=', 'out_invoice')]).move_id.id
             if invoice_id:
@@ -709,8 +709,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 else:
                     invoices_to_refund[invoice_id].append(order.id)
 
-        _logger.warning('RELACION DE DEVOLUCIOES')
-        _logger.warning(str(invoices_to_refund))
+        #_logger.warning('RELACION DE DEVOLUCIOES')
+        #_logger.warning(str(invoices_to_refund))
 
         # ----------------
 
