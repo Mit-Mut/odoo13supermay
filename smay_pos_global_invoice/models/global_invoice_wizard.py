@@ -768,6 +768,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             for line in data_invoice['line_ids']:
                 if line[2]['name'] == tax.name:
                     existe_tax = True
+                    _logger.warning('existe el impueswto'+str(tax.name))
                     break
 
             if not existe_tax:
@@ -822,6 +823,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                     }
                 )
 
+
+                _logger.warning('Se anexa el siuiente registro')
+                _logger.warning(str(tax_line))
                 data_invoice['line_ids'].append(tax_line)
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
