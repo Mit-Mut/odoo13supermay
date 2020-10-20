@@ -940,7 +940,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         _logger.warning(str('IMPUESTOOOOO'))
                         _logger.warning(str(li[2]['name']))
                         _logger.warning(str(impuesto.name))
-                        if li[2]['name'] == impuesto.name:
+                        if li[2]['name'] == impuesto.name.replace(' (POS)',''):
                             aux_credit = abs(li[2]['credit'])
                             aux_price_unit = abs(li[2]['price_unit'])
                             aux_tax_base_amount = abs(li[2]['tax_base_amount'])
