@@ -724,7 +724,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
-            data_invoice= self.add_tax_line(data_invoice, invoice_id)
+            data_invoice = self.add_tax_line(data_invoice, invoice_id)
             _logger.warning(str('tetetetetetet'))
             _logger.warning(str(invoices_to_refund))
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
@@ -827,6 +827,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 _logger.warning('Se anexa el siuiente registro')
                 _logger.warning(str(tax_line))
                 data_invoice['line_ids'].append(tuple(tax_line))
+        return data_invoice
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
