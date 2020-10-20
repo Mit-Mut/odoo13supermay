@@ -937,6 +937,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
+                        _logger.warning(str('IMPUESTOOOOO'))
+                        _logger.warning(str(li[2]['name']))
+                        _logger.warning(str(impuesto.name))
                         if li[2]['name'] == impuesto.name:
                             aux_credit = abs(li[2]['credit'])
                             aux_price_unit = abs(li[2]['price_unit'])
