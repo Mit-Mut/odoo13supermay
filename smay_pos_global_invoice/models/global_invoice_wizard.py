@@ -827,7 +827,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 _logger.warning('Se anexa el siuiente registro')
                 _logger.warning(str(tax_line))
                 data_invoice['line_ids'].append(tuple(tax_line))
-        return data_invoice
+        return  data_invoice
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
