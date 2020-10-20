@@ -859,13 +859,13 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 _original_line = self.env['account.move.line'].search(
                     [('move_id', '=', invoice_id),('move_id.type', '=', 'out_invoice'), ('name', '=', description)],limit=1, order ='id asc')
 
-               
+
 
                 line = []
                 line.append(0)
                 line.append(0)
                 line.append({
-                    'move_id': _original_line.move_id.id,
+                    'move_id': invoice_id,
                     # 'account_id': account_id,
                     'account_id': _original_line.account_id.id,
                     'sequence': _original_line.sequence,
