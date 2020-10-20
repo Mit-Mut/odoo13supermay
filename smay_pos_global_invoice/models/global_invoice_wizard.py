@@ -705,7 +705,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             invoice_id = self.env['account.move.line'].search(
                 [('name', 'like', order.pos_reference),
                  ('move_id.type', '=', 'out_invoice'),
-                 ],limit=1, order ='id asc').move_id.id
+                 ], limit=1, order='id asc').move_id.id
             _logger.warning(str(invoice_id))
             if invoice_id:
                 if invoice_id not in invoices_to_refund:
@@ -857,12 +857,11 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 _logger.warning(str(str(description)))
 
                 _original_line = self.env['account.move.line'].search(
-                    [('move_id', '=', invoice_id),('move_id.type', '=', 'out_invoice'), ('name', '=', description)],limit=1, order ='id asc')
+                    [('move_id', '=', invoice_id), ('move_id.type', '=', 'out_invoice'), ('name', 'like', description)],
+                    limit=1, order='id asc')
 
                 _logger.warning('original line')
                 _logger.warning(str(_original_line))
-
-
 
                 line = []
                 line.append(0)
