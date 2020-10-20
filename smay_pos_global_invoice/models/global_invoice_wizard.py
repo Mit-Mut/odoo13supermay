@@ -762,6 +762,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         # aqui
         taxe_ids = self.env['account.move.line'].search(
             [('product_id', '=', None), ('tax_line_id', '!=', None), ('move_id', '=', invoice_id)])
+        _logger.warning(taxe_ids)
         for tax in taxe_ids:
             existe_tax = False
             for line in data_invoice['line_ids']:
