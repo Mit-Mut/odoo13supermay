@@ -954,7 +954,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 data_invoice['line_ids'].append(tuple(line))
 
         # borro los impuestos que no son usados
-        lineas_borrar = []
+        '''lineas_borrar = []
         for line in data_invoice['line_ids']:
             if line[2]['name'] and not line[2]['product_id'] and line[2]['credit'] == 0 and line[2][
                 'tax_base_amount'] == 0 and line[2]['quantity'] == -1:
@@ -962,7 +962,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
         # Elimino los imuestos que no fueron utilizados
         for line in lineas_borrar:
-            data_invoice['line_ids'].remove(line)
+            data_invoice['line_ids'].remove(line)'''
 
         return data_invoice
 
