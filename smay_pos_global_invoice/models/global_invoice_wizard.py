@@ -756,7 +756,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 'type': 'ir.actions.act_window',
                 'nodestroy': False,
                 'target': 'current',
-                'res_id': Invoice.id and Invoice.ids[0] or False,
+                'res_id': credit_note.id and credit_note.ids[0] or False,
             }
 
     def add_tax_line(self, data_invoice, invoice_id):
