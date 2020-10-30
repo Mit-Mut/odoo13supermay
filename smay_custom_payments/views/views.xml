@@ -9,7 +9,7 @@
                 <xpath expr="//sheet" position="inside">
                     <group col="2">
                         <field name="multiple_payments"
-                               string='Permite el pago de ordenes combinando los metodos de pago'/>
+                               string='Multiples metodos de pago'/>
                     </group>
                 </xpath>
             </field>
