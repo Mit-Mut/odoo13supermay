@@ -213,8 +213,6 @@ class GlobalInvoiceWizard(models.TransientModel):
             })
         Invoice.action_post()
         for session in sessions_to_invoicing:
-            _logger.warning('ACTUALIAA SESSIONS')
-            _logger.warning(str(Invoice.name))
             session.sudo(True).write({
                 'factura_global': True,
                 'global_invoice_name': Invoice.name,
@@ -307,8 +305,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                 [('type_tax_use', '=', 'sale'), ('l10n_mx_cfdi_tax_type', '=', 'Tasa'), ]):
             # ('amount', '>', 0)]):
             if impuesto.cash_basis_transition_account_id:
-                # _logger.warning('IMPUESTSSSSSS')
-                # _logger.warning(str(impuesto.name))
                 data_invoice['line_ids'].append(self._get_info_tax(impuesto.name))
 
         # Agrego la linea de totales
@@ -711,7 +707,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             from account_move_line aml
             join account_move am
                 on am.id = aml.move_id
-            where aml.name like '%'''+str(order.pos_reference)+'''%'
+            where aml.name like '%''' + str(order.pos_reference) + '''%'
                 and am.type='out_invoice'
             order by am.id asc
             limit 1
@@ -726,27 +722,15 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 else:
                     invoices_to_refund[invoice_id].append(order.id)
 
-        _logger.warning('RELACION DE DEVOLUCIOES')
-        _logger.warning(str(invoices_to_refund))
-
-        # ----------------
-
         credit_note = None
         for factura_id in invoices_to_refund.keys():
             _logger.warning('Aqui empiezo la factura' + str(factura_id))
             data_invoice = self.prepare_invoice(factura_id)
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             data_invoice = self.add_tax_line(data_invoice, invoice_id)
-            _logger.warning(str('tetetetetetet'))
-            _logger.warning(str(invoices_to_refund))
-            _logger.warning(str(data_invoice))
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
 
-            _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
-            _logger.warning(str(data_invoice))
-
             credit_note = self.env['account.move'].create(data_invoice)
-
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
             _logger.warning(str(data_invoice))
             _logger.warning(str(credit_note))
@@ -775,13 +759,11 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
         # aqui
         taxe_ids = self.env['account.move.line'].search(
             [('product_id', '=', None), ('tax_line_id', '!=', None), ('move_id', '=', invoice_id)])
-        _logger.warning(taxe_ids)
         for tax in taxe_ids:
             existe_tax = False
             for line in data_invoice['line_ids']:
                 if line[2]['name'] == tax.name:
                     existe_tax = True
-                    _logger.warning('existe el impueswto' + str(tax.name))
                     break
 
             if not existe_tax:
@@ -835,20 +817,12 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         'sale_line_ids': [(6, None, [])]
                     }
                 )
-
-                _logger.warning('Se anexa el siuiente registro')
-                _logger.warning(str(tax_line))
                 data_invoice['line_ids'].append(tax_line)
-                _logger.warning('impueto agrgado')
-                _logger.warning(str(data_invoice))
-        _logger.warning('registro antes de return')
-        _logger.warning(str(data_invoice))
         return data_invoice
 
     def _add_invoice_lines(self, data_invoice, invoice_id, order_ids):
         orders = self.env['pos.order'].search([('id', 'in', order_ids)])
         for order in orders:
-            _logger.warning(str(order.pos_reference))
             order_taxes = {}
 
             # omite las que ya se facturaron
@@ -874,16 +848,9 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
                 # aqui debo de guardar cada linea de factura
 
-                _logger.warning('REFEREFEFEFEF')
-                _logger.warning(str(str(invoice_id)))
-                _logger.warning(str(str(description)))
-
                 _original_line = self.env['account.move.line'].search(
                     [('move_id', '=', invoice_id), ('move_id.type', '=', 'out_invoice'), ('name', 'like', description)],
                     limit=1, order='id asc')
-
-                _logger.warning('original line')
-                _logger.warning(str(_original_line))
 
                 line = []
                 line.append(0)
@@ -938,9 +905,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                         price_unit_aux = round(abs(li[2]['price_unit']), 2)
                         debit_aux = li[2]['debit']
                         credit_aux = li[2]['credit']
-                        _logger.warning('ENTRO A ACTUALIZAR TOTALES')
-                        _logger.warning(str(credit_aux))
-                        _logger.warning(str(amount_total))
                         # li[2]['price_unit'] = - round((price_unit_aux + amount_total), 2)
                         # li[2]['debit'] = round(debit_aux + amount_total, 2)
                         li[2]['credit'] = round(abs(credit_aux) + abs(amount_total), 2)
@@ -949,10 +913,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                 impuesto = self.env['account.tax'].browse(order_taxes.get(order_tax))
                 if impuesto.l10n_mx_cfdi_tax_type == 'Tasa' and impuesto.amount > 0:
                     for li in data_invoice['line_ids']:
-                        _logger.warning(str('IMPUESTOOOOO'))
-                        _logger.warning(str(li[2]['name']))
-                        _logger.warning(str(impuesto.name))
-                        if li[2]['name'] == impuesto.name.replace(' (POS)',''):
+                        if li[2]['name'] == impuesto.name.replace(' (POS)', ''):
                             aux_credit = abs(li[2]['credit'])
                             aux_price_unit = abs(li[2]['price_unit'])
                             aux_tax_base_amount = abs(li[2]['tax_base_amount'])
