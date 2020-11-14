@@ -1,0 +1,128 @@
+<odoo>
+    <data>
+        <record id="view_company_form" model='ir.ui.view'>
+            <field name="name">view_company_form_inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='website']" position="after">
+                    <label for="invoice_partner_id" string="Cliente para Factura Global"/>
+                    <field name="invoice_partner_id" nolabel="1"/>
+
+                    <label for="invoice_product_id" string="Producto para Factura Global"/>
+                    <field name="invoice_product_id" nolabel="1"/>
+
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="ace_view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group col="2">
+                        <field name="equipo_ventas"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!--<record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pos_security_pin']" position="after">
+                    <field name="sucursal_id"/>
+                </xpath>
+            </field>
+        </record>-->
+
+        <record id="view_global_invoice_form" model="ir.ui.view">
+            <field name="name">view.global.invoice.form</field>
+            <field name="model">global.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Factura Global">
+                    <group colspan="2">
+                        <field name="company_id" widget="selection"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="sucursal_id"/>
+                        <field name="pay_method_id" widget="selection"/>
+                        <field name="uso_cfdi_id" widget="selection"/>
+                    </group>
+                    <footer>
+                        <button class="btn-primary"
+                                name="generate_invoice"
+                                string="Genera Factura Global" type="object"/>
+                        <button class="btn-default" special="cancel" string="Cancelar"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_global_invoice" model="ir.actions.act_window">
+            <field name="name">Facturación Global</field>
+            <field name="res_model">global.invoice.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_global_invoice" id="global_invoice" name="Facturacion Global"
+                  parent="point_of_sale.menu_point_of_sale" sequence="6"/>
+
+        <!--Campos para notas de credito-->
+
+        <record id="view_global_credit_notes_form" model="ir.ui.view">
+            <field name="name">view.global.invoice.form</field>
+            <field name="model">global.invoice.credit.notes.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Factura Global - Notas de Credito">
+                    <group colspan="2">
+                        <field name="company_id" widget="selection"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="sucursal_id"/>
+                        <field name="pay_method_id" widget="selection"/>
+                        <field name="uso_cfdi_id" widget="selection"/>
+                    </group>
+                    <footer>
+                        <button class="btn-primary"
+                                name="generate_invoice"
+                                string="Genera Factura Global" type="object"/>
+                        <button class="btn-default" special="cancel" string="Cancelar"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_global_credit_notes" model="ir.actions.act_window">
+            <field name="name">Facturación Notas de Credito</field>
+            <field name="res_model">global.invoice.credit.notes.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_global_credit_notes" id="global_invoice_credit_notes"
+                  name="Facturacion Global(Notas de credito)"
+                  parent="point_of_sale.menu_point_of_sale" sequence="7"/>
+    </data>
+
+
+    <record id="view_pos_session_form" model="ir.ui.view">
+        <field name="name">pos.session.form.view</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='config_id']" position="after">
+                <field name="factura_global" attrs="{'invisible': [('factura_global','=', False)]}"/>
+                <field name="global_invoice_name" attrs="{'invisible': [('global_invoice_name','=', '')]}"/>
+                <field name="notas_credito_global" attrs="{'invisible': [('factura_global','=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

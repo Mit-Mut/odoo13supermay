@@ -1,0 +1,403 @@
+<odoo>
+    <data>
+        <template id="report_inventory_smay" inherit_id="stock.report_inventory">
+            <xpath expr="//div" position="replace">
+                <div class="page">
+                    <br/>
+                    <!--<h2>Inventario</h2>-->
+
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Inventorio</strong>
+                                </th>
+                                <th>
+                                    <strong>Fecha</strong>
+                                </th>
+                                <th>
+                                    <strong>Usuario</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span t-field="o.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="o.date"/>
+                                </td>
+                                <td>
+                                    <span t-field="o.write_uid.name"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <t t-set="total_price_egresos" t-value="0"/>
+                    <t t-set="total_price_ingresos" t-value="0"/>
+                    <t t-set="total_price" t-value="0"/>
+
+                    <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th groups="stock.group_stock_multi_locations">
+                                    <strong>Almacen</strong>
+                                </th>
+                                <th>
+                                    <strong>Producto</strong>
+                                </th>
+                                <th groups="stock.group_production_lot">
+                                    <strong>Production Lot</strong>
+                                </th>
+                                <th groups="stock.group_tracking_lot">
+                                    <strong>Package</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Cantidad</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Costo</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Total</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="locations" t-as="location">
+                                <tr groups="stock.group_stock_multi_locations">
+                                    <td colspan="2">
+                                        <strong t-esc="location.display_name"/>
+                                    </td>
+                                    <td groups="stock.group_production_lot"></td>
+                                    <td groups="stock.group_tracking_lot"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <t t-set="items" t-value="0"/>
+                                <t t-set="total_price" t-value="0"/>
+                                <t t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id )"
+                                   t-as="line">
+                                    <t t-if="line.x_diferencia_cantidad ==0">
+                                        <t t-set="items" t-value="items+1"/>
+                                        <tr>
+                                            <td groups="stock.group_stock_multi_locations"></td>
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td groups="stock.group_production_lot">
+                                                <span t-field="line.prod_lot_id"/>
+                                            </td>
+                                            <td groups="stock.group_tracking_lot">
+                                                <span t-field="line.package_id"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:,.2f}'.format(line.product_qty)"/>
+                                                <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <span t-field="line.product_id.standard_price"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <t t-esc="'{0:,.2f}'.format(round(line.product_id.standard_price*line.product_qty,2))"/>
+                                                <!--  $ <span t-field="line.product_id.standard_price*line.product_qty"/>-->
+                                            </td>
+                                            <t t-set="total_price"
+                                               t-value="total_price+round(line.product_id.standard_price*line.product_qty,2)"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            $
+                                            <t t-esc="'{0:,.2f}'.format(total_price)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>ITEMS</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <t t-esc="'{0:,.2f}'.format(items)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                            </t>
+
+
+                        </tbody>
+                    </table>
+
+
+                    <h4>INGRESOS (Faltantes)</h4>
+                    <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th groups="stock.group_stock_multi_locations">
+                                    <strong>Almacen</strong>
+                                </th>
+                                <th>
+                                    <strong>Producto</strong>
+                                </th>
+                                <th groups="stock.group_production_lot">
+                                    <strong>Production Lot</strong>
+                                </th>
+                                <th groups="stock.group_tracking_lot">
+                                    <strong>Package</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Cantidad</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Costo</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Total</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="locations" t-as="location">
+                                <tr groups="stock.group_stock_multi_locations">
+                                    <td colspan="2">
+                                        <strong t-esc="location.display_name"/>
+                                    </td>
+                                    <td groups="stock.group_production_lot"></td>
+                                    <td groups="stock.group_tracking_lot"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <t t-set="items_ingresos" t-value="0"/>
+                                <t t-set="total_price_ingresos" t-value="0"/>
+                                <t t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id )"
+                                   t-as="line">
+                                    <t t-if="line.x_diferencia_cantidad &lt;0">
+                                        <t t-set="items_ingresos" t-value="items_ingresos+1"/>
+                                        <tr>
+                                            <td groups="stock.group_stock_multi_locations"></td>
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td groups="stock.group_production_lot">
+                                                <span t-field="line.prod_lot_id"/>
+                                            </td>
+                                            <td groups="stock.group_tracking_lot">
+                                                <span t-field="line.package_id"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:,.2f}'.format(abs(line.x_diferencia_cantidad))"/>
+                                                <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <span t-field="line.product_id.standard_price"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <t t-esc="'{0:,.2f}'.format(round(line.product_id.standard_price*abs(line.x_diferencia_cantidad),2))"/>
+                                                <!--  $ <span t-field="line.product_id.standard_price*line.product_qty"/>-->
+                                            </td>
+                                            <t t-set="total_price_ingresos"
+                                               t-value="total_price_ingresos+round(line.product_id.standard_price*abs(line.x_diferencia_cantidad),2)"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            $
+                                            <t t-esc="'{0:,.2f}'.format(total_price_ingresos)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>ITEMS</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <t t-esc="'{0:,.2f}'.format(items_ingresos)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                            </t>
+
+
+                        </tbody>
+                    </table>
+
+
+                    <h4>EGRESOS (Sobrantes)</h4>
+                    <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th groups="stock.group_stock_multi_locations">
+                                    <strong>Almacen</strong>
+                                </th>
+                                <th>
+                                    <strong>Producto</strong>
+                                </th>
+                                <th groups="stock.group_production_lot">
+                                    <strong>Production Lot</strong>
+                                </th>
+                                <th groups="stock.group_tracking_lot">
+                                    <strong>Package</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Cantidad</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Costo</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Total</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="locations" t-as="location">
+                                <tr groups="stock.group_stock_multi_locations">
+                                    <td colspan="2">
+                                        <strong t-esc="location.display_name"/>
+                                    </td>
+                                    <td groups="stock.group_production_lot"></td>
+                                    <td groups="stock.group_tracking_lot"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <t t-set="items_egresos" t-value="0"/>
+                                <t t-set="total_price_egresos" t-value="0"/>
+                                <t t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id )"
+                                   t-as="line">
+                                    <t t-if="line.x_diferencia_cantidad &gt;0">
+                                        <t t-set="items_egresos" t-value="items_egresos+1"/>
+                                        <tr>
+                                            <td groups="stock.group_stock_multi_locations"></td>
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td groups="stock.group_production_lot">
+                                                <span t-field="line.prod_lot_id"/>
+                                            </td>
+                                            <td groups="stock.group_tracking_lot">
+                                                <span t-field="line.package_id"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'{0:,.2f}'.format(abs(line.x_diferencia_cantidad))"/>
+                                                <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <span t-field="line.product_id.standard_price"/>
+                                            </td>
+                                            <td class="text-right">
+                                                $
+                                                <t t-esc="'{0:,.2f}'.format(round(line.product_id.standard_price*abs(line.x_diferencia_cantidad),2))"/>
+                                                <!--  $ <span t-field="line.product_id.standard_price*line.product_qty"/>-->
+                                            </td>
+                                            <t t-set="total_price_egresos"
+                                               t-value="total_price_egresos+round(line.product_id.standard_price*abs(line.x_diferencia_cantidad),2)"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            $
+                                            <t t-esc="'{0:,.2f}'.format(total_price_egresos)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>ITEMS</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <t t-esc="'{0:,.2f}'.format(items_egresos)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                            </t>
+
+
+                        </tbody>
+                    </table>
+
+                    <h4>DIFERENCIAS</h4>
+                    <table class="table table-sm" style="width: 40%;">
+                        <tr>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-center">Monto</th>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Egresos</td>
+                            <td class="text-right">
+                                <b>$
+                                    <t t-esc="'{0:,.2f}'.format(total_price_egresos)"/>
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Ingresos</td>
+                            <td class="text-right">
+                                <b>$
+                                    <t t-esc="'{0:,.2f}'.format(total_price_ingresos)"/>
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Total</th>
+                            <th class="text-right">$
+                                <t t-esc="'{0:,.2f}'.format(total_price_egresos-total_price_ingresos)"/>
+                            </th>
+                        </tr>
+                    </table>
+
+                    <!-- <t t-if="o.filter == 'product' and o.product_id">
+                         <div class="row justify-content-end">
+                             <div class="col-4">
+                                 <table class="table table-sm">
+                                     <tr class="border-black">
+                                         <td>
+                                             <strong>Total Quantity</strong>
+                                         </td>
+                                         <td class="text-right">
+                                             <span t-field="o.total_qty"/>
+                                             <span t-field="o.product_id.uom_id"/>
+                                         </td>
+                                     </tr>
+                                 </table>
+                             </div>
+                         </div>
+                     </t>-->
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

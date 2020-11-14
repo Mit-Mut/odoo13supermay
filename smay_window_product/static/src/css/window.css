@@ -1,0 +1,55 @@
+.mainTable{
+    width:100%;
+    /*padding:20px;*/
+    font-size:18px;
+}
+
+.imgProduct{
+    /* border: 1px solid #dddddd;*/
+    padding:10px 5px;
+    width:50%;
+}
+
+.imgProduct2{
+    width:100%;
+    height:300px;
+}
+
+.priceProductUnit, .priceProductBox{
+    border: 1px solid #dddddd;
+    padding: 10px;
+    margin: 5px 10px 15px 0;
+    cursor: pointer;
+}
+
+div.informationProduct, div.informationProduct2{
+/*border: 1px solid #dddddd;*/
+    display:inline;
+}
+
+div.informationProduct2{
+    font-weight: bold;
+    /*width:20%;
+    color:#FFFFFF;
+    background-color:black;
+    border: 1px solid #dddddd;
+    padding: 10px;
+    margin: 5px 10px 15px 0;
+    display:inline;
+    float:left;*/
+
+}
+.priceProduct{
+    border: 1px solid #dddddd;
+    padding: 10px;
+    margin: 5px 10px 15px 0;
+    cursor: default;
+}
+
+.InformationPromotion{
+cursor: default;
+font-size:15px;
+font-weight: bold;
+color:#33C1FF;
+text-align:left;
+}

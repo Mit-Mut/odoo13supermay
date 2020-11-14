@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="front_sales_report_pdf_document">
+        <t t-call="web.basic_layout">
+            <div name='report_sale' class="page" style="font-size:14px">
+
+                <t t-if="o.status_session()=='closed'">
+                    <div align="center"
+                         style="border:1px solid black;margin:15px 10px 0px 10px ;padding:0 auto;font-size:25px">
+                        <strong>REPORTE DE CIERRE</strong>
+                    </div>
+                </t>
+
+                <t t-if="o.status_session()=='opened'">
+                    <div align="center"
+                         style="border:1px solid black;margin:15px 10px 0px 10px ;padding:0 auto;font-size:25px">
+                        <strong>REPORTE DE ARQUEO</strong>
+                    </div>
+                </t>
+
+
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+                    <tr>
+                        <td style="text-align:left">
+                            Fecha del reporte
+                        </td>
+                        <td style="text-align:right">
+                            <span t-esc="o.get_current_time()"/>
+                            <span t-esc="o.get_current_date()"/>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+
+                    <tr>
+                        <td style="text-align:left">
+                            Sesión
+                        </td>
+                        <td style="text-align:right">
+                            <span t-esc="o.name"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left">
+                            Cajero
+                        </td>
+                        <td style="text-align:right">
+                            <span t-esc="o.user_id.partner_id.name"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left">
+                            Inicio de Sesión
+                        </td>
+                        <td style="text-align:right">
+                            <span t-esc="o.get_session_time(o.start_at)"/>
+                            <span t-esc="o.get_session_date(o.start_at)"/>
+                        </td>
+                    </tr>
+
+                    <t t-if="o.status_session()=='closed'">
+                        <tr>
+                            <td style="text-align:left">
+                                Cierre de Sesión
+                            </td>
+                            <td style="text-align:right">
+                                <span t-esc="o.get_session_time(o.stop_at)"/>
+                                <span t-esc="o.get_session_date(o.stop_at)"/>
+                            </td>
+                        </tr>
+                    </t>
+
+
+                </table>
+                <br/>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+                    <tr>
+                        <td style="text-align:left">
+                            Fondo de Caja
+                        </td>
+                        <td style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(
+                            o.cash_register_balance_start - o.cash_register_balance_end_real)"/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+                    <tr>
+                        <td style="text-align:left">
+                            Ventas
+                        </td>
+                        <td style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(o.get_total_sales()+o.get_total_tax())"/>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td style="text-align:left">
+                            Devoluciones
+                        </td>
+                        <td style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(o.get_total_returns())"/>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td colspan="2" style="text-align:right">
+                            __________________________________
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th style="width:50%; !important; text-align:right">
+                            Total
+                        </th>
+                        <th style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(o.get_total_first())"/>
+                        </th>
+                    </tr>
+
+
+                </table>
+                <br/>
+
+                <t t-set="venta_efectivo" t-value="0"/>
+
+
+                <table style="width:95%;margin:15px 5px 0px 5px;" id="payments">
+                    <t t-set="total" t-value="0"/>
+
+                    <tr t-foreach="o.get_payments()" t-as="l">
+                        <td style="text-align:left">
+                            <span t-esc="l.get('name')"/>
+                        </td>
+                        <td style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(l.get('sum'))"/>
+                            <t t-if="l.get('name')=='Efectivo'">
+                                <t t-set="venta_efectivo" t-value="float(l.get('sum'))"/>
+                            </t>
+                        </td>
+                        <t t-set="total" t-value="total + l.get('sum')"/>
+                    </tr>
+
+                </table>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+
+                    <tr>
+                        <td colspan="2" style="text-align:right">
+                            __________________________________
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th style="width:50%;text-align:right">
+                            Total
+                        </th>
+                        <th style="width:50%; !important;text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(total)"/>
+                        </th>
+                    </tr>
+
+                </table>
+                <br/>
+                <br/>
+
+                <t t-if="o.get_orders_with_reference()">
+                    <table style="width:95%;margin:15px 5px 0px 5px;" id="retiros">
+                        <div align="center">
+                            <b>Pagos con Tarjeta</b>
+                        </div>
+
+
+                        <th style="text-align:center;width:40%">
+                            PEDIDO
+                        </th>
+                        <th style="text-align:center;width:35%">
+                            METODO
+                        </th>
+                        <th style="text-align:center;width:25%">
+                            TOTAL
+                        </th>
+
+                        <t t-set="total_retirements" t-value="0"/>
+
+                        <tr t-foreach="o.get_orders_with_reference()" t-as="order">
+                            <td style="font-size:12px; text-align:left">
+                                <t t-esc="order.get('pos_reference')"/>
+                            </td>
+                            <td style="font-size:12px;text-align:right ">
+                                <t t-foreach="order.get('metodos')" t-as="metodo">
+                                    <t t-esc="metodo.get('metodo').upper()[0:3]"/>
+                                    --
+                                    <span t-field="o.currency_id.symbol"/>
+
+
+                                    <span t-esc="o.get_thousands_format(metodo.get('monto'))"/>
+                                    <br/>
+                                </t>
+                            </td>
+                            <td style="font-size:12px;text-align:right ">
+                                <b>
+                                    <span t-field="o.currency_id.symbol"/>
+                                    <span t-esc="o.get_thousands_format(order.get('total'))"/>
+                                </b>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                </t>
+                <br/>
+                <br/>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;font-size:12px;" id="retiros">
+                    <div align="center">
+                        <b>Retiros de Efectivo</b>
+                    </div>
+
+                    <tr t-if="o.get_retirements()">
+                        <th class="text-left" style="width:15%">
+                            ID
+                        </th>
+                        <th class="text-center" style="width:15%">
+                            TIPO
+                        </th>
+                        <th class="text-center" style="width:45%">
+                            COMENTARIO
+                        </th>
+                        <th class="text-center" style="width:25%">
+                            MONTO
+                        </th>
+                    </tr>
+
+                    <t t-set="total_retirements" t-value="0"/>
+
+                    <tr t-foreach="o.get_retirements()" t-as="r">
+                        <td style="font-size:12px; width:15%;text-align:left">
+                            <t t-esc="r.get('id_retirement')"/>
+                        </td>
+                        <td style="font-size:12px; width:15%;text-align:left">
+                            <t t-esc="r.get('motivo').upper()"/>
+                        </td>
+                        <td style="font-size:12px; width:45%; text-align:center">
+                            <t t-if="r.get('comment')" t-esc="r.get('comment').upper()"/>
+                        </td>
+                        <td style="font-size:12px; width:25%; text-align:right">
+                            <!--<t t-esc="r.get('amount')"/>-->
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(r.get('amount'))"/>
+                        </td>
+                        <t t-set="total_retirements" t-value="total_retirements + r.get('amount')"/>
+                    </tr>
+
+
+                </table>
+                <t t-if="o.get_retirements()">
+
+                    <table style="width:95%;margin:15px 5px 0px 5px;">
+
+                        <tr>
+                            <td colspan="4" style="text-align:right">
+                                __________________________________
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th style="width:50%;text-align:right">
+                                Total
+                            </th>
+                            <th style="width:50%; !important;text-align:right">
+                                <span t-field="o.currency_id.symbol"/>
+                                <span t-esc="o.get_thousands_format(total_retirements)"/>
+                            </th>
+                        </tr>
+
+                    </table>
+                    <br/>
+                    <br/>
+                </t>
+
+                <table style="width:95%;margin:15px 5px 0px 5px;" id="totales_en_caja">
+
+                    <tr>
+                        <th style="width:50%; !important; text-align:left">
+                            Efectivo en Caja
+                        </th>
+                        <th style="width:30%; !important; text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(o.cash_register_total_entry_encoding)"/>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="text-align:left">
+                            Fondo de Caja
+                        </th>
+                        <th style="text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format(o.cash_register_balance_start - o.cash_register_balance_end_real)"/>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="text-align:right">
+                            __________________________________
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th style="width:50%;text-align:right">
+                            Total
+                        </th>
+                        <th style="width:50%; !important; text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <span t-esc="o.get_thousands_format((o.cash_register_total_entry_encoding)+(o.cash_register_balance_start - o.cash_register_balance_end_real))"/>
+                            <br/>
+                            <br/>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="2" style="font-size:13px;">
+                            <div align="center">
+                                <b>Diferencia de Efectivo</b>
+                            </div>
+                        </th>
+
+                    </tr>
+                    <tr>
+                        <th style="font-size:13px; text-align:left">Total Vendido</th>
+                        <th style="font-size:13px; text-align:right">
+                            $
+                            <t t-esc="o.get_thousands_format(venta_efectivo)"/>
+                        </th>
+
+                    </tr>
+                    <tr>
+                        <th style="font-size:13px; text-align:left">Total Retirado</th>
+                        <th style="font-size:13px;text-align:right">
+                            $
+                            <t t-esc="o.get_thousands_format(total_retirements)"/>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size:13px;text-align:right">
+                            __________________________________
+                        </td>
+                    </tr>
+                    <tr>
+                        <t t-set="_diferencia" t-value="venta_efectivo-total_retirements"/>
+                        <t t-if="_diferencia&lt;0">
+                            <th style="font-size:13px; text-align:right">Sobrante</th>
+                            <th style="font-size:13px;text-align:right">
+                                $
+                                <t t-esc="o.get_thousands_format(_diferencia*-1)"/>
+                            </th>
+
+                        </t>
+                        <t t-if="_diferencia>0">
+                            <th style="font-size:13px; text-align:right">Faltante</th>
+                            <th style="font-size:13px;text-align:right">
+                                $
+                                <t t-esc="o.get_thousands_format(_diferencia)"/>
+                            </th>
+
+                        </t>
+                        <t t-if="_diferencia==0">
+                            <th style="font-size:13px; text-align:right">Sin Diferencias</th>
+                            <th style="font-size:13px;text-align:right">
+                                $
+                                <t t-esc="o.get_thousands_format(_diferencia)"/>
+                                <br/>
+                                <br/>
+                            </th>
+
+                        </t>
+
+                    </tr>
+                </table>
+                <br/>
+                <table style="width:95%;margin:15px 5px 0px 5px;">
+                    <tr>
+                        <th style="width:50%; !important; text-align:left" class="tickes_vendidos">
+                            Total de tickets vendidos
+                        </th>
+                        <th style="width:30%; !important; text-align:right">
+                            <span t-esc="o.get_thousands_format(o.get_total_tickets())"/>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="width:50%; !important; text-align:left" class="ticket_promedio">
+                            Ticket Promedio
+                        </th>
+                        <th style="width:30%; !important; text-align:right">
+                            <span t-field="o.currency_id.symbol"/>
+                            <t t-if="o.get_total_tickets()!=0">
+                                <span t-esc="o.get_thousands_format(total/o.get_total_tickets())"/>
+                            </t>
+
+                        </th>
+                    </tr>
+
+                </table>
+
+
+            </div>
+        </t>
+    </template>
+
+    <template id="front_sales_report_pdf_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="aces_pos_x_report.front_sales_report_pdf_document"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

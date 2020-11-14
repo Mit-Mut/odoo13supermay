@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position='inside'>
+                    <page string='Inventarios Super May'>
+                        <group>
+                            <field name="inventory_stock_location_id" options="{'no_create': True,'no_open':True}"/>
+                            <field name="inventory_validator"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

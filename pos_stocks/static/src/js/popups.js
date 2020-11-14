@@ -4,19 +4,20 @@
 
 odoo.define('pos_stock.popups', function (require) {
     "use strict";
-    
+
     var gui = require('point_of_sale.gui');
     var PopupWidget = require('point_of_sale.popups');
-    
+
     var OutOfStockMessagePopup = PopupWidget.extend({
         template: 'OutOfStockMessagePopup',
         show:function(options){
             var self = this;
-            this.options = options || ''; 
+            this.options = options || '';
             self._super(options);
         }
     });
+
     gui.define_popup({ name: 'out_of_stock', widget: OutOfStockMessagePopup });
-    
+
     return OutOfStockMessagePopup;
 });

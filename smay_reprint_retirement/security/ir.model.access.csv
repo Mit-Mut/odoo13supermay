@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_smay_reprint_retirement_smay_reprint_retirement,smay_reprint_retirement.smay_reprint_retirement,model_smay_reprint_retirement_smay_reprint_retirement,,1,0,0,0

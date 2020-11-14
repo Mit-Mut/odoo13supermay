@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="ace_view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <!-- <field name="iface_display_categ_images" position="after">
+            <field name="print_x_report"/>
+                <field name='enable_x_report'/>
+            </field>-->
+                <xpath expr="//sheet" position="inside">
+                    <group col="2">
+                        <field name="enable_x_report"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

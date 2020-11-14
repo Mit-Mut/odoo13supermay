@@ -7,6 +7,7 @@ odoo.define('pos_stock.BaseWidget',function(require) {
     var PosBaseWidget = require('point_of_sale.BaseWidget');
     
     PosBaseWidget.include({
+
         set_stock_qtys: function(result){
             var self = this;
             if(!self.chrome.screens){
@@ -22,11 +23,13 @@ odoo.define('pos_stock.BaseWidget',function(require) {
             });
             $.unblockUI();
         },
+
         get_information: function(wk_product_id) {
             self = this;
             if (self.pos.get('wk_product_qtys'))
                 return self.pos.get('wk_product_qtys')[wk_product_id];
         },
+
         wk_change_qty_css: function() {
             self = this;
             var wk_order = self.pos.get('orders');
@@ -51,5 +54,6 @@ odoo.define('pos_stock.BaseWidget',function(require) {
                 }
             }
         }
+
     })
 });

@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+
+        <record id="action_stock_report_smay_viewsql" model="ir.actions.act_window">
+            <field name="name">Reporte de stock</field>
+            <field name="res_model">stock.report.smay</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_mode">pivot</field>
+        </record>
+
+        <record id="view_report_pos_order_pivot" model="ir.ui.view">
+            <field name="name">stock.report.smay.pivot</field>
+            <field name="model">stock.report.smay</field>
+            <field name="arch" type="xml">
+                <pivot string="Reporte de Stock - Super May">
+                    <!--<field name="barcode" type="col" string="Codigo de Barras"/>-->
+                    <field name="product_id" type="row"/>
+                    <!--<field name="impuestos" type="col" string="Impuestos"/>-->
+                    <field name="almacen" type="col"/>
+                    <!--<field name="last_price_unit" type="measure" string="Ultimo Costo"/>-->
+                    <field name="cantidad" type="measure" string="Stock"/>
+                    <!--<field name="last_price_total" type="measure" string="Total Costo"/>-->
+
+                </pivot>
+            </field>
+        </record>
+
+
+        <record id="action_stock_report_smay" model="ir.actions.act_window">
+            <field name="name">Valoración del Inventario - Super May</field>
+            <field name="res_model">stock.report.wizard.smay</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <record id="view_stock_report_smay_form" model="ir.ui.view">
+            <field name="name">"view.stock.report.smay.form"></field>
+            <field name="model">stock.report.wizard.smay</field>
+            <field name="arch" type="xml">
+                <form string="Reporte de Inventario Super May">
+                    <group colspan="2">
+                        <!--<field name="start_date"/>
+                        <field name="agrega_ceros"/>
+                        <field name="costo_promedio"/>-->
+                        <field name="sucursal_id"/>
+                    </group>
+                    <footer>
+                        <button class="btn-primary"
+                                name="generate_report"
+                                string="Genera Reporte" type="object"/>
+                        <button class="btn-default" special="cancel" string="Cancelar"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <menuitem action="action_stock_report_smay" id="stock_report_smay_form" name="Reporte de Inventario Super May"
+                  parent="stock.menu_warehouse_report" sequence="5" groups="stock.group_stock_manager"/>
+    </data>
+</odoo>
