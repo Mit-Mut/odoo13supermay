@@ -139,6 +139,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='taxes_id']" position="after">
                     <field name="x_utility_percent"/>
+                    <field name='x_last_price'/>
                 </xpath>
             </field>
 

@@ -199,7 +199,9 @@ class SmayPurchasesOrder(models.Model):
                             })
 
                             line.product_id.product_tmpl_id.sudo(True).write({
-                                'x_fecha_actualizacion_precios': line.write_date
+                                'x_fecha_actualizacion_precios': line.write_date,
+                                'x_sent_labels': False,
+                                'x_last_price': line.product_id.list_price
                             })
 
                         else:
@@ -222,7 +224,8 @@ class SmayPurchasesOrder(models.Model):
                         'standard_price': line.price_unit
                     })
 
-            if len(products) > 0:
+            # envia por correo los cambios de precio
+            '''if len(products) > 0:
                 # send mail
 
                 email_to = ''
@@ -281,7 +284,7 @@ class SmayPurchasesOrder(models.Model):
                 })
                 if msg:
                     mail.sudo().send(msg)
-                    mail.sudo().process_email_queue()
+                    mail.sudo().process_email_queue()'''
         # return
         return resulta
 
@@ -295,12 +298,86 @@ class SmayPurchasesOrder(models.Model):
             return self.env.ref('product.report_product_label').report_action(products)
         raise UserError('No hubo cambios de precios.')
 
+    ##esta funcion se manda llamar desde la tarea programada
+    def send_changed_labels(self):
+        product_tmpls = self.env['product.template'].search([('x_sent_labels', '=', False)])
+
+        tmpl_ids = []
+        for product_tmpl in product_tmpls:
+            tmpl_ids.append(product_tmpl.id)
+
+        if tmpl_ids:
+            _logger.warning(str(len(tmpl_ids)))
+            products = self.env['product.product'].browse(tmpl_ids)
+
+            # send mail
+            email_to = ''
+            for user in self.env.user.company_id.x_notification_partner_ids:
+                if user.email:
+                    email_to += user.email + ';'
+
+            if email_to == '':
+                _logger.warning('No hay usuarios configurados en la compañia para enviar las etiquetas')
+                return
+
+            mail = self.env['mail.mail']
+            data = {}
+            data['subject'] = 'Cambios de Costos y Precios'
+            data['email_to'] = email_to
+            data['body_html'] = 'Buen día,<br/><br/>'
+            data[
+                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b>' + self.name + '</b> del proveedor <b>' + self.partner_id.name + '</b>:<br/><br/>'
+            data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
+                <tr style='background-color:#BA3B20;color:#FFFFFF'>\
+                    <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
+                    <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
+                    <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
+                </tr>"
+
+            # for product in products:
+            for product in products:
+                data['body_html'] += "<tr>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.name + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
+                    product.product_tmpl_id.x_last_price) + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
+                    product.lst_price) + "</b></td>\
+                </tr>"
+            data['body_html'] += '</table>'
+            data[
+                'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
+            data['body_html'] += '<br/><br/>'
+            data['body_html'] += 'S@lu2.'
+
+            msg = mail.create(data)
+            prices = self.env.ref('product.report_product_label').render_qweb_pdf(products)
+            b64_pdf = base64.b64encode(prices[0])
+
+            msg.update({
+                'attachment_ids': [(0, 0, {
+                    # 'name': 'Etiquetas - Cambios de precio',
+                    'type': 'binary',
+                    'datas': b64_pdf,
+                    'name': 'Etiquetas - Cambios de precio.pdf',
+                    'store_fname': 'Etiquetas - Cambios de precio',
+                    'res_model': self._name,
+                    'res_id': self.id,
+                    'mimetype': 'application/x-pdf'
+                })]
+            })
+
+            if msg:
+                mail.sudo().send(msg)
+                mail.sudo().process_email_queue()
+
 
 class SmayPurchasesProduct(models.Model):
     _inherit = 'product.template'
 
     x_utility_percent = fields.Float(string='Porcentaje de utilidad', default=16)
     x_fecha_actualizacion_precios = fields.Datetime('Fecha en que se cambio el precio')
+    x_sent_labels = fields.Boolean(defult=True)
+    x_last_price = field.Float(default=0.0, string='Precio anterior',readonly=True)
 
 
 class SmayPurchasesProductProduct(models.Model):
