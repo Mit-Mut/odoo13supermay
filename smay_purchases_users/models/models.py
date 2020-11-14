@@ -135,7 +135,7 @@ class SmayPurchasesOrder(models.Model):
         else:
             return self.env.user.x_almacen_compras.id
 
-    def button_confirm(self):
+    '''def button_confirm(self):
         for line in self.order_line:
             if not line.account_analytic_id:
                 raise UserError('No tiene asignada la cuenta analitica en ' + str(self.product_id.name))
@@ -156,7 +156,7 @@ class SmayPurchasesOrder(models.Model):
                 self.button_done()
                 return
             else:
-                raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')
+                raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')'''
 
     def action_view_picking(self):
         resulta = super(SmayPurchasesOrder, self).action_view_picking()
