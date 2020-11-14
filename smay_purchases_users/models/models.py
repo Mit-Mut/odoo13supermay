@@ -157,6 +157,7 @@ class SmayPurchasesOrder(models.Model):
                 return
             else:
                 raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')'''
+    '''test'''
 
     def action_view_picking(self):
         resulta = super(SmayPurchasesOrder, self).action_view_picking()
