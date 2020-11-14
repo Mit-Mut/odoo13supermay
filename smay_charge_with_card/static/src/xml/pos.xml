@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="BankReferencePopUp">
+		<div class="modal-dialog">
+			<div class="popup popup-confirm" style="height:350px">
+				<p class="title">
+					<t t-esc="widget.options.title || 'Referencia Bancaria' "/>
+				</p>
+                <br/>
+                <br/>
+                <div style='text-align:center'>
+					Monto a cobrar: <span class="card_amount"><t t-esc="widget.format_currency(widget.options.amount)"/></span>
+                    <br/>
+                    Autorización generada por la PIN PAD :
+				</div>
+                <br/>
+                <p class="message">
+					<input type="text" id="bank_reference" placeholder='referencia'/>
+                    <br/>
+                    <br/>
+                    <br/>
+				</p>
+                <div class="footer">
+					<div class="button" id="confirm">
+						Confirmar
+					</div>
+                    <div class="button" id="cancel">
+						Cancelar
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</t>
+
+
+    <t t-extend="OrderReceipt">
+		<t t-jquery=".pos-receipt-center-align" t-operation="before">
+			<t t-if="widget.pos.get_order().x_bank_reference">
+				<br/>
+                <div class="bank_reference">
+					<span style="font-size: 11px;font-weight: bold;">Autorización:<t
+                            t-esc="widget.pos.get_order().x_bank_reference"/></span>
+				</div>
+			</t>
+		</t>
+	</t>
+
+</templates>

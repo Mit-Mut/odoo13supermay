@@ -11,7 +11,7 @@
                 <script type="text/javascript" src="/pos_stocks/static/src/js/screens.js"></script>
                 <script type="text/javascript" src="/pos_stocks/static/src/js/models.js"></script>
                 <script type="text/javascript" src="/pos_stocks/static/src/js/popups.js"></script>
-                <link rel="stylesheet" href="/pos_stocks/static/src/css/pos_stocks.css" />
+                <link rel="stylesheet" href="/pos_stocks/static/src/css/pos_stocks.css"/>
             </xpath>
         </template>
     </data>

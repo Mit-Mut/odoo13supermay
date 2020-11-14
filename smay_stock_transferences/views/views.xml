@@ -1,0 +1,136 @@
+<odoo>
+    <data>
+
+        <!-- Agrega los campos en res_users-->
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position='inside'>
+                    <page string='Transferencias Super May'>
+                        <group>
+                            <field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
+                            <!--<field name="stock_warehouse_id" options="{'no_create': True,'no_open':True}"/>-->
+                            <field name="transfers_validator"/>
+                            <field name="picking_type_id" options="{'no_create': True,'no_open':True}"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Crea la vista para los usuarios-->
+        <record model="ir.ui.view" id="view_picking_form_inherit_user">
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('stock.group_stock_user')])]"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" readonly="True" required="True"
+                           options="{'no_create': True,'no_open':True}"
+                    />
+                </xpath>
+
+                <xpath expr="//field[@name='location_id']" position="replace">
+                    <field name="location_id"
+                           attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"
+                           domain="['|', ('company_id', '=', company_id), ('company_id', '=', False),('name', 'in', ['Stock'])]"
+                           options="{'no_create': True,'no_open':True}" readonly="True"/>
+                </xpath>
+
+                <xpath expr="//field[@name='location_dest_id']" position="replace">
+
+                    <field name="location_dest_id" options="{'no_create': True,'no_open':True}"
+                           groups="stock.group_stock_multi_locations"
+                           attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"
+                           domain="['|', ('company_id', '=', company_id), ('company_id', '=', False),('name', 'in', ['Stock','Mermas','Insumos'])]"
+                    />
+                </xpath>
+
+                <xpath expr="//field[@name='picking_type_id']" position="replace">
+
+                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="True"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='product_id']" position="replace">
+                    <field name="product_id" required="1"
+                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <!--<xpath expr="//button[@name='button_scrap']" position="replace">
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [1,'=',1]}"/>
+
+                </xpath>-->
+
+            </field>
+        </record>
+
+        <!--Genera la vista personalizada para managers-->
+        <record model="ir.ui.view" id="view_picking_form_inherit_manager">
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('stock.group_stock_manager')])]"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" required="True"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='location_id']" position="replace">
+                    <field name="location_id"
+                           attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"
+                           domain="['|', ('company_id', '=', company_id), ('company_id', '=', False),('name', 'in', ['Stock'])]"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='location_dest_id']" position="replace">
+
+                    <field name="location_dest_id" options="{'no_create': True,'no_open':True}"
+                           groups="stock.group_stock_multi_locations"
+                           attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"
+                           domain="['|', ('company_id', '=', company_id), ('company_id', '=', False),('name', 'in', ['Stock','Mermas','Insumos'])]"
+                    />
+                </xpath>
+
+                <xpath expr="//field[@name='picking_type_id']" position="replace">
+
+                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='product_id']" position="replace">
+                    <field name="product_id" required="1"
+                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"
+                           options="{'no_create': True,'no_open':True}"/>
+                </xpath>
+
+                <!--<xpath expr="//button[@name='button_scrap']" position="replace">
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [1,'=',1]}"/>
+                </xpath>-->
+
+
+            </field>
+        </record>
+
+        <!--Agrega el ubicacion origen-->
+        <record id="vpicktree_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_dest_id']" position="before">
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="InformationProductPopUp">
+		<div class="modal-dialog">
+			<div class="popup popup-confirm" style="height:450px; width:45%">
+				<p class="title">
+					<t t-esc="widget.options.title || 'Información del producto' "/>
+				</p>
+                <table class="mainTable">
+					<tr>
+						<td class="imgProduct">
+                			<img t-att-src="widget.options.url_image" class="imgProduct2"/>
+						</td>
+                        <td>
+							<t t-if="widget.options.prices">
+								<t t-foreach="widget.options.prices" t-as="precio">
+									<t t-foreach="precio" t-as="qty">
+										<div class='priceProductUnit' t-att-qty="qty"
+                                             t-att-product_id="widget.options.id"
+                                             style="background-color:#666666; color:#FFFFFF">
+										A partir de <t t-esc="qty"/>
+                                            <t t-if="qty==1">
+												Pieza $
+											</t>
+                                            <t t-if="qty&gt;1">
+                                            Piezas $
+											</t>
+                                            <t t-if="widget.options.cost &gt; 0">
+                                            <t t-if="widget.options.cost &lt; precio[qty]" t-esc="precio[qty]"/>
+											</t>
+										</div>
+									</t>
+								</t>
+							</t>
+                            <div class="priceProduct" style="background-color:#FA441D;color: white;font-weight: bold;">
+                            	<div class="informationProduct">
+									Existencias:
+								</div>
+                                <div class="informationProduct2" id="informationQtyStock">
+									<t t-esc="widget.options.stock_qty"/>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+                <br/>
+                <div class="footer">
+					<div class="button" id="cancel">
+						Cerrar
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+</templates>

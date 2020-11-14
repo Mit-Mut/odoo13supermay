@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">view.pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group col="2">
+                    <field name='extra_charge' string="Porcentaje extra al pagar con tarjeta"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_pos_pos_form_inherited" model='ir.ui.view'>
+        <field name="name">inherit_pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_reference']" position='after'>
+                <field name="x_bank_reference"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_form" model="ir.ui.view">
+        <field name="name">pos.payment.method.view</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='split_transactions']" position="after">
+                <field name="uso_terminal_smay"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

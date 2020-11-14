@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="invoicePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup" style="height:300px; width:65%  !important">
+                <p class="title"><t t-esc="widget.options.title"/></p>
+                <table>
+                    <tr>
+                        <td style="text-align:left; padding:30px 0px 0px 20px">
+                            <label>Uso del CFDI :</label>
+                        </td>
+                        <td style="text-align:left ; padding:30px 0px 0px 20px">
+                            <select id="uso_cfdi"
+                                    style="font-size:15px; font-weight:bold;height:35px;border-radius:3px;">
+                                <t t-foreach="Object.keys(widget.pos.facturacion_usos_cfdi)" t-as="uso">
+                                    <option t-att-value="uso">
+                                        <t t-esc="widget.pos.facturacion_usos_cfdi[uso]"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left; padding:30px 0px 0px 20px">
+                            <label>Metodo de pago :</label>
+                        </td>
+                        <td style="text-align:left; padding:30px 0px 0px 20px">
+                            <select id="metodo_pago"
+                                    style="font-size:15px; font-weight:bold;height:35px;border-radius:3px;">
+                                <t t-foreach="widget.pos.facturacion_sat_metodos_pago" t-as="metodos_sat">
+                                    <option t-att-value="metodos_sat.id">
+                                        <t t-esc="metodos_sat.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="footer">
+                    <div class="button" style='width:126px;' id="accept14">
+                            Aceptar
+                    </div>
+                    <div class="button" style='width:126px;' id="cancel14">
+                            Cancelar
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </t>
+
+
+    <t t-name="ConfirmInvoicePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup" style="height:400px; width:60%  !important">
+                <p class="title"><t t-esc="widget.options.title"/></p>
+                <table>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            Total a facturar:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-esc="widget.format_currency(widget.pos.get_order().get_total_with_tax())"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            Cliente:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-if="widget.pos.get_order().get_client()">
+                            <t t-esc="widget.pos.get_order().get_client().name"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            Correo:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-if="widget.pos.get_order().get_client()">
+                            <t t-esc="widget.pos.get_order().get_client().email"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            RFC:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-if="widget.pos.get_order().get_client()">
+                            <t t-esc="widget.pos.get_order().get_client().vat"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            Metodo de pago:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-esc="widget.pos.get_order().get_metodo_pago_sat(widget.pos.get_order().x_metodo_pago_sat)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;text-align:left">
+                            Uso del CFDI:
+                        </td>
+                        <td style="padding:5px 20px;text-align:left">
+                            <t t-esc="widget.pos.get_order().get_uso_cfdi(widget.pos.get_order().x_uso_cfdi_sat)"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="footer">
+                    <div class="button" style='width:126px;' id="aceptar_data_invoice">
+                            Aceptar
+                    </div>
+                    <div class="button" style='width:126px;' id="cancelar_data_invoice">
+                            Cancelar
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </t>
+
+
+</templates>

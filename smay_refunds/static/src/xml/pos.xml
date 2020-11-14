@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="PopUpMenu">
+        <t t-jquery=".gridView" t-operation="append">
+            <div class="gridView-listItem">
+                <div class="gridView-detailsSection">
+                    <div class="gridView-toolbar refundButton">
+                        <div class="gridView-menu"><i class="fa fa-rotate-left"></i></div>
+                        <div class="gridView-date">Devolución</div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+
+    <t t-name="RefundPopUp">
+        <div class="modal-dialog">
+			<div class="popup popup-confirm" style="height:350px ">
+				<p class="title">
+					<t t-esc="widget.options.title || 'Devolucion' "/>
+				</p>
+                <br/>
+                <br/>
+                <div style='text-align:center'>
+					Escribe la orden a devolver :
+				</div>
+                <br/>
+                <p class="message">
+					Pedido <input id="refund_order" type="text" autocomplete="off" placeholder='00000 000 0000'/>
+                    <br/>
+                    <br/>
+                    <br/>
+				</p>
+                <div class="footer">
+                    <div class="button" id="refund_accept">
+						Aceptar
+					</div>
+                    <div class="button" id="refund_cancel">
+						Cancelar
+					</div>
+				</div>
+			</div>
+		</div>
+    </t>
+
+
+    <t t-name="RefundOrderInformationPopUp">
+        <div class="modal-dialog">
+            <div class="popup popup-confirm" style="width:80%;height:550px !important">
+                <p class="title"><t t-esc=" widget.options.title || 'Devolución - Productos que se devolveran' " /></p>
+                <p id='original_order' align="left" style="overflow:scroll;width:100%;height:380px"></p>
+                <div class="footer" style="height:80px">
+                    <div class="button" style='width:126px;' id="OriginalOrderAccept">
+                        Aceptar
+                    </div>
+                    <div class="button" style='width:126px;' id="OriginalOrderCancel">
+                        Cancelar
+                    </div>
+                    <div style="width:55%; height:80px; float:right;margin-right:30px">
+                        <div style="font-size:15px">Motivos de Devolución</div>
+                        <div style="width:48%;height:48px;float:left">
+                            <select id='motivo_select'
+                                    style="margin:15px 0px;border-radius:3px;font-family:'Lato';font-size:15px;width:100%;font-weight: bold;float:left;height:30px">
+                                <option value="Otro">Otro</option>
+                                <option value="Producto dañado o caducado">Producto dañado o caducado</option>
+                                <option value="El producto equivocado">El producto equivocado</option>
+                                <option value="El producto no es encontrado">El producto no es encontrado</option>
+                                <option value="El cliente tiene prisa">El cliente tiene prisa</option>
+                                <option value="El producto se cobro pero no hay en stock">El producto se cobro pero no hay en stock</option>
+                            </select>
+                        </div>
+                        <div style="width:50%;height:45px;float:right">
+                            <textarea id='descripcion_refund'
+                                      style="font-family:'Lato';font-size:15px;width:100%;max-height:35px;max-width:300px;min-height:35px;min-width:300px">
+
+</textarea>
+                        </div>
+                    </div>
+                    <div class="button" id="RefundOrderTotal" style="width:150px;float:left;margin-left:10px">
+                        Devolver todo
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+    <!--
+
+
+
+
+    -->
+
+
+    <t t-name="RefoundPosTicket">
+        <!---HEAD-->
+        <div class="pos-center-align reprint_label">
+            <img id='img_reimp1' class="pos-logo" src="/smay_refunds/static/img/devolucion_leyenda.JPG"
+                 alt="Super may - Reimpresión"
+                 style="width:100%; height:30px"/>
+        </div>
+
+
+        <t t-if='receipt.logo'>
+            <img class="pos-receipt-logo" t-att-src='receipt.logo' alt="Logo"
+                 style="max-width: 170px; max-height: 500px;"/>
+            <br/>
+        </t>
+
+        <t t-if='!receipt.logo'>
+            <h2 class="pos-receipt-center-align">
+                <t t-esc='widget.pos.company.name'/>
+            </h2>
+            <br/>
+        </t>
+
+        <div class="pos-receipt-contact">
+            <t t-if='widget.pos.company.contact_address'>
+                <div>
+                    <t t-esc='widget.pos.company.contact_address'/>
+                </div>
+            </t>
+
+            <t t-if='widget.pos.company.vat'>
+                <div>
+                    RFC:<t t-esc='widget.pos.company.vat'/>
+                </div>
+            </t>
+
+            <t t-if='widget.pos.company.phone'>
+                <div>
+                    Tel:<t t-esc='widget.pos.company.phone'/>
+                </div>
+            </t>
+
+            <t t-if="widget.pos.company.street">
+                <div>
+                    <t t-esc="widget.pos.company.street"/>
+                </div>
+            </t>
+
+            <t t-if="widget.pos.company.l10n_mx_edi_colony">
+                <div>
+                    <t t-esc="widget.pos.company.l10n_mx_edi_colony"/>
+                </div>
+            </t>
+
+            <t t-if="widget.pos.company.zip">
+                <div>
+                    C.P. :<t t-esc="widget.pos.company.zip"/>
+                </div>
+            </t>
+
+            <t t-if="widget.pos.company.city">
+                <div>
+                    <t t-esc="widget.pos.company.city"/>,
+                </div>
+            </t>
+
+
+            <t t-if='widget.pos.company.email'>
+                <div>
+                    <t t-esc='widget.pos.company.email'/>
+                </div>
+            </t>
+
+            <t t-if='widget.pos.company.website'>
+                <div>
+                    <t t-esc='widget.pos.company.website'/>
+                </div>
+            </t>
+
+            <t t-if='widget.pos.config.receipt_header'>
+                <t t-raw='widget.pos.config.receipt_header'/>
+            </t>
+            <br/>
+
+
+            <div class="informacion_sucursal" style="font-weight: bold;text-align:left">
+                <t t-set="sucursal_id" t-value="widget.pos.config.sucursal_id[0]"/>
+
+                <t t-foreach="widget.pos.partners" t-as="partner">
+                    <t t-if="partner.id==sucursal_id">
+                        <t t-esc="partner.name || ''"/>
+                        <br/>
+                        <t t-esc="partner.street_name|| ''"/>
+                        <t t-esc="partner.street_number|| ''"/>
+                        TEL
+                        <t t-esc="partner.phone|| ''"/>
+                        <br/>
+                        Col.
+                        <t t-esc="partner.l10n_mx_edi_colony|| ''"/>
+                        <t t-esc="partner.city|| ''"/>
+                        <t t-esc="partner.country_id[1]|| ''"/>
+                        <br/>
+                        RFC.
+                        <t t-esc="partner.vat|| ''"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+        <br/>
+
+        <div class="pos-receipt-order-data">
+            <div>
+                <t t-esc='receipt.order_name'/>
+            </div>
+            <div>
+                <t t-esc='receipt.date_order'/>
+            </div>
+        </div>
+        <br/>
+        <br/>
+
+
+        <div class="informacion_sucursal" style="font-weight: bold;font-size:12px;text-align:left">
+            <div>
+                Cajero: <t t-esc='receipt.cashier[0]'/>
+            </div>
+            <div>
+                Cliente: <t t-esc='receipt.client'/>
+            </div>
+        </div>
+        <br/>
+
+        <!-- Orderlines -->
+        <div class="header_ordelines" style="font-size:10px;font-weight: bold">
+            <span>Producto</span>
+            <br/>
+
+            <span style="padding-left: 2em;">
+                Precio Unit
+            </span>
+
+            <span style="padding-left: 2em;">
+                Desc. Unit
+            </span>
+
+            <span style="padding-left: 2em;">
+                Desc. Total
+            </span>
+
+        </div>
+
+        <div class='orderlines' style="font-size:10px;">
+            <t t-set="x_descuento_total" t-value="0.0"/>
+            <t t-set="x_subtotal" t-value="0.0"/>
+
+            <t t-foreach="receipt.orderlines" t-as="orderline">
+                <div style="padding-top:8px">
+                    <t t-esc='orderline.name_product'/>
+                </div>
+                <t t-if="orderline.descuento_smay&lt;0">
+                    <!--<div style="font-size:10px;">
+                        <span style="padding-left: 2em;">
+                            <t t-esc="widget.format_currency(
+                            orderline.price_unit+((orderline.descuento_smay*-1)/(orderline.qty*-1))*-1
+                            )"/>
+                        </span>
+                        |
+                        <span style="padding-left: 2.5em;">
+                            <t t-esc="(orderline.descuento_smay)/(orderline.qty)"/>
+                        </span>
+                        |
+                        <span style="padding-left: 2.5em;">
+                            <t t-esc="widget.format_currency(orderline.descuento_smay)"/>
+                        </span>
+                    </div>-->
+
+                    <t t-set="x_descuento_total" t-value="x_descuento_total+orderline.descuento_smay"/>
+                </t>
+
+                <div class="pos-receipt-left-padding">
+                    <t t-esc="orderline.qty"/>
+                    <t t-esc="widget.pos.db.get_product_by_id(orderline.product_id).uom_id[1]"/>
+                    x
+                    <t t-esc='widget.format_currency(orderline.price_unit)'/>
+                    <span class="price_display pos-receipt-right-align">
+                        <t t-esc='widget.format_currency(orderline.price_unit*orderline.qty)'/>
+                    </span>
+                </div>
+
+                <!--<t t-set="x_subtotal"
+                   t-value="x_subtotal+(orderline.price_unit*orderline.qty)+orderline.descuento_smay"/>-->
+                <t t-set="x_subtotal"
+                   t-value="x_subtotal+(orderline.price_unit*orderline.qty)"/>
+            </t>
+        </div>
+
+
+        <div class="pos-receipt-right-align">
+            --------
+        </div>
+        <br/>
+
+        <div>
+            Subtotal<span t-esc='widget.format_currency(x_subtotal)' class="pos-receipt-right-align"/>
+        </div>
+        <!--<div>
+            Descuento<span t-esc='widget.format_currency(x_descuento_total)' class="pos-receipt-right-align"/>
+        </div>-->
+
+
+        <div class="pos-receipt-right-align">
+            --------
+        </div>
+        <br/>
+
+        <div class="pos-receipt-amount">
+            TOTAL
+            <!--<span t-esc='widget.format_currency(x_subtotal-x_descuento_total)' class="pos-receipt-right-align"/>-->
+            <span t-esc='widget.format_currency(x_subtotal)' class="pos-receipt-right-align"/>
+        </div>
+        <br/>
+        <br/>
+
+        <div class="pos-center-align reprint_label">
+            <img id='img_reimp1' class="pos-logo" src="/smay_refunds/static/img/devolucion_leyenda.JPG"
+                 alt="Super may - Reimpresión"
+                 style="width:100%; height:30px"/>
+        </div>
+        <br/>
+    </t>
+</templates>

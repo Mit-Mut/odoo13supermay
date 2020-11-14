@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_withdrawal_concentrator_tree" model="ir.ui.view">
+        <field name="name">conciliation.withdrawals.tree</field>
+        <field name="model">conciliation.withdrawals</field>
+        <field name="arch" type="xml">
+            <tree create="true" edit="true" default_order="id desc" limit="100">
+                <field name="name"/>
+
+                <field name="total_conciliado" widget="monetary"/>
+                <field name="create_date" string="Fecha de Creación"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_withdrawal_concentrator_form" model="ir.ui.view">
+        <field name="name">conciliation.withdrawals.form</field>
+        <field name="model">conciliation.withdrawals</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="validate_consolidation" string="Validar Retiros" type="object"
+                            attrs="{'invisible':[('state','in',('nuevo','retiros_validados','deposito_validado'))]}"
+                            class="oe_highlight"/>
+
+                    <button name="validate_bank_deposit" string="Validar Deposito Bancario" type="object"
+                            groups="point_of_sale.group_pos_manager"
+                            attrs="{'invisible':[('state','in',('nuevo','borrador','deposito_validado'))]}"
+                            class="oe_highlight"/>
+
+                    <button name="print_report" type="object" string="Reporte de Conciliación"
+                            attrs="{'invisible':[('state','in',('nuevo','borrador','retiros_validados'))]}"
+                            class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="nuevo,borrador,retiros_validados,deposito_validado"
+                           class="oe_highlight"/>
+                </header>
+
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_withdrawal_concentrator_form_user">
+        <field name="model">conciliation.withdrawals</field>
+        <field name="inherit_id" ref="smay_reconciliation_of_withdrawals.view_withdrawal_concentrator_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('point_of_sale.group_pos_user')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="replace">
+
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group col="4">
+                        <field name="create_uid"
+                               options="{'no_open':True}" readonly="1" string="Creado por"/>
+
+                        <field name="write_uid" options="{'no_open':True}"
+                               readonly="1" string="Modificado por"/>
+
+                        <field name="create_date"
+                               options="{'no_open':True}" readonly="1" string="Creado el"/>
+
+                        <field name="write_date"
+                               options="{'no_open':True}" readonly="1" string="Modificado el"/>
+
+                        <field name="sucursal_id"
+                               options="{'no_open':True}" readonly="1" string="Sucursal"/>
+
+                        <field name="comments" options="{'no_open':True}" string="Comentarios"
+                               attrs="{'readonly': [('state','in',('deposito_validado'))]}"/>
+
+                        <field name="start_date"
+                               attrs="{'readonly': [('state','in',('borrador','retiros_validados','deposito_validado'))]}"
+                               string="Fecha de Inicio:" required='1'/>
+                        <field name="end_date"
+                               attrs="{'readonly': [('state','in',('borrador','retiros_validados','deposito_validado'))]}"
+                               string="Fecha de Final:" required="1"/>
+
+                        <field name="gran_total"
+                               widget="monetary" string="Gran Total"
+                               digits="(14,2)" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Retiros">
+                            <group>
+                                <field name="validate_retirements_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="validate_retirements_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="withdraw_line_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' default_order="retirement_id" limit="100"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="total_amount" readonly="1"/>
+                                        <field name="commentary" string="Autorización"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+
+                                <field name="total_conciliado" string="Total Retiros(Depositar)"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+                        <page string="Gastos">
+                            <group>
+
+                                <field name="gasto_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom" limit="100"
+                                          create='true' edit='true' default_order="retirement_id"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="amount" readonly="1"/>
+                                        <field name="description"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_gastos" string="Total Gastos"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+                        <page string="Prestamos">
+                            <group>
+
+                                <field name="prestamo_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' default_order="retirement_id" limit="100"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="amount" readonly="1"/>
+                                        <field name="description"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_prestamos" string="Total Prestamos"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+
+                        <page string="Tarjetas">
+                            <group>
+                                <field name="validate_retirements_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="validate_retirements_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="card_payment_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open': True,}" default_order="order_reference" readonly="1">
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' limit="100">
+                                        <field name="order_reference" readonly="1"/>
+                                        <field name="session" readonly="1" force_save="1"/>
+                                        <field name="cajero" readonly="1" force_save="1"/>
+                                        <field name="amount" string='Monto' readonly="1" force_save="1"/>
+                                        <field name="commentary" string="Autorización"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_conciliado_card_payments" string="Total Tarjetas"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+                        </page>
+
+
+                        <page string="Faltantes">
+                            <group>
+
+                                <field name="faltante_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open':True}" default_order="cajero_id" readonly="1">
+                                    <tree string="Details" editable="bottom" limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="amount"/>
+                                        <field name="commentary"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_faltantes"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+                        <page string="Sobrantes">
+                            <group>
+                                <field name="sobrantes_ids" readonly="1">
+                                    <tree limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="amount"/>
+                                        <field name="commentary"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_sobrantes" string="Total Sobrantes"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+
+                        <page string="Devoluciones">
+                            <group>
+                                <field name="refund_ids" readonly="1">
+                                    <tree string="Devoluciones" limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="pos_reference"/>
+                                        <field name="motivo_devolucion"/>
+                                        <field name="amount"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_devoluciones" string="Total Devoluciones"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+
+
+                        <page string="Bancos">
+
+                            <group>
+                                <field name="validate_deposits_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="validate_deposits_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="bank_deposit_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open':True}">
+                                    <tree editable="bottom" limit="100">
+                                        <field name="bank"/>
+                                        <field name="reference"/>
+                                        <field name="depositor"/>
+                                        <field name="deposit_date"/>
+                                        <field name="deposited_amount"/>
+                                        <field name="deposito_validado_en_banco"
+                                               groups="point_of_sale.group_pos_user " readonly='1'/>
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <button name="update_totals_managers" string=" Actualiza Totales"
+                                        type="object" class="oe_link oe_left" groups="point_of_sale.group_pos_user"/>
+                                <br/>
+                                <field name="deposit_total"
+                                       widget="monetary" string="Total Depositado"
+                                       digits="(14,2)" readonly="1"/>
+                                <br/>
+                                <br/>
+                                <field name="total_conciliado_banco"
+                                       widget="monetary" string="Total Verificado en Banco"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                            </group>
+
+                        </page>
+
+                        <page string="RESUMEN">
+
+                            <group>
+                                <field name="validate_deposits_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="validate_deposits_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                            </group>
+                            <group class="oe_right">
+                                <button name="update_totals_managers" string="Actualiza Totales"
+                                        type="object" class="oe_link oe_left" groups="point_of_sale.group_pos_user"/>
+                                <br/>
+                                <field name="total_venta_bruta" widget="monetary" string="Venta Bruta"
+                                       digits="(14,2)" readonly="1"/>
+                                <field name="total_devoluciones" widget="monetary" string="Devoluciones"
+                                       digits="(14,2)" readonly="1"/>
+
+                                <field name="total_venta_neta" widget="monetary" string="Venta Neta"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                                <br/>
+                                <br/>
+
+                                <field name="total_venta_neta" widget="monetary" string="Venta Neta"
+                                       digits="(14,2)" readonly="1"/>
+                                <field name="total_conciliado_card_payments" widget="monetary" string="Tarjetas ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_gastos" widget="monetary" string="Gastos ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_prestamos" widget="monetary" string="Prestamos ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_faltantes_cajeros" widget="monetary" string="Faltantes ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_sobrantes_cajeros" widget="monetary" string="Sobrantes ( + )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <br/>
+                                <br/>
+                                <field name="gran_total" widget="monetary" string="Efectivo a Depositar ( = )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+
+                                <field name="deposit_total" widget="monetary" string="Enviado por conciliador $"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <field name="total_conciliado_banco" widget="monetary" string="Verificado en Banco $"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <br/>
+                                <br/>
+
+
+                                <field name="total_diferencia_banco" widget="monetary" string="DIFERENCIA BANCOS"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+
+                            </group>
+
+
+                        </page>
+                    </notebook>
+                </sheet>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_withdrawal_concentrator_form_manager">
+        <field name="model">conciliation.withdrawals</field>
+        <field name="inherit_id" ref="smay_reconciliation_of_withdrawals.view_withdrawal_concentrator_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('point_of_sale.group_pos_manager')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="replace">
+
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group col="4">
+                        <field name="create_uid"
+                               options="{'no_open':True}" readonly="1" string="Creado por"/>
+
+                        <field name="write_uid" options="{'no_open':True}"
+                               readonly="1" string="Modificado por"/>
+
+                        <field name="create_date"
+                               options="{'no_open':True}" readonly="1" string="Creado el"/>
+
+                        <field name="write_date"
+                               options="{'no_open':True}" readonly="1" string="Modificado el"/>
+
+                        <field name="sucursal_id"
+                               options="{'no_open':True}" readonly="1" string="Sucursal"/>
+
+                        <field name="comments" options="{'no_open':True}" string="Comentarios"
+                               attrs="{'readonly': [('state','in',('deposito_validado'))]}"/>
+
+                        <field name="start_date"
+                               attrs="{'readonly': [('state','in',('borrador','retiros_validados','deposito_validado'))]}"
+                               string="Fecha de Inicio:" required='1'/>
+                        <field name="end_date"
+                               attrs="{'readonly': [('state','in',('borrador','retiros_validados','deposito_validado'))]}"
+                               string="Fecha de Final:" required="1"/>
+
+                        <field name="gran_total"
+                               widget="monetary" string="Gran Total"
+                               digits="(14,2)" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Retiros">
+                            <group>
+                                <field name="validate_retirements_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="validate_retirements_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="withdraw_line_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' default_order="retirement_id" limit="100"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="total_amount" readonly="1"/>
+                                        <field name="commentary"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+
+                                <field name="total_conciliado" string="Total Retiros(Depositar)"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+                        <page string="Gastos">
+                            <group>
+
+                                <field name="gasto_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom" limit="100"
+                                          create='true' edit='true' default_order="retirement_id"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="amount" readonly="1"/>
+                                        <field name="description"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_gastos" string="Total Gastos"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+                        <page string="Prestamos">
+                            <group>
+
+                                <field name="prestamo_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado','retiros_validados'))]}"
+                                       options="{'no_open':True}" readonly="1">
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' default_order="retirement_id" limit="100"
+                                          options="{'no_open':True}">
+                                        <field name="retirement_id"/>
+                                        <field name="amount" readonly="1"/>
+                                        <field name="description"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_prestamos" string="Total Prestamos"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                            </group>
+                        </page>
+
+
+                        <page string="Tarjetas">
+                            <group>
+                                <field name="validate_retirements_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="validate_retirements_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo'))]}"/>
+
+                                <field name="card_payment_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open': True,}" default_order="order_reference" >
+                                    <tree string="Details" editable="bottom"
+                                          create='true' edit='true' limit="100">
+                                        <field name="order_reference" readonly="1"/>
+                                        <field name="session" readonly="1" force_save="1"/>
+                                        <field name="cajero" readonly="1" force_save="1"/>
+                                        <field name="amount" string='Monto' readonly="1" force_save="1"/>
+                                        <field name="commentary" string="Autorización"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_conciliado_card_payments" string="Total Tarjetas"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+                        </page>
+
+
+                        <page string="Faltantes">
+                            <group>
+
+                                <field name="faltante_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open':True}" default_order="cajero_id" readonly="1">
+                                    <tree string="Details" editable="bottom" limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="amount"/>
+                                        <field name="commentary"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_faltantes"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+                        <page string="Sobrantes">
+                            <group>
+                                <field name="sobrantes_ids" readonly="1">
+                                    <tree limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="amount"/>
+                                        <field name="commentary"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_sobrantes" string="Total Sobrantes"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+
+                        <page string="Devoluciones">
+                            <group>
+                                <field name="refund_ids" readonly="1">
+                                    <tree string="Devoluciones" limit="100">
+                                        <field name="cajero_id"/>
+                                        <field name="pos_reference"/>
+                                        <field name="motivo_devolucion"/>
+                                        <field name="amount"/>
+
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <br/>
+                                <field name="total_devoluciones" string="Total Devoluciones"
+                                       widget="monetary"
+                                       digits="(14,2)" readonly="1"/>
+                            </group>
+
+                        </page>
+
+
+                        <page string="Bancos">
+
+                            <group>
+                                <field name="validate_deposits_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="validate_deposits_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="bank_deposit_ids"
+                                       attrs="{'readonly': [('state','in',('deposito_validado'))]}"
+                                       options="{'no_open':True}">
+                                    <tree editable="bottom" limit="100">
+                                        <field name="bank"/>
+                                        <field name="reference"/>
+                                        <field name="depositor"/>
+                                        <field name="deposit_date"/>
+                                        <field name="deposited_amount"/>
+                                        <field name="deposito_validado_en_banco"
+                                               groups="point_of_sale.group_pos_manager"/>
+                                    </tree>
+                                </field>
+                            </group>
+
+                            <group class="oe_subtotal_footer oe_right">
+                                <button name="update_totals_managers" string=" Actualiza Totales"
+                                        type="object" class="oe_link oe_left" groups="point_of_sale.group_pos_user"/>
+                                <br/>
+                                <field name="deposit_total"
+                                       widget="monetary" string="Total Depositado"
+                                       digits="(14,2)" readonly="1"/>
+                                <br/>
+                                <br/>
+                                <field name="total_conciliado_banco"
+                                       widget="monetary" string="Total Verificado en Banco"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                            </group>
+
+                        </page>
+
+                        <page string="RESUMEN">
+
+                            <group>
+                                <field name="validate_deposits_uid" readonly="1" string="Validados por:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                                <field name="validate_deposits_date" readonly="1" string="Fecha de validación:"
+                                       options="{'no_open':True}"
+                                       attrs="{'invisible':[('state','in',('borrador','nuevo','retiros_validados'))]}"/>
+                            </group>
+                            <group class="oe_right">
+                                <button name="update_totals_managers" string="Actualiza Totales"
+                                        type="object" class="oe_link oe_left" groups="point_of_sale.group_pos_user"/>
+                                <br/>
+                                <field name="total_venta_bruta" widget="monetary" string="Venta Bruta"
+                                       digits="(14,2)" readonly="1"/>
+                                <field name="total_devoluciones" widget="monetary" string="Devoluciones"
+                                       digits="(14,2)" readonly="1"/>
+
+                                <field name="total_venta_neta" widget="monetary" string="Venta Neta"
+                                       digits="(14,2)" readonly="1"/>
+
+
+                                <br/>
+                                <br/>
+
+                                <field name="total_venta_neta" widget="monetary" string="Venta Neta"
+                                       digits="(14,2)" readonly="1"/>
+                                <field name="total_conciliado_card_payments" widget="monetary" string="Tarjetas ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_gastos" widget="monetary" string="Gastos ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_prestamos" widget="monetary" string="Prestamos ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_faltantes_cajeros" widget="monetary" string="Faltantes ( - )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+                                <field name="total_sobrantes_cajeros" widget="monetary" string="Sobrantes ( + )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <br/>
+                                <br/>
+                                <field name="gran_total" widget="monetary" string="Efectivo a Depositar ( = )"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+
+                                <field name="deposit_total" widget="monetary" string="Enviado por conciliador $"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <field name="total_conciliado_banco" widget="monetary" string="Verificado en Banco $"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+                                <br/>
+                                <br/>
+
+
+                                <field name="total_diferencia_banco" widget="monetary" string="DIFERENCIA BANCOS"
+                                       digits="(14,2)" readonly="1" groups="point_of_sale.group_pos_user"/>
+
+
+                            </group>
+
+
+                        </page>
+                    </notebook>
+                </sheet>
+
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="action_conciliation_withdrawals" model="ir.actions.act_window">
+        <field name="name">Conciliación de Retiros</field>
+        <field name="res_model">conciliation.withdrawals</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem action="action_conciliation_withdrawals" id="reconciliation_withdrawals" name="Conciliación de Retiros"
+              parent="point_of_sale.menu_point_of_sale" sequence="7"/>
+
+</odoo>
+

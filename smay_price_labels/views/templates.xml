@@ -1,0 +1,122 @@
+<odoo>
+    <data>
+        <template id="report_simple_label_smay" inherit_id="product.report_simple_label">
+            <xpath expr="//div" position="replace">
+
+                <div style="width: 100%; display: inline-table; height:200px;">
+                    <table class="table" style="border: 2px  solid black;padding:1px 0px">
+                        <tr>
+                            <th style="padding:1px">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td class="table-active text-center" style="width:30%;padding:2px;">
+                                            <t t-if="product.product_tmpl_id.company_id">
+                                                <img t-att-src="image_data_uri(product.product_tmpl_id.company_id.partner_id.image_512)"
+                                                     style="width:100%;height:190px"/>
+                                            </t>
+
+                                        </td>
+                                        <td style="width:70%;padding:2px;">
+                                            <div style="width:100%;padding:5px 0px;font-size:30px;font-weight: bold;border-bottom: 1px solid black;"
+                                                 class="text-center">
+                                                <!--<strong t-field="product.display_name"/>-->
+                                                <strong t-field="product.name"/>
+                                            </div>
+                                            <div style="width:100%;font-size:28px">
+                                                <div style="width:100%;font-size:10px" class="text-center">A partir
+                                                    de:
+                                                </div>
+                                                <t t-set="num_price" t-value="1"/>
+                                                <t t-set="prices" t-value="product.get_prices_smay(product.id)"/>
+                                                <t t-if="len(prices)&gt; 1">
+                                                    <t t-foreach="prices" t-as="price">
+                                                        <div t-if="price==1" class="text-left">
+                                                            Unitario
+                                                            <b>$
+                                                                <t t-if="product.standard_price &lt; prices[price]">
+                                                                    <t t-if="prices[price] &gt; 0"
+                                                                       t-esc="'{:,.2f}'.format(prices[price])[:str(prices[1]).find('.')+3]"/>
+                                                                </t>
+                                                            </b>
+                                                        </div>
+                                                        <t t-if="price&gt;1">
+                                                            <div t-if="num_price == 1"
+                                                                 style="width:100%;"
+                                                                 class="text-center">
+                                                                <t t-esc="price"/>
+                                                                Piezas $
+                                                                <t t-if="product.standard_price &lt; prices[price]">
+                                                                    <t t-if="prices[price] &gt; 0"
+                                                                       t-esc="'{:,.2f}'.format(prices[price])[:str(prices[1]).find('.')+3]"/>
+                                                                </t>
+                                                                <br/>
+                                                            </div>
+                                                            <div t-if="num_price == 2"
+                                                                 style="width:100%;"
+                                                                 class="text-right">
+                                                                <t t-esc="price"/>
+                                                                Piezas $
+                                                                <t t-if="product.standard_price &lt; prices[price]">
+                                                                    <t t-if="prices[price] &gt; 0"
+                                                                       t-esc="'{:,.2f}'.format(prices[price])[:str(prices[1]).find('.')+3]"/>
+                                                                </t>
+                                                                <t t-if="product.standard_price &gt; prices[price]">
+                                                                    <span>_____</span>
+
+                                                                </t>
+                                                                <br/>
+                                                            </div>
+                                                            <div t-if="num_price == 3"
+                                                                 style="width:100%;"
+                                                                 class="text-left">
+                                                                <t t-esc="price"/>
+                                                                Piezas $
+                                                                <t t-if="product.standard_price &lt; prices[price]">
+                                                                    <t t-if="prices[price] &gt; 0"
+                                                                       t-esc="'{:,.2f}'.format(prices[price])[:str(prices[1]).find('.')+3]"/>
+
+                                                                </t>
+
+                                                                <br/>
+                                                            </div>
+                                                            <t t-set="num_price" t-value="num_price+1"/>
+                                                            <t t-if="num_price==5">
+                                                                <t t-set="num_price" t-value="0"/>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <t t-if="len(prices)==1">
+                                                    <div class="text-center" style="padding-top:40px;font-size: 30px">
+                                                        Unitario
+                                                        <b>$
+                                                            <t t-if="product.standard_price &lt; prices[1]">
+                                                                <t t-if="prices[1] &gt; 0"
+                                                                   t-esc="'{:,.2f}'.format(prices[1])[:str(prices[1]).find('.')+3]"/>
+                                                            </t>
+                                                        </b>
+                                                    </div>
+
+                                                </t>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="padding:0px;text-size:25px">
+                                            <div class="text-center">
+                                                <strong>
+                                                    ¡Tú decides cuanto AHORRAR!
+                                                </strong>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
