@@ -313,6 +313,10 @@ class SmayPurchasesOrder(models.Model):
             products = self.env['product.product'].search([('product_tmpl_id','in',tmpl_ids)])
             _logger.warning(str(products))
 
+            prods=[]
+            for product in products:
+                prods.append(product.id)
+
             # send mail
             email_to = ''
             for user in self.env.user.company_id.x_notification_partner_ids:
@@ -330,7 +334,7 @@ class SmayPurchasesOrder(models.Model):
             data['body_html'] = 'Buen daa,<br/><br/>'
 
             msg = mail.create(data)
-            prices = self.env.ref('product.report_product_label').render_qweb_pdf(products[0])
+            prices = self.env.ref('product.report_product_label').render_qweb_pdf(prods)
             b64_pdf = base64.b64encode(prices[0])
 
             msg.update({
