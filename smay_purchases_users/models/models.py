@@ -225,7 +225,7 @@ class SmayPurchasesOrder(models.Model):
                     })
 
             # envia por correo los cambios de precio
-            '''if len(products) > 0:
+            if len(products) > 0:
                 # send mail
 
                 email_to = ''
@@ -284,7 +284,7 @@ class SmayPurchasesOrder(models.Model):
                 })
                 if msg:
                     mail.sudo().send(msg)
-                    mail.sudo().process_email_queue()'''
+                    mail.sudo().process_email_queue()
         # return
         return resulta
 
