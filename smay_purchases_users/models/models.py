@@ -377,7 +377,7 @@ class SmayPurchasesProduct(models.Model):
     x_utility_percent = fields.Float(string='Porcentaje de utilidad', default=16)
     x_fecha_actualizacion_precios = fields.Datetime('Fecha en que se cambio el precio')
     x_sent_labels = fields.Boolean(defult=True)
-    x_last_price = field.Float(default=0.0, string='Precio anterior',readonly=True)
+    x_last_price = fields.Float(default=0.0, string='Precio anterior',readonly=True)
 
 
 class SmayPurchasesProductProduct(models.Model):
