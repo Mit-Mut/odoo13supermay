@@ -302,6 +302,8 @@ class SmayPurchasesOrder(models.Model):
     def send_changed_labels(self):
         product_tmpls = self.env['product.template'].search([('x_sent_labels', '=', False)])
 
+        _logger.warning('PRODDDDDTMPL'+str(product_tmpls))
+
         tmpl_ids = []
         for product_tmpl in product_tmpls:
             tmpl_ids.append(product_tmpl.id)
