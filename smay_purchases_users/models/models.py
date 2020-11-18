@@ -324,14 +324,7 @@ class SmayPurchasesOrder(models.Model):
             data = {}
             data['subject'] = 'Cambios de Costos y Precios'
             data['email_to'] = email_to
-            data['body_html'] = 'Buen día,<br/><br/>'
-            data[
-                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b></b> del proveedor <b></b>:<br/><br/>'
-            
-            data[
-                'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
-            data['body_html'] += '<br/><br/>'
-            data['body_html'] += 'S@lu2.'
+            data['body_html'] = 'Buen daa,<br/><br/>'
 
             msg = mail.create(data)
             prices = self.env.ref('product.report_product_label').render_qweb_pdf(products)
