@@ -366,6 +366,8 @@ class SmayPurchasesOrder(models.Model):
                 })]
             })
 
+            _logger.warning(('llego aqui'))
+
             if msg:
                 mail.sudo().send(msg)
                 mail.sudo().process_email_queue()
