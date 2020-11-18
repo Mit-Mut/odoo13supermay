@@ -308,7 +308,8 @@ class SmayPurchasesOrder(models.Model):
 
         if tmpl_ids:
             _logger.warning(str(len(tmpl_ids)))
-            products = self.env['product.product'].browse(tmpl_ids)
+            products = self.env['product.product'].search([('product_tmpl_id','in',tmpl_ids)])
+            _logger.warning(str(products))
 
             # send mail
             email_to = ''
