@@ -326,7 +326,7 @@ class SmayPurchasesOrder(models.Model):
             data['email_to'] = email_to
             data['body_html'] = 'Buen día,<br/><br/>'
             data[
-                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b>' + self.name + '</b> del proveedor <b>' + self.partner_id.name + '</b>:<br/><br/>'
+                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b></b> del proveedor <b></b>:<br/><br/>'
             data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
                 <tr style='background-color:#BA3B20;color:#FFFFFF'>\
                     <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
