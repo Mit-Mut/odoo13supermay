@@ -302,7 +302,7 @@ class SmayPurchasesOrder(models.Model):
     def send_changed_labels(self):
         product_tmpls = self.env['product.template'].search([('x_sent_labels', '=', False)])
 
-        _logger.warning('PRODDDDDTMPL'+str(product_tmpls))
+        _logger.warning('PRODDDDDTMPL' + str(product_tmpls))
 
         tmpl_ids = []
         for product_tmpl in product_tmpls:
@@ -310,10 +310,10 @@ class SmayPurchasesOrder(models.Model):
 
         if tmpl_ids:
             _logger.warning(str(len(tmpl_ids)))
-            products = self.env['product.product'].search([('product_tmpl_id','in',tmpl_ids)])
+            products = self.env['product.product'].search([('product_tmpl_id', 'in', tmpl_ids)])
             _logger.warning(str(products))
 
-            prods=[]
+            prods = []
             for product in products:
                 prods.append(product.id)
 
@@ -331,7 +331,31 @@ class SmayPurchasesOrder(models.Model):
             data = {}
             data['subject'] = 'Cambios de Costos y Precios'
             data['email_to'] = email_to
-            data['body_html'] = 'Buen daa,<br/><br/>'
+            data['body_html'] = 'Buen día,<br/><br/>'
+            data[
+                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra   del proveedor :<br/><br/>'
+
+            data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
+                            <tr style='background-color:#BA3B20;color:#FFFFFF'>\
+                                <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
+                                <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
+                                <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
+                            </tr>"
+
+            # for product in products:
+            for product in prods:
+                data['body_html'] += "<tr>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.name + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
+                    product.x_last_price) + "</td>\
+                                                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
+                    product.lst_price) + "</b></td>\
+                                                </tr>"
+                data['body_html'] += '</table>'
+                data[
+                    'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
+                data['body_html'] += '<br/><br/>'
+                data['body_html'] += 'S@lu2.'
 
             msg = mail.create(data)
             prices = self.env.ref('product.report_product_label').render_qweb_pdf(prods)
@@ -363,7 +387,7 @@ class SmayPurchasesProduct(models.Model):
     x_utility_percent = fields.Float(string='Porcentaje de utilidad', default=16)
     x_fecha_actualizacion_precios = fields.Datetime('Fecha en que se cambio el precio')
     x_sent_labels = fields.Boolean(defult=True)
-    x_last_price = fields.Float(default=0.0, string='Precio anterior',readonly=True)
+    x_last_price = fields.Float(default=0.0, string='Precio anterior', readonly=True)
 
 
 class SmayPurchasesProductProduct(models.Model):
