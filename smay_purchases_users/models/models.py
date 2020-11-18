@@ -225,7 +225,7 @@ class SmayPurchasesOrder(models.Model):
                     })
 
             # envia por correo los cambios de precio
-            if len(products) > 0:
+            '''if len(products) > 0:
                 # send mail
 
                 email_to = ''
@@ -284,7 +284,7 @@ class SmayPurchasesOrder(models.Model):
                 })
                 if msg:
                     mail.sudo().send(msg)
-                    mail.sudo().process_email_queue()
+                    mail.sudo().process_email_queue()'''
         # return
         return resulta
 
@@ -327,21 +327,7 @@ class SmayPurchasesOrder(models.Model):
             data['body_html'] = 'Buen día,<br/><br/>'
             data[
                 'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b></b> del proveedor <b></b>:<br/><br/>'
-            data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
-                <tr style='background-color:#BA3B20;color:#FFFFFF'>\
-                    <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
-                    <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
-                    <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
-                </tr>"
-
-            # for product in products:
-            for product in products:
-                data['body_html'] += "<tr>\
-                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'></td>\
-                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $</td>\
-                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $</b></td>\
-                </tr>"
-            data['body_html'] += '</table>'
+            
             data[
                 'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
             data['body_html'] += '<br/><br/>'
