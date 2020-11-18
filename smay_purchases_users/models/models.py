@@ -330,7 +330,7 @@ class SmayPurchasesOrder(models.Model):
             data['body_html'] = 'Buen daa,<br/><br/>'
 
             msg = mail.create(data)
-            prices = self.env.ref('product.report_product_label').render_qweb_pdf(products)
+            prices = self.env.ref('product.report_product_label').render_qweb_pdf(products[0])
             b64_pdf = base64.b64encode(prices[0])
 
             msg.update({
