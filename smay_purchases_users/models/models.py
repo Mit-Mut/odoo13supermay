@@ -343,7 +343,7 @@ class SmayPurchasesOrder(models.Model):
                             </tr>"
 
             # for product in products:
-            for product in prods:
+            for product in products:
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
