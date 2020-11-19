@@ -17,7 +17,6 @@ class SmayPurchasesUsersResUsers(models.Model):
                                         domain="[('code','=','incoming')]")
     x_cuenta_analitica = fields.Many2one('account.analytic.account', string='Cuenta Analitica',
                                          help='Asigna la cuenta analitica a las compras.')
-
     purchase_validator = fields.Boolean('Puede validar compras.', default=False)
 
 
@@ -41,13 +40,8 @@ class SmayPurchasesOrder(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=Purchase.READONLY_STATES,
                                       required=True, default=lambda self: self._default_picking_type(),
                                       help="This will determine operation type of incoming shipment")
-
     analytic_account_select = fields.Many2one('account.analytic.account', string='Cuenta Analitica')
-
-    # cantidad_lineas = fields.Integer('Items', default=0)
     cantidad_lineas = fields.Integer('Items', compute='_compute_qty_lines')
-
-    # cantidad_productos = fields.Float('Cantidad Prods.', default=0)
     cantidad_productos = fields.Float('Cantidad Prods.', compute='_compute_qty_products')
 
     def _compute_qty_products(self):
@@ -159,66 +153,40 @@ class SmayPurchasesOrder(models.Model):
             else:
                 raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')
 
-    '''test'''
-
-    # def action_view_picking(self):
     def update_information_product(self):
-        # resulta = super(SmayPurchasesOrder, self).action_view_picking()
         if True:
-            '''for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
-                for _line in line.move_line_ids:
-                    _line.sudo(True).write({
-                        'qty_done': _line.product_uom_qty,
-                    })
-
-            pickings = self.env['stock.picking'].browse(resulta.get('res_id'))
-            for picking in pickings:
-                picking.button_validate()'''
 
             products = []
             diferencial_cambio_precio = .20
             for line in self.order_line:
                 _product = {}
-                if line.product_id.standard_price < line.price_unit:
-                    if round(((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
+                if (line.product_id.standard_price < line.price_unit) and (
+                        round(((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
+                              1) > line.product_id.list_price) and (
+                        round(line.price_unit - line.product_id.standard_price, 1) >= diferencial_cambio_precio):
+                    '''if round(((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
                              1) > line.product_id.list_price:
 
-                        if round(line.price_unit - line.product_id.standard_price, 1) >= diferencial_cambio_precio:
-                            products.append(line.product_id.id)
-                            _product['id'] = line.product_id.id
-                            _product['old_cost'] = line.product_id.standard_price
-                            _product['new_cost'] = line.price_unit
-                            _product['old_list_price'] = line.product_id.list_price
-                            _product['new_list_price'] = round(
-                                ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit, 1)
+                        if round(line.price_unit - line.product_id.standard_price, 1) >= diferencial_cambio_precio:'''
+                    products.append(line.product_id.id)
+                    _product['id'] = line.product_id.id
+                    _product['old_cost'] = line.product_id.standard_price
+                    _product['new_cost'] = line.price_unit
+                    _product['old_list_price'] = line.product_id.list_price
+                    _product['new_list_price'] = round(
+                        ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit, 1)
 
-                            line.product_id.sudo(True).write({
-                                'standard_price': _product['new_cost'],
-                                'list_price': _product['new_list_price'],
-                                'x_purcharse_change_price': self.name,
-                            })
+                    line.product_id.sudo(True).write({
+                        'standard_price': _product['new_cost'],
+                        'list_price': _product['new_list_price'],
+                        'x_purcharse_change_price': self.name,
+                    })
 
-                            line.product_id.product_tmpl_id.sudo(True).write({
-                                'x_fecha_actualizacion_precios': line.write_date,
-                                'x_sent_labels': False,
-                                'x_last_price': _product['old_list_price']
-                            })
-
-
-
-                        else:
-                            line.product_id.sudo(True).write({
-                                'standard_price': line.price_unit,
-                                # 'list_price': ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
-                                # 'x_purcharse_change_price': self.name,
-                            })
-                    elif round(((line.product_id.x_utility_percent / 100) + 1),
-                               1) * line.price_unit < line.product_id.list_price:
-                        line.product_id.sudo(True).write({
-                            'standard_price': line.price_unit,
-                            # 'list_price': ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
-                            # 'x_purcharse_change_price': self.name,
-                        })
+                    line.product_id.product_tmpl_id.sudo(True).write({
+                        'x_fecha_actualizacion_precios': line.write_date,
+                        'x_sent_labels': False,
+                        'x_last_price': _product['old_list_price']
+                    })
 
                 ###CAMBIO DE COMPRAS 20200627
                 elif line.product_id.standard_price > line.price_unit:
@@ -233,7 +201,7 @@ class SmayPurchasesOrder(models.Model):
                     _logger.warning(str(self.partner_id.id))
                     if provider.product_tmpl_id.id == prd_tmpl.id and provider.name.id == self.partner_id.id:
                         provider.sudo(True).write({
-                                'price': line.price_unit
+                            'price': line.price_unit
                         })
 
         return True
@@ -308,13 +276,11 @@ class SmayPurchasesOrder(models.Model):
                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
                     product.list_price) + "</b></td></tr>"
 
-                prd_tmpl= product.product_tmpl_id
+                prd_tmpl = product.product_tmpl_id
                 prd_tmpl.sudo(True).write({
                     'x_sent_labels': True
                 }
                 )
-
-
 
             data['body_html'] += '</table>'
             data[
