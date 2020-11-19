@@ -4,6 +4,7 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 import logging
 import base64
+import pytz
 
 _logger = logging.getLogger(__name__)
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -331,7 +332,7 @@ class SmayPurchasesOrder(models.Model):
             data['email_to'] = email_to
             data['body_html'] = 'Buen día,<br/><br/>'
             data[
-                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra   del proveedor :<br/><br/>'
+                'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en el proceso de compra:<br/><br/>'
 
             data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
                             <tr style='background-color:#BA3B20;color:#FFFFFF'>\
@@ -346,11 +347,14 @@ class SmayPurchasesOrder(models.Model):
             for product in products:
                 fecha = ''
                 if product.product_tmpl_id.x_fecha_actualizacion_precios:
+
                     fecha=product.product_tmpl_id.x_fecha_actualizacion_precios
+                    local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
+                    fecha_usuario = fecha.astimezone(tz=local).strftime('%Y-%m-%d %H:%M:%S')
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_purcharse_change_price + "</td>\
-                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + fecha + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + fecha_usuario + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(product.product_tmpl_id.x_last_price) + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
                     product.list_price) + "</b></td></tr>"
