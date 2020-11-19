@@ -302,8 +302,6 @@ class SmayPurchasesOrder(models.Model):
     def send_changed_labels(self):
         product_tmpls = self.env['product.template'].search([('x_sent_labels', '=', False)])
 
-        _logger.warning('PRODDDDDTMPL' + str(product_tmpls))
-
         tmpl_ids = []
         for product_tmpl in product_tmpls:
             tmpl_ids.append(product_tmpl.id)
@@ -339,6 +337,7 @@ class SmayPurchasesOrder(models.Model):
                             <tr style='background-color:#BA3B20;color:#FFFFFF'>\
                                 <th style='border:1px solid white' width='45%'>PRODUCTO</th>\
                                 <th style='border:1px solid white' width='48%'>COMPRA</th>\
+                                <th style='border:1px solid white' width='48%'>FECHA</th>\
                                 <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
                                 <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
                             </tr>"
@@ -348,6 +347,7 @@ class SmayPurchasesOrder(models.Model):
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_purcharse_change_price + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_fecha_actualizacion_precios + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
                     product.product_tmpl_id.x_last_price) + "</td>\
                                                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $"+'{:,.2f}'.format(
