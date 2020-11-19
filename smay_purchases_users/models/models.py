@@ -284,8 +284,8 @@ class SmayPurchasesOrder(models.Model):
             data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
                             <tr style='background-color:#BA3B20;color:#FFFFFF'>\
                                 <th style='border:1px solid white' width='40%'>PRODUCTO</th>\
-                                <th style='border:1px solid white' width='15%'>COMPRA</th>\
-                                <th style='border:1px solid white' width='15%'>FECHA</th>\
+                                <th style='border:1px solid white' width='13%'>COMPRA</th>\
+                                <th style='border:1px solid white' width='17%'>FECHA</th>\
                                 <th style='border:1px solid white' width='15%'>PRECIO ANTERIOR</th>\
                                 <th style='border:1px solid white' width='15%'>PRECIO ACTUAL</th>\
                             </tr>"
