@@ -163,8 +163,8 @@ class SmayPurchasesOrder(models.Model):
     #def action_view_picking(self):
     def update_information_product(self):
         #resulta = super(SmayPurchasesOrder, self).action_view_picking()
-        if self.env['stock.picking'].browse(resulta.get('res_id')).state != 'done':
-            for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
+        if True:
+            '''for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
                 for _line in line.move_line_ids:
                     _line.sudo(True).write({
                         'qty_done': _line.product_uom_qty,
@@ -172,7 +172,7 @@ class SmayPurchasesOrder(models.Model):
 
             pickings = self.env['stock.picking'].browse(resulta.get('res_id'))
             for picking in pickings:
-                picking.button_validate()
+                picking.button_validate()'''
 
             products = []
             old_list_price = []
