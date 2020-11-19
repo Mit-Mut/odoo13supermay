@@ -143,7 +143,7 @@ class SmayPurchasesOrder(models.Model):
         if self.env.user.has_group('purchase.group_purchase_manager'):
             super(SmayPurchasesOrder, self).button_confirm()
             self.update_information_product()
-            #self.button_done()
+            # self.button_done()
             return
         else:
             if not self.env.user.purchase_validator:
@@ -154,15 +154,16 @@ class SmayPurchasesOrder(models.Model):
             if self.picking_type_id.id == self.env.user.x_almacen_compras.id:
                 super(SmayPurchasesOrder, self).button_confirm()
                 self.update_information_product()
-                #self.button_done()
+                # self.button_done()
                 return
             else:
                 raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')
+
     '''test'''
 
-    #def action_view_picking(self):
+    # def action_view_picking(self):
     def update_information_product(self):
-        #resulta = super(SmayPurchasesOrder, self).action_view_picking()
+        # resulta = super(SmayPurchasesOrder, self).action_view_picking()
         if True:
             '''for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
                 for _line in line.move_line_ids:
@@ -223,10 +224,9 @@ class SmayPurchasesOrder(models.Model):
                         'standard_price': line.price_unit
                     })
 
-
         return True
 
-    def print_labels(self):
+    '''def print_labels(self):
         self.ensure_one()
         products = []
         for line in self.order_line:
@@ -234,7 +234,7 @@ class SmayPurchasesOrder(models.Model):
         products = self.env['product.product'].search([('x_purcharse_change_price', '=', self.name)])
         if products:
             return self.env.ref('product.report_product_label').report_action(products)
-        raise UserError('No hubo cambios de precios.')
+        raise UserError('No hubo cambios de precios.')'''
 
     ##esta funcion se manda llamar desde la tarea programada
     def send_changed_labels(self):
@@ -284,18 +284,24 @@ class SmayPurchasesOrder(models.Model):
             for product in products:
                 fecha = ''
                 if product.product_tmpl_id.x_fecha_actualizacion_precios:
-                    fecha=product.product_tmpl_id.x_fecha_actualizacion_precios
+                    fecha = product.product_tmpl_id.x_fecha_actualizacion_precios
                     local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
                     fecha_usuario = fecha.astimezone(tz=local).strftime('%Y-%m-%d %H:%M:%S')
                 if not fecha_usuario:
-                    fecha_usuario=''
+                    fecha_usuario = ''
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_purcharse_change_price + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + fecha_usuario + "</td>\
-                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(product.product_tmpl_id.x_last_price) + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
+                    product.product_tmpl_id.x_last_price) + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
                     product.list_price) + "</b></td></tr>"
+
+                product.sudo(True).write({
+                    'product_tmpl_id.x_sent_labels': True
+                }
+                )
             data['body_html'] += '</table>'
             data[
                 'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
