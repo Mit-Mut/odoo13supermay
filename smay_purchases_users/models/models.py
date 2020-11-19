@@ -301,6 +301,13 @@ class SmayPurchasesOrder(models.Model):
                     'x_sent_labels': True
                 }
                 )
+
+                for provider in product.seller_ids:
+                    if provider.product_tmpl_id.id == prd_tmpl.id and provider.name.id == self.partner_id.id:
+                        provider.sudo(True).write({
+                            'price': product.list_price
+                        })
+
             data['body_html'] += '</table>'
             data[
                 'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
@@ -326,6 +333,8 @@ class SmayPurchasesOrder(models.Model):
             if msg:
                 mail.sudo().send(msg)
                 mail.sudo().process_email_queue()
+        else:
+            _logger.warning('No hay cambios de precios en productos')
 
 
 class SmayPurchasesProduct(models.Model):
