@@ -245,9 +245,7 @@ class SmayPurchasesOrder(models.Model):
             tmpl_ids.append(product_tmpl.id)
 
         if tmpl_ids:
-            _logger.warning(str(len(tmpl_ids)))
             products = self.env['product.product'].search([('product_tmpl_id', 'in', tmpl_ids)])
-            _logger.warning(str(products))
 
             prods = []
             for product in products:
@@ -298,8 +296,9 @@ class SmayPurchasesOrder(models.Model):
                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
                     product.list_price) + "</b></td></tr>"
 
-                product.sudo(True).write({
-                    'product_tmpl_id.x_sent_labels': True
+                prd_tmpl= product.product_tmpl_id
+                prd_tmpl.sudo(True).write({
+                    'x_sent_labels': True
                 }
                 )
             data['body_html'] += '</table>'
@@ -324,9 +323,6 @@ class SmayPurchasesOrder(models.Model):
                     'mimetype': 'application/x-pdf'
                 })]
             })
-
-            _logger.warning(('llego aqui'))
-
             if msg:
                 mail.sudo().send(msg)
                 mail.sudo().process_email_queue()
