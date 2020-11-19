@@ -204,6 +204,13 @@ class SmayPurchasesOrder(models.Model):
                                 'x_last_price': _product['old_list_price']
                             })
 
+                            prd_tmpl = prod.product_id.product_tmpl_id
+                            for provider in line.product_id.seller_ids:
+                                if provider.product_tmpl_id.id == prd_tmpl.id and provider.name.id == self.partner_id.id:
+                                    provider.sudo(True).write({
+                                        'price': _product['new_cost']
+                                    })
+
                         else:
                             line.product_id.sudo(True).write({
                                 'standard_price': line.price_unit,
@@ -302,11 +309,7 @@ class SmayPurchasesOrder(models.Model):
                 }
                 )
 
-                for provider in product.seller_ids:
-                    if provider.product_tmpl_id.id == prd_tmpl.id and provider.name.id == self.partner_id.id:
-                        provider.sudo(True).write({
-                            'price': product.list_price
-                        })
+
 
             data['body_html'] += '</table>'
             data[
