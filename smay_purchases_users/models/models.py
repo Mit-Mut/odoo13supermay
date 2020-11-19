@@ -337,7 +337,8 @@ class SmayPurchasesOrder(models.Model):
 
             data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
                             <tr style='background-color:#BA3B20;color:#FFFFFF'>\
-                                <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
+                                <th style='border:1px solid white' width='45%'>PRODUCTO</th>\
+                                <th style='border:1px solid white' width='48%'>COMPRA</th>\
                                 <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
                                 <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
                             </tr>"
@@ -346,6 +347,7 @@ class SmayPurchasesOrder(models.Model):
             for product in products:
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
+                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_purcharse_change_price + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
                     product.product_tmpl_id.x_last_price) + "</td>\
                                                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $"+'{:,.2f}'.format(
