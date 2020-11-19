@@ -347,10 +347,11 @@ class SmayPurchasesOrder(models.Model):
             for product in products:
                 fecha = ''
                 if product.product_tmpl_id.x_fecha_actualizacion_precios:
-
                     fecha=product.product_tmpl_id.x_fecha_actualizacion_precios
                     local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
                     fecha_usuario = fecha.astimezone(tz=local).strftime('%Y-%m-%d %H:%M:%S')
+                if not fecha_usuario:
+                    fecha_usuario=''
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.x_purcharse_change_price + "</td>\
