@@ -225,7 +225,7 @@ class SmayPurchasesOrder(models.Model):
                     line.product_id.sudo(True).write({
                         'standard_price': line.price_unit
                     })
-                prd_tmpl = prod.product_id.product_tmpl_id
+                prd_tmpl = line.product_id.product_tmpl_id
                 for provider in line.product_id.seller_ids:
                     _logger.warning(str(provider.product_tmpl_id.id))
                     _logger.warning(str(prd_tmpl.id))
@@ -233,7 +233,7 @@ class SmayPurchasesOrder(models.Model):
                     _logger.warning(str(self.partner_id.id))
                     if provider.product_tmpl_id.id == prd_tmpl.id and provider.name.id == self.partner_id.id:
                         provider.sudo(True).write({
-                                'price': _product['new_cost']
+                                'price': line.price_unit
                         })
 
         return True
