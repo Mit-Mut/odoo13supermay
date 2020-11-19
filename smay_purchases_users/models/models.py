@@ -350,10 +350,11 @@ class SmayPurchasesOrder(models.Model):
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.x_fecha_actualizacion_precios + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
                     product.product_tmpl_id.x_last_price) + "</td>\
-                                                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $"+'{:,.2f}'.format(
-                    product.list_price)+"</b></td></tr>"
+                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
+                    product.list_price) + "</b></td></tr>"
             data['body_html'] += '</table>'
-            data['body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
+            data[
+                'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
             data['body_html'] += '<br/><br/>'
             data['body_html'] += 'S@lu2.'
 
