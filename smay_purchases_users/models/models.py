@@ -136,14 +136,14 @@ class SmayPurchasesOrder(models.Model):
         else:
             return self.env.user.x_almacen_compras.id
 
-    '''def button_confirm(self):
+    def button_confirm(self):
         for line in self.order_line:
             if not line.account_analytic_id:
                 raise UserError('No tiene asignada la cuenta analitica en ' + str(self.product_id.name))
         if self.env.user.has_group('purchase.group_purchase_manager'):
             super(SmayPurchasesOrder, self).button_confirm()
-            self.action_view_picking()
-            self.button_done()
+            self.update_information_product()
+            #self.button_done()
             return
         else:
             if not self.env.user.purchase_validator:
@@ -153,15 +153,16 @@ class SmayPurchasesOrder(models.Model):
 
             if self.picking_type_id.id == self.env.user.x_almacen_compras.id:
                 super(SmayPurchasesOrder, self).button_confirm()
-                self.action_view_picking()
-                self.button_done()
+                self.update_information_product()
+                #self.button_done()
                 return
             else:
-                raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')'''
+                raise UserError('No puedes confirmar compras de otro almacen (Sucursal).')
     '''test'''
 
-    def action_view_picking(self):
-        resulta = super(SmayPurchasesOrder, self).action_view_picking()
+    #def action_view_picking(self):
+    def update_information_product(self):
+        #resulta = super(SmayPurchasesOrder, self).action_view_picking()
         if self.env['stock.picking'].browse(resulta.get('res_id')).state != 'done':
             for line in self.env['stock.picking'].browse(resulta.get('res_id')).move_ids_without_package:
                 for _line in line.move_line_ids:
@@ -287,7 +288,7 @@ class SmayPurchasesOrder(models.Model):
                     mail.sudo().send(msg)
                     mail.sudo().process_email_queue()'''
         # return
-        return resulta
+        return True
 
     def print_labels(self):
         self.ensure_one()
