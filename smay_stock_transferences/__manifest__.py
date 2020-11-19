@@ -23,7 +23,6 @@
 
     # always loaded
     'data': [
-        #'security/transfers_restrict_user.xml',
-        # 'views/views.xml',
+        'views/views.xml',
     ],
 }
