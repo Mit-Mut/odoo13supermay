@@ -347,7 +347,7 @@ class SmayPurchasesOrder(models.Model):
                 data['body_html'] += "<tr>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + product.product_tmpl_id.name + "</td>\
                     <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
-                    str(product.product_tmpl_id.x_last_price)) + "</td>\
+                    product.product_tmpl_id.x_last_price) + "</td>\
                                                     <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $</b></td></tr>"
             data['body_html'] += '</table>'
             data['body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
