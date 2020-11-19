@@ -175,7 +175,6 @@ class SmayPurchasesOrder(models.Model):
                 picking.button_validate()'''
 
             products = []
-            old_list_price = []
             diferencial_cambio_precio = .20
             for line in self.order_line:
                 _product = {}
@@ -191,19 +190,17 @@ class SmayPurchasesOrder(models.Model):
                             _product['old_list_price'] = line.product_id.list_price
                             _product['new_list_price'] = round(
                                 ((line.product_id.x_utility_percent / 100) + 1) * line.price_unit, 1)
-                            old_list_price.append(_product)
 
                             line.product_id.sudo(True).write({
-                                'standard_price': line.price_unit,
-                                'list_price': round(((line.product_id.x_utility_percent / 100) + 1) * line.price_unit,
-                                                    1),
+                                'standard_price': _product['new_cost'],
+                                'list_price': _product['new_list_price'],
                                 'x_purcharse_change_price': self.name,
                             })
 
                             line.product_id.product_tmpl_id.sudo(True).write({
                                 'x_fecha_actualizacion_precios': line.write_date,
                                 'x_sent_labels': False,
-                                'x_last_price': line.product_id.list_price
+                                'x_last_price': _product['old_list_price']
                             })
 
                         else:
@@ -226,68 +223,7 @@ class SmayPurchasesOrder(models.Model):
                         'standard_price': line.price_unit
                     })
 
-            # envia por correo los cambios de precio
-            '''if len(products) > 0:
-                # send mail
 
-                email_to = ''
-                for user in self.env.user.company_id.x_notification_partner_ids:
-                    if user.email:
-                        email_to += user.email + ';'
-
-                mail = self.env['mail.mail']
-                data = {}
-                data['subject'] = 'Cambios de Costos y Precios'
-                data['email_to'] = email_to
-                data['body_html'] = 'Buen día,<br/><br/>'
-                data[
-                    'body_html'] += 'Los costos y precios de los siguientes productos fueron modificados en la compra  <b>' + self.name + '</b> del proveedor <b>' + self.partner_id.name + '</b>:<br/><br/>'
-
-                data['body_html'] += "<table style='border:2px solid black' cellpadding='0' cellspacing='0' width='80%' align='center'>\
-                            <tr style='background-color:#BA3B20;color:#FFFFFF'>\
-                                <th style='border:1px solid white' width='48%'>PRODUCTO</th>\
-                                <th style='border:1px solid white' width='13%'>PRECIO ANTERIOR</th>\
-                                <th style='border:1px solid white' width='13%'>PRECIO ACTUAL</th>\
-                            </tr>"
-
-                # for product in products:
-                for product in old_list_price:
-                    prod = self.env['product.product'].browse(product['id'])
-
-                    data['body_html'] += "<tr>\
-                                                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;padding-left:5px'>" + prod.name + "</td>\
-                                                    <td style='border:1px solid white;border-bottom:1px solid black;border-right:1px solid black;text-align:right;padding-right:5px'> $" + '{:,.2f}'.format(
-                        product['old_list_price']) + "</td>\
-                                                    <td style='border:1px solid white;border-bottom:1px solid black;text-align:right;padding-right:5px'><b> $" + '{:,.2f}'.format(
-                        product['new_list_price']) + "</b></td>\
-                                                </tr>"
-                data['body_html'] += '</table>'
-                data[
-                    'body_html'] += '<br/><br/>Se adjunta el archivo con los nuevos precios para reemplazarlo en piso de venta.'
-                data['body_html'] += '<br/><br/>'
-                data['body_html'] += 'S@lu2.'
-
-                msg = mail.create(data)
-                prices = self.env.ref('product.report_product_label').render_qweb_pdf(products)
-                b64_pdf = base64.b64encode(prices[0])
-
-                msg.update({
-
-                    'attachment_ids': [(0, 0, {
-                        # 'name': 'Etiquetas - Cambios de precio',
-                        'type': 'binary',
-                        'datas': b64_pdf,
-                        'name': 'Etiquetas - Cambios de precio.pdf',
-                        'store_fname': 'Etiquetas - Cambios de precio',
-                        'res_model': self._name,
-                        'res_id': self.id,
-                        'mimetype': 'application/x-pdf'
-                    })]
-                })
-                if msg:
-                    mail.sudo().send(msg)
-                    mail.sudo().process_email_queue()'''
-        # return
         return True
 
     def print_labels(self):
