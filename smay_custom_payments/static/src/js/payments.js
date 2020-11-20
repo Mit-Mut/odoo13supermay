@@ -2,9 +2,21 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
     "use strict";
 
 	var models = require('point_of_sale.models');
+	var screens = require('point_of_sale.screens')
 
 	var _super_order = models.Order;
 	var _super_paymentline = models.Paymentline
+	var _super_PaymentScreenWidget = screens.PaymentScreenWidget
+
+	screens.PaymentScreenWidget = screens.PaymentScreenWidget.extend({
+
+	payment_input:function(input){
+	    console.log('vengaaaaaaaaaaa')
+	    _super_PaymentScreenWidget.prototype.payment_input.apply(this,arguments)
+	}
+
+
+	});
 
 	models.Order = models.Order.extend({
 
