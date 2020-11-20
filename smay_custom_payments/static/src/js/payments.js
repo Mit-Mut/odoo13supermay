@@ -15,6 +15,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	        return;
 	    }
 	    _super_PaymentScreenWidget.prototype.payment_input.apply(this,arguments)
+	    return;
 	}
 
 
