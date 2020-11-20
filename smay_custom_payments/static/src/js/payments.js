@@ -40,8 +40,12 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
     console.log(this)
     if(this.payment_method.is_cash_count)
         _super_paymentline.prototype.set_amount.apply(this,arguments)
-    else if(this.pos.get_order().get_due()>0)
+    else if(this.pos.get_order().get_due()>0){
+    console.log(this.pos.get_order().get_due())
+    console.log(this.payment_method.is_cash_count)
     _super_paymentline.prototype.set_amount.apply(this,arguments)
+
+    }
     },
 
     });
