@@ -4,6 +4,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	var models = require('point_of_sale.models');
 
 	var _super_order = models.Order;
+	var _super_paymentline = models.Paymentline
 
 	models.Order = models.Order.extend({
 
@@ -30,6 +31,17 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	    },
 
 	});
+
+
+    models.Paymentline = models.Paymentline.extend({
+
+    set_amount: function(value){
+    console.log(value)
+    console.log(this)
+    _super_paymentline.prototype.set_amount.apply(this,arquments)
+    },
+
+    });
 });
 
 
