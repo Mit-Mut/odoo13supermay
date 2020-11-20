@@ -8,7 +8,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	var _super_paymentline = models.Paymentline
 	var _super_PaymentScreenWidget = screens.PaymentScreenWidget
 
-	screens.PaymentScreenWidget = screens.PaymentScreenWidget.extend({
+	screens.PaymentScreenWidget = screens.PaymentScreenWidget.include({
 
 	payment_input:function(input){
 	    console.log('vengaaaaaaaaaaa')
