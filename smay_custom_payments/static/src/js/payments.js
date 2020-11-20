@@ -38,7 +38,8 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
     set_amount: function(value){
     console.log(value)
     console.log(this)
-    _super_paymentline.prototype.set_amount.apply(this,arquments)
+    
+    _super_paymentline.prototype.set_amount.apply(this,arguments)
     },
 
     });
