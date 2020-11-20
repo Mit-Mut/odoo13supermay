@@ -8,7 +8,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	var _super_paymentline = models.Paymentline
 	var _super_PaymentScreenWidget = screens.PaymentScreenWidget
 
-	screens.PaymentScreenWidget = screens.PaymentScreenWidget.include({
+	screens.PaymentScreenWidget.include({
 
 	payment_input:function(input){
 	    if(!this.pos.get_order().selected_paymentline.payment_method.is_cash_count){
