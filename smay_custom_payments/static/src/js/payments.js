@@ -28,7 +28,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 	        console.log(this.payment_exists(method))
 	        console.log(this.pos.get_order().get_due())
 	        if(this.payment_exists(method)==false && this.pos.get_order().get_due()>0){
-	            _super_order.prototype.add_paymentline.apply(this,arguments);
+	            this._super();
 	        }
 	    },
 
