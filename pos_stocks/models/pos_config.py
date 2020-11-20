@@ -8,6 +8,18 @@
 #################################################################################
 from odoo import fields, models
 
+'''
+20201120 - v13.0.0.1:
+En la configuración del punto de venta añade los siguientes campos para poner restriccciones de venta y visualización
+    
+    wk_display_stock : Bandera para mostrar o no el stock en el POS.
+    wk_stock_type: Cantidad presentada en el POS
+    wk_deny_val: Bandera para no dejar vender el producto sin stock
+    wk_error_msg : Mensaje que sera presentado en el POS al negar la venta.
+    wk_hide_out_of_stock: bandera para ocultar productos sin stock
+    
+'''
+
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'

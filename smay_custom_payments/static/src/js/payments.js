@@ -9,7 +9,7 @@ odoo.define('smay_custom_payments.smay_custom_payments', function(require){
 
 	    add_paymentline: function(payment_method) {
 	        var method = payment_method['name'];
-	        if(this.payment_exists(method)==false){
+	        if(this.payment_exists(method)==false && this.pos.get_order().get_due()>0){
 	            _super_order.prototype.add_paymentline.apply(this,arguments);
 	        }
 	    },
