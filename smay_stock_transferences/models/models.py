@@ -53,11 +53,7 @@ class smayStocktMove(models.Model):
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
             move.product_uom_qty=5
-
-    @api.onchange('product_uom_qty')
-    def _qty_qty(self):
-        _logger.warning('ffffffffff')
-
+            _logger.warning('-----------------'+str(stock_location))
 
 class smayTransferencesStockPicking(models.Model):
     _inherit = 'stock.picking'
