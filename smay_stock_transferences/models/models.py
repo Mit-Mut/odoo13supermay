@@ -55,7 +55,7 @@ class smayTransferencesStockPicking(models.Model):
 
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
-        resp = super(smayTransferencesStockPicking,self)._compute_move_without_package(self)
+        resp = super(smayTransferencesStockPicking,self)._compute_move_without_package()
         _logger.warning('WWWWWWWWWWWWWWWWWWW')
         return resp
 
