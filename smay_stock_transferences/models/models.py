@@ -6,7 +6,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 '''
 FECHA:		20201120 
 VERSIÓN:	v13.0.0.1:
@@ -43,10 +42,14 @@ class smayTransferencesResUser(models.Model):
 class smayTransferencesStockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    '''partner_id = fields.Many2one(
+        'res.partner', 'Partner',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        default=lambda self: self.env.user.sucursal_id.id)'''
     partner_id = fields.Many2one(
         'res.partner', 'Partner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        default=lambda self: self.env.user.sucursal_id.id)
+        default=lambda self: self.env.user.sucursal_transferencias_id.id)
 
     location_id = fields.Many2one(
         'stock.location', "Source Location",
