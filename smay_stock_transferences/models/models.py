@@ -53,11 +53,9 @@ class smayTransferencesStockPicking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
 
-    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
-    def _compute_move_without_package(self):
-        resp = super(smayTransferencesStockPicking,self)._compute_move_without_package()
+    @api.onchange('move_lines')
+    def _change_productttt(self):
         _logger.warning('WWWWWWWWWWWWWWWWWWW')
-        return resp
 
     @api.model
     def _default_location(self):
