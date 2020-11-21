@@ -58,7 +58,7 @@ class smayTransferencesStockPicking(models.Model):
                                                default=lambda  self: self.get_qty(),
                                                inverse='_set_move_without_package')
 
-    @api.onchange('move_ids_without_package')
+    
     def get_qty(self):
         _logger.warning('WWWWWWWWWWWWWWWWWWW' + str(self.move_ids_without_package))
         return 1
