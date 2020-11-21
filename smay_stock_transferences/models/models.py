@@ -52,7 +52,7 @@ class smayStocktMove(models.Model):
         for move in self:
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
-                move.product_qty = 3
+            move.product_qty = 3
 
 
 class smayTransferencesStockPicking(models.Model):
