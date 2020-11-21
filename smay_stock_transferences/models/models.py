@@ -56,6 +56,8 @@ class smayTransferencesStockPicking(models.Model):
     @api.onchange('move_ids_without_package')
     def _change_productttt(self):
         _logger.warning('WWWWWWWWWWWWWWWWWWW'+str(self.move_ids_without_package))
+        for move in self.move_ids_without_package:
+            _logger.warning(str(move))
 
     @api.model
     def _default_location(self):
