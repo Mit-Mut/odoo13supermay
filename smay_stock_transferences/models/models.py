@@ -39,6 +39,22 @@ class smayTransferencesResUser(models.Model):
     sucursal_transferencias_id = fields.Many2one('res.partner', 'Sucursal Transferencias')
 
 
+class smayStocktMove(models.Model):
+    _inherit = 'stock.move'
+
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_product_qty(self):
+        # DLE FIXME: `stock/tests/test_move2.py`
+        # `product_qty` is a STORED compute field which depends on the context :/
+        # I asked SLE to change this, task: 2041971
+        # In the mean time I cheat and force the rouding to half-up, it seems it works for all tests.
+        rounding_method = 'HALF-UP'
+        for move in self:
+            move.product_qty = move.product_uom._compute_quantity(
+                move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
+                move.product_qty = 3
+
+
 class smayTransferencesStockPicking(models.Model):
     _inherit = 'stock.picking'
 
@@ -58,7 +74,7 @@ class smayTransferencesStockPicking(models.Model):
                                                default=lambda  self: self.get_qty(),
                                                inverse='_set_move_without_package')
 
-    
+
     def get_qty(self):
         _logger.warning('WWWWWWWWWWWWWWWWWWW' + str(self.move_ids_without_package))
         return 1
