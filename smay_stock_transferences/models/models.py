@@ -7,6 +7,25 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+'''
+FECHA:		20201120 
+VERSIÓN:	v13.0.0.1:
+DESCRIPCIÓN:
+		En la configuración del punto de venta añade los siguientes campos para poner restriccciones de venta y visualización
+		
+MODELO: res.users
+CAMPOS:
+    
+    stock_location_id = fields.Many2one('stock.location', string='Almacen origen para transferencias',
+                                        domain="[('name','=','Stock')]")
+
+    transfers_validator = fields.Boolean(string='Puede validar transferencias', default=False)
+
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de movimiento por default',
+                                      domain="[('name','=','Transferencias internas')]")    
+'''
+
+
 class smayTransferencesResUser(models.Model):
     _inherit = 'res.users'
 
@@ -17,6 +36,8 @@ class smayTransferencesResUser(models.Model):
 
     picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de movimiento por default',
                                       domain="[('name','=','Transferencias internas')]")
+
+    sucursal_transferencias_id = fields.Many2one('res.partner', 'Sucursal Transferencias')
 
 
 class smayTransferencesStockPicking(models.Model):
