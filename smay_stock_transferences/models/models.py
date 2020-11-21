@@ -73,15 +73,8 @@ class smayTransferencesStockPicking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
 
-    move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package",
-                                               compute='_compute_move_without_package',
-                                               default=lambda  self: self.get_qty(),
-                                               inverse='_set_move_without_package')
 
 
-    def get_qty(self):
-        _logger.warning('WWWWWWWWWWWWWWWWWWW' + str(self.move_ids_without_package))
-        return 1
 
     @api.model
     def _default_location(self):
