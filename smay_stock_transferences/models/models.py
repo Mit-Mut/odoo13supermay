@@ -54,7 +54,7 @@ class smayStocktMove(models.Model):
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
             if(move.product_id):
                 quant = self.env['stock.quant'].search([('product_id','=',move.product_id.id),('location_id','=',move.location_id.id)])
-                move.product_uom_qty=quant.quantity - quant.reserved
+                move.product_uom_qty=quant.quantity - quant.reserved_quantity
             _logger.warning('-----------------'+str(move.location_id))
 
 class smayTransferencesStockPicking(models.Model):
