@@ -48,8 +48,8 @@ class smayStocktMove(models.Model):
 
     '''Funcion heredada y retorna la cantidad del producto para el almacen y restando lo reservado'''
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
-    def _compute_product_qty(self):
+    @api.onchange('product_id',)
+    def _calculate_qty(self):
         # DLE FIXME: `stock/tests/test_move2.py`
         # `product_qty` is a STORED compute field which depends on the context :/
         # I asked SLE to change this, task: 2041971
@@ -126,30 +126,31 @@ class smayTransferencesStockPicking(models.Model):
         self.validate_picking_records()
         return record'''
 
-    def validate_picking_records(self):
+    '''def validate_picking_records(self):
 
-        i = 0
-        '''if not self.id:
-            if len(self.browse(self.id).move_ids_without_package) == 0:
-                raise UserError('La transferencia debe tener productos agregados.')'''
-        for picking in self.move_ids_without_package:
-            j = 0
-            for picking_aux in self.move_ids_without_package:
-                if i != j and picking.product_id.id == picking_aux.product_id.id:
-                    raise UserError('El product ' + str(picking_aux.product_id.name) + ' esta repetido')
-                j = j + 1
-            i = i + 1
+        i = 0'''
+    '''if not self.id:
+        if len(self.browse(self.id).move_ids_without_package) == 0:
+            raise UserError('La transferencia debe tener productos agregados.')'''
+    '''for picking in self.move_ids_without_package:
+        j = 0
+        for picking_aux in self.move_ids_without_package:
+            if i != j and picking.product_id.id == picking_aux.product_id.id:
+                raise UserError('El product ' + str(picking_aux.product_id.name) + ' esta repetido')
+            j = j + 1
+        i = i + 1
 
-        for picking in self.move_ids_without_package:
+    for picking in self.move_ids_without_package:
 
-            stocks = self.env['stock.quant'].search([('company_id', '=', self.env.user.company_id.id),
-                                                     ('location_id', '=', self.location_id.id),
-                                                     ('product_id', '=', picking.product_id.id)]).quantity
-            if stocks <= 0:
-                raise UserError('No tienes stock para transferir del producto ' + str(picking.product_id.name))
-            if stocks < picking.product_uom_qty:
-                raise UserError('No puedes transferir ' + str(picking.product_uom_qty) + ' piezas del producto ' + str(
-                    picking.product_id.name) + ', solo cuentas con ' + str(stocks) + ' piezas en tu almacen.')
+        stocks = self.env['stock.quant'].search([('company_id', '=', self.env.user.company_id.id),
+                                                 ('location_id', '=', self.location_id.id),
+                                                 ('product_id', '=', picking.product_id.id)]).quantity
+        if stocks <= 0:
+            raise UserError('No tienes stock para transferir del producto ' + str(picking.product_id.name))
+        if stocks < picking.product_uom_qty:
+            raise UserError('No puedes transferir ' + str(picking.product_uom_qty) + ' piezas del producto ' + str(
+                picking.product_id.name) + ', solo cuentas con ' + str(stocks) + ' piezas en tu almacen.')'''
+
 
     def validate_picking(self, vals):
         i = 0
@@ -167,6 +168,7 @@ class smayTransferencesStockPicking(models.Model):
                                     picking[2].get('product_id')).name) + ' esta repetido.')
                             j = j + 1
                     i = i + 1
+
 
     def validation_lines(self):
         for picking in self.move_ids_without_package:
@@ -192,6 +194,7 @@ class smayTransferencesStockPicking(models.Model):
                 self.location_dest_id.id) + '   ' + str(self.location_dest_id.name) + 'self' + str(self))'''
             if self.location_id.id == self.location_dest_id.id:
                 raise UserError('La ubicación origen y destino no pueden ser la misma.')
+
 
     # @api.multi
     def action_confirm(self):
@@ -222,6 +225,7 @@ class smayTransferencesStockPicking(models.Model):
         else:
             return super(smayTransferencesStockPicking, self).action_confirm()
 
+
     # @api.multi
     def button_validate(self):
         if '/INT/' in str(self.name):
@@ -239,6 +243,7 @@ class smayTransferencesStockPicking(models.Model):
         else:
             return super(smayTransferencesStockPicking, self).button_validate()
 
+
     '''@api.multi
     def button_validate(self):
         if self.env.user.has_group('stock.group_stock_manager'):
@@ -249,6 +254,7 @@ class smayTransferencesStockPicking(models.Model):
             if self.location_dest_id.id != self.env.user.stock_location_id.id:
                 raise UserError('No puedes validar transferencias para el almacen de otra sucursal')
             return super(smayTransferencesStockPicking, self).button_validate()'''
+
 
     # @api.multi
     def action_assign(self):
@@ -262,6 +268,7 @@ class smayTransferencesStockPicking(models.Model):
                 super(smayTransferencesStockPicking, self).action_assign()
         else:
             return super(smayTransferencesStockPicking, self).action_assign()
+
 
     # @api.multi
     def do_unreserve(self):
@@ -277,10 +284,12 @@ class smayTransferencesStockPicking(models.Model):
         else:
             super(smayTransferencesStockPicking, self).do_unreserve()
 
+
     def action_toggle_is_locked(self):
         if '/INT/' in str(self.name):
             raise UserError('Funcionalidad deshabilidata.')
         return super(smayTransferencesStockPicking, self).action_toggle_is_locked()
+
 
     def button_scrap(self):
         if '/INT/' in str(self.name):
