@@ -11,17 +11,15 @@ FECHA:		20201120
 VERSIÓN:	v13.0.0.1:
 DESCRIPCIÓN:
 		En la configuración del punto de venta añade los siguientes campos para poner restriccciones de venta y visualización
-		
+'''
+'''		
 MODELO: res.users
 CAMPOS:
     
-    stock_location_id = fields.Many2one('stock.location', string='Almacen origen para transferencias',
-                                        domain="[('name','=','Stock')]")
-
-    transfers_validator = fields.Boolean(string='Puede validar transferencias', default=False)
-
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de movimiento por default',
-                                      domain="[('name','=','Transferencias internas')]")    
+    stock_location_id: Almacen por default en transferencias para usuarios de INVENTARIO, para manager lo de deja en blanco
+    transfers_validator: El usuario de inventario debe de tener el campo en true para poder validar las transferencias
+    picking_type_id: Valor por default en las transferencias para el usuario de inventario, para el manager no lo toma en cuenta
+    sucursal_transferencias_id: Valor por defatul para el usuario de inventario. 
 '''
 
 
@@ -39,8 +37,16 @@ class smayTransferencesResUser(models.Model):
     sucursal_transferencias_id = fields.Many2one('res.partner', 'Sucursal Transferencias')
 
 
+'''		
+MODELO: stock.move
+CAMPOS:
+'''
+
+
 class smayStocktMove(models.Model):
     _inherit = 'stock.move'
+
+    '''Funcion heredada y retorna la cantidad del producto para el almacen y restando lo reservado'''
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
@@ -52,35 +58,39 @@ class smayStocktMove(models.Model):
         for move in self:
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
-            if(move.product_id):
-                quant = self.env['stock.quant'].search([('product_id','=',move.product_id.id),('location_id','=',move.location_id.id)])
-                move.product_uom_qty=quant.quantity - quant.reserved_quantity
-            _logger.warning('-----------------'+str(move.location_id))
+            ##ADD BY Gerardo Reyes Preciado
+            if (move.product_id):
+                quant = self.env['stock.quant'].search(
+                    [('product_id', '=', move.product_id.id), ('location_id', '=', move.location_id.id)])
+                move.product_uom_qty = quant.quantity - quant.reserved_quantity
+
+
+'''		
+MODELO: stock.picking
+CAMPOS:
+    
+    partner_id: heredado
+    location_id:heredado
+    picking_type_id:Heredado
+    
+'''
+
 
 class smayTransferencesStockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # Se autocompleta con el valor asignado en res.users, se agrego el valor default
     partner_id = fields.Many2one(
         'res.partner', 'Partner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         default=lambda self: self.env.user.sucursal_transferencias_id.id)
-
+    # Se autocompleta con el valor asignado en res.users, se agrego el valor default
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         default=lambda self: self._default_location(),
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
-
-
-
-
-    @api.model
-    def _default_location(self):
-        if self.env.user.has_group('stock.group_stock_manager'):
-            return
-        else:
-            return self.env.user.stock_location_id.id
-
+    # Se autocompleta con el valor asignado en res.users, se agrego el valor default
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True,
@@ -89,13 +99,20 @@ class smayTransferencesStockPicking(models.Model):
         states={'draft': [('readonly', False)]}, default=lambda self: self._default_picking_type())
 
     @api.model
+    def _default_location(self):
+        if self.env.user.has_group('stock.group_stock_manager'):
+            return
+        else:
+            return self.env.user.stock_location_id.id
+
+    @api.model
     def _default_picking_type(self):
         if self.env.user.has_group('stock.group_stock_manager'):
             return
         else:
             return self.env.user.picking_type_id.id
 
-    def write2(self, vals):
+    '''def write2(self, vals):
         self.validate_picking(vals)
         record = super(smayTransferencesStockPicking, self).write(vals)
         self.validate_picking_records()
@@ -107,7 +124,7 @@ class smayTransferencesStockPicking(models.Model):
         self.validate_picking(vals)
         record = super(smayTransferencesStockPicking, self).create(vals)
         self.validate_picking_records()
-        return record
+        return record'''
 
     def validate_picking_records(self):
 
