@@ -58,6 +58,7 @@ class smayTransferencesStockPicking(models.Model):
         _logger.warning('WWWWWWWWWWWWWWWWWWW'+str(self.move_ids_without_package))
         for move in self.move_ids_without_package:
             _logger.warning(str(move.product_id))
+            move.product_uom_qty =100
 
     @api.model
     def _default_location(self):
