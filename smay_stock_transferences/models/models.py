@@ -53,7 +53,7 @@ class smayTransferencesStockPicking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
 
-    @api.onchange('move_line_ids')
+    @api.onchange('move_line_ids.product_id')
     def _change_productttt(self):
         _logger.warning('WWWWWWWWWWWWWWWWWWW')
 
