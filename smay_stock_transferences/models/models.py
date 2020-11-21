@@ -42,10 +42,6 @@ class smayTransferencesResUser(models.Model):
 class smayTransferencesStockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    '''partner_id = fields.Many2one(
-        'res.partner', 'Partner',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        default=lambda self: self.env.user.sucursal_id.id)'''
     partner_id = fields.Many2one(
         'res.partner', 'Partner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -56,6 +52,12 @@ class smayTransferencesStockPicking(models.Model):
         default=lambda self: self._default_location(),
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
+
+    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
+    def _compute_move_without_package(self):
+        resp = super(smayTransferencesStockPicking,self)._compute_move_without_package(self)
+        _logger.warning('WWWWWWWWWWWWWWWWWWW')
+        return resp
 
     @api.model
     def _default_location(self):
