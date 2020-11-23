@@ -33,7 +33,7 @@ class SmayCustomPosSession(models.Model):
                         session.cash_register_balance_start - session.cash_register_balance_end_real)) + " del Fondo de Caja que se ingreso y el que se retira.")
 
             super(SmayCustomPosSession, self).action_pos_session_closing_control()
-            session.action_pos_session_close()
+            #session.action_pos_session_close()
 
     def action_pos_session_close(self):
         for session in self:
