@@ -238,7 +238,8 @@
 
                                 <button t-if="record.current_session_state.raw_value === 'new_session' || record.current_session_state.raw_value === 'opening_control'"
                                         class="btn btn-primary"
-                                        name="open_session_cb" type="object">Abrir Caja
+                                        name="open_session_cb" type="object">Establecer
+                                    Fondo
                                 </button>
 
                                 <button t-if="_.contains(['opened', 'closing_control'], record.current_session_state.raw_value)"
@@ -247,12 +248,7 @@
                                 </button>
 
                                 <button t-if="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value"
-                                        class="btn btn-primary" name="open_existing_session_cb" type="object">Establecer
-                                    Fondo
-                                </button>
-                                <button t-if="record.current_session_state.raw_value === 'new_session' || record.current_session_state.raw_value === 'opening_control'"
-                                        class="btn btn-primary"
-                                        name="open_session_cb" type="object">Abrir Caja
+                                        class="btn btn-primary" name="open_existing_session_cb" type="object">Abrir Caja
                                 </button>
 
 
