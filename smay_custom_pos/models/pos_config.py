@@ -12,8 +12,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     fondo_caja = fields.Float(string="Fondo de Caja", default=500.00,
-                              help="Se indica la cantidad que se tiene que manejar"
-                                   " como fondo de caja.")
+                              help="Se indica la cantidad que se tiene que manejar como fondo de caja.")
     sucursal_id = fields.Many2one('res.partner', string='Sucursal(ticket)',
                                   help="Selecciona la tienda que se presentara en el ticket")
 
@@ -22,7 +21,8 @@ class PosConfig(models.Model):
         return True
 
     def open_session_cb(self):
-        if not self.user_has_groups('point_of_sale.group_pos_manager') and self.env.user.partner_id.name.upper() != 'CHECADOR':
+        if not self.user_has_groups(
+                'point_of_sale.group_pos_manager') and self.env.user.partner_id.name.upper() != 'CHECADOR':
             sessions = self.env['pos.session'].search(
                 [('user_id', '=', self.env.user.id), ('state', '!=', 'closed'), ('config_id', '!=', self.id)])
             for session in sessions:

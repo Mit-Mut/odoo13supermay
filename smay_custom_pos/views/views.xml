@@ -77,21 +77,20 @@
 
                     <button name="open_frontend_cb" type="object" string="Continuar venta" states="opened"
                             class="oe_highlight"/>
-                    <button name="action_pos_session_closing_control" type="object" string="Cerrar caja"
+                    <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="Cerrar caja(sesion)"
                             attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                             groups="point_of_sale.group_pos_manager"
-                            class="oe_highlight btn-danger" context="{'auto_closing_control': True}"/>
-                    <button name="action_pos_session_closing_control" type="object"
-                            string="Validar y contabilizar asiento(s) de cierre"
-                            attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
-                            class="oe_highlight"
-                            confirm="Are you sure you want to do this?"/>
-                    <button name="action_pos_session_closing_control" type="object"
-                            string="Validar y contabilizar asiento(s) de cierre" states="closing_control"
-                            class="oe_highlight"/>
+                            class="oe_highlight" />
 
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1"/>
+
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
+                            groups="point_of_sale.group_pos_manager"
+                        class="oe_highlight"/>
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control" groups="point_of_sale.group_pos_manager"
+                        class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
                 </header>
             </xpath>
 
@@ -211,11 +210,11 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//div/div[1]/div[1]/div[2]" position="replace">
+            <!--<xpath expr="//div/div[1]/div[1]/div[2]" position="replace">
                 <div class="o_secondary">
                     <t t-esc="record.pos_session_username.value || 'Disponible'"/>
                 </div>
-            </xpath>
+            </xpath>-->
 
             <xpath expr="//div/div[1]/div[2]/a" position="replace">
                 <a class="o_kanban_manage_toggle_button" href="#" groups="point_of_sale.group_pos_manager">
@@ -243,10 +242,10 @@
                                     name="open_ui" type="object">Continuar Venta
                             </button>
                             <button t-if="record.pos_session_username.value" class="btn btn-default"
-                                    name="open_session_cb" type="object">Ver Caja
+                                    name="open_existing_session_cb" type="object">Ver Caja
                             </button>
                         </div>
-                        <div class="col-6 o_kanban_primary_right">
+                        <!--<div class="col-6 o_kanban_primary_right">
 
                             <div t-if="record.last_session_closing_date.value" class="row">
                                 <div class="col-xs-6">
@@ -269,7 +268,7 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </xpath>
