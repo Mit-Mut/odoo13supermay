@@ -39,7 +39,7 @@
 
     <t t-extend="ClientDetails">
 		<t t-jquery=".edit-buttons" t-operation="replace">
-			<div t-if="widget.pos.get_cashier().is_manager" class='edit-buttons'>
+			<div t-if="widget.pos.user.is_manager" class='edit-buttons'>
                 <div class='button edit'><i class='fa fa-pencil-square' role="img" aria-label="Edit" title="Edit"/></div>
             </div>
 		</t>
