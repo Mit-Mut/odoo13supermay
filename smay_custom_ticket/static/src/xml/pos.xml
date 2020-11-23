@@ -28,7 +28,7 @@
     <!--Se oculta el boton de crear clientes a los cajeros-->
     <t t-extend="ClientListScreenWidget">
 		<t t-jquery=".new-customer" t-operation="replace">
-			<span t-if="widget.pos.get_cashier().is_manager" class='button new-customer' role="img"
+			<span t-if="widget.pos.user.is_manager" class='button new-customer' role="img"
                   aria-label="Add a customer"
                   title="Add a customer">
                 <i class='fa fa-user'></i>
