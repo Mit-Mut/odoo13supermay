@@ -66,17 +66,7 @@
             <field name="groups_id" eval="[(6,0,[ref('point_of_sale.group_pos_user')])]"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='user_id']" position="replace">
-                    <field name="user_id" readonly="1"/>
-                </xpath>
 
-                <xpath expr="//field[@name='config_id']" position="replace">
-                    <field name="config_id" readonly="1"/>
-                </xpath>
-
-                <xpath expr="//field[@name='user_id']" position="replace">
-                    <field name="user_id" readonly="1"/>
-                </xpath>
 
                 <xpath expr="//header" position="replace">
                     <header>
@@ -209,11 +199,11 @@
                 </xpath>
 
                 <xpath expr="//field[@name='user_id']" position="replace">
-                    <field name="user_id" options="{'no_open': True}"/>
+                    <field name="user_id" options="{'no_open': True}" readonly="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='config_id']" position="replace">
-                    <field name="config_id" options="{'no_open': True}"/>
+                    <field name="config_id" options="{'no_open': True}" readonly="1"/>
                 </xpath>
             </field>
         </record>
