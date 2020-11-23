@@ -21,7 +21,7 @@
     <!--Se ocultan botones de pricelists-->
     <t t-extend="ProductScreenWidget">
 		<t t-jquery=".control-buttons" t-operation="replace">
-			<div t-if='widget.pos.user.is_manager' class="control-buttons oe_hidden"></div>
+			<!--<div t-if='widget.pos.user.is_manager' class="control-buttons oe_hidden"></div>-->
 		</t>
 	</t>
 
