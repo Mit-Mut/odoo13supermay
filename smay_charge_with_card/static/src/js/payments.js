@@ -54,7 +54,9 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
                 }
                 self.gui.close_popup();
                	self.pos.get_order().x_bank_reference = $('#bank_reference').val()
-               	$('.button.next.highlight').click()
+               	if(self.pos.gui.get_current_screen()=='payment')
+               	setTimeout(function(){ $('.button.next.highlight').click(); }, 3000);
+
           	});
 
             self.$('#cancel').on('click',function(){
