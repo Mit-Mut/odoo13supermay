@@ -24,7 +24,7 @@ class PosConfig(models.Model):
         if not self.user_has_groups(
                 'point_of_sale.group_pos_manager') and self.env.user.partner_id.name.upper() != 'CHECADOR':
             sessions = self.env['pos.session'].search(
-                [('user_id', '=', self.env.user.id), ('state', '!=', 'closed'), ('config_id', '!=', self.id)])
+                [('user_id', '=', self.env.user.id), ('state', '=', 'opened'), ('config_id', '!=', self.id)])
             for session in sessions:
                 raise UserError('Ya tienes sesión abierta en el punto de venta: ' + session.config_id.name)
             if not self.env.user.sucursal_id:
