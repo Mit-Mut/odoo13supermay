@@ -198,7 +198,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
 			_super_order.prototype.set_client.apply(this, arguments);
 			var orderlines = this.get_orderlines();
 			if(orderlines.length>0){
-				this.x_factor_with_card = ((self.pos.get_order().get_due()*this.pos.config['extra_charge'])/self.pos.get_order().get_total_with_tax())
+				this.x_factor_with_card = ((self.pos.get_order().get_due()*self.pos.config['extra_charge'])/self.pos.get_order().get_total_with_tax())
                 for(var i = 0; i< orderlines.length; i++){
                     var new_price = orderlines[i].get_unit_display_price()*((this.x_factor_with_card/100)+1);
                     orderlines[i].set_unit_price(new_price);
@@ -210,7 +210,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
             if(cashregister.uso_terminal_smay && this.payment_exists(cashregister)==false){
             var orderlines = this.get_orderlines();
             if(orderlines.length>0){
-				this.x_factor_with_card = ((self.pos.get_order().get_due()*this.pos.config['extra_charge'])/self.pos.get_order().get_total_with_tax())
+				this.x_factor_with_card = ((self.pos.get_order().get_due()*self.pos.config['extra_charge'])/self.pos.get_order().get_total_with_tax())
                 for(var i = 0; i< orderlines.length; i++){
                     var new_price = orderlines[i].get_unit_display_price()*((this.x_factor_with_card/100)+1);
                     orderlines[i].set_unit_price(new_price);
