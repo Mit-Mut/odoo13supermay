@@ -12,12 +12,11 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
     var _super_ProductScreenWidget = screens.ProductScreenWidget;
 
     _super_ProductScreenWidget = screens.ProductScreenWidget.include({
-     show : function(reset){
-     this._super(reset)
-     console.log('FFFFFFFFFFFFFFF')
-     $('.button.next.highlight').removeClass('highlight');
-     }
-
+        show : function(reset){
+                this._super(reset)
+                //console.log('FFFFFFFFFFFFFFF')
+                $('.button.next.highlight').removeClass('highlight');
+        }
     });
 
 
@@ -30,12 +29,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
             setTimeout(function(){
                 if(self.pos.get_order())
                 self.pos.get_order().remove_all_paymentlines()
-                    /*for(var i= 0; i<self.pos.get_order().get_orderlines().length; i++){
-                        self.pos.get_order().remove_orderline(self.pos.get_order().get_orderlines()[i])
-                         i--
-                    }*/
             },300)
-            console.log('asdasdasddas')
         }
     });
 
@@ -67,17 +61,9 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
                 self.gui.close_popup();
                	self.pos.get_order().x_bank_reference = $('#bank_reference').val()
                	setTimeout(function(){
-               	console.log(self)
-               	console.log(this)
-               	console.log('screen:'  +self.pos.gui.get_current_screen())
-               	console.log($('.button.next.highlight').text())
-               	if(self.pos.gui.get_current_screen()==='payment'){
-               	        $('.button.next.highlight').click();
-               	        $('.button.next.highlight').removeClass('highlight');
-
-               	        }
-
-               	}, 2000);
+                    if(self.pos.gui.get_current_screen()==='payment')
+                            $('.button.next.highlight').click();
+               	}, 1500);
 
           	});
 
