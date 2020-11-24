@@ -9,6 +9,16 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
 
     models.load_fields('pos.payment.method', ['uso_terminal_smay'])
 
+    var _super_ProductScreenWidget = screens.ProductScreenWidget;
+
+    _super_ProductScreenWidget = screens.ProductScreenWidget.include({
+     show : function(reset){
+     this._super(reset)
+     console.log('FFFFFFFFFFFFFFF')
+     }
+
+    });
+
 
     var _super_OrderWidget = screens.OrderWidget;
     _super_OrderWidget  = screens.OrderWidget.include({
