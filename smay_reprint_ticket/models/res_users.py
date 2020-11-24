@@ -12,7 +12,7 @@ class SmayReprintTicketResUser(models.Model):
 
     
     
-    is_manager = fields.Boolean(string='Es encargado', default=False)
+    #is_manager = fields.Boolean(string='Es encargado', default=False)
     pos_security_pin = fields.Char(string='PIN para punto de venta')
 
     _sql_constraints = [
