@@ -11,6 +11,7 @@ class SmayReprintTocketOrderline(models.Model):
     _inherit = 'pos.order.line'
 
     x_descuento = fields.Float(string='Descuento aplicado al producto', default=0.0)
+    x_unit_cost = fields.Float(string='Costo unitario del producto', default=0.0)
 
 
 class SmayReprintTicketPosOrder(models.Model):

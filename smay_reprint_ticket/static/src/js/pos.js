@@ -9,18 +9,20 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
     var core = require('web.core');
     var QWeb = core.qweb;
 
-    models.load_fields('res.users', ['pos_security_pin','sucursal_id']);
+    models.load_fields('res.users', ['pos_security_pin','sucursal_id','x_unit_cost']);
 
     var _super_orderline = models.Orderline;
 
     models.Orderline = models.Orderline.extend({
         initialize: function(attr,options){
             this.x_descuento =0.0;
+            this.x_unit_cost=0.0;
             _super_orderline.prototype.initialize.apply(this,arguments);
         },
 
         init_from_JSON: function (json){
             this.x_descuento = json.x_descuento;
+            this.x_unit_cost = json.x_unit_cost;
             _super_orderline.prototype.init_from_JSON.apply(this, arguments);
 
         },
@@ -29,6 +31,7 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
             var data = _super_orderline.prototype.clone.apply(this, arguments)
             if(this.product.lst_price - this.get_unit_display_price()>0)
                 data.this.x_descuento = this.product.lst_price - this.get_unit_display_price()
+                data.
             else
                 data.x_descuento=0
             return data
