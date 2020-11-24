@@ -205,7 +205,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
 
         },
 		
-		set_client: function(client){
+		/*set_client: function(client){
 			_super_order.prototype.set_client.apply(this, arguments);
 			var orderlines = this.get_orderlines();
 			if(orderlines.length>0){
@@ -215,7 +215,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
                     orderlines[i].set_unit_price(new_price);
                 }
                 }
-		},
+		},*/
 
         add_paymentline: function(cashregister){
             if(cashregister.uso_terminal_smay && this.payment_exists(cashregister)==false){
