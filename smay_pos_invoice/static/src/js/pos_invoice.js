@@ -251,6 +251,7 @@ odoo.define('smay_pos_invoice.smay_pos_invoice', function (require) {
                         'title': 'Información a Facturar',
                     }), 2000})
             }
+            self.pos.get_order().remove_all_paymentlines()
         },
     });
 
