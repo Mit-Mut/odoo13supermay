@@ -15,6 +15,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
      show : function(reset){
      this._super(reset)
      console.log('FFFFFFFFFFFFFFF')
+     $('.button.next.highlight').removeClass('highlight');
      }
 
     });
