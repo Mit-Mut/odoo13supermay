@@ -24,6 +24,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
                          i--
                     }*/
             },300)
+            console.log('asdasdasddas')
         }
     });
 
