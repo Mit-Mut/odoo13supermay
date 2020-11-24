@@ -61,7 +61,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
                	console.log($('.button.next.highlight').text())
                	if(self.pos.gui.get_current_screen()==='payment')
                	        $('.button.next.highlight').click();
-               	        self.pos.gui.screen_instances.receipt.renderElement()
+               	        $('.button.next.highlight').removeClass('.highlight');
 
                	}, 2000);
 
