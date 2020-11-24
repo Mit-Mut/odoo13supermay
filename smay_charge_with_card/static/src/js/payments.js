@@ -38,7 +38,7 @@ odoo.define('smay_charge_with_card.smay_charge_with_card', function(require){
 			
 			
 			
-			self.pos.gui.screen_instances.payment.renderElement()
+			//self.pos.gui.screen_instances.payment.renderElement()
 	        $('#confirm').hide()
 
 	        self.$('#confirm').on('click',function(){
