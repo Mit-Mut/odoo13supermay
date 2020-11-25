@@ -452,6 +452,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                                 //$('#img_reimp1')
                                 self.pos.config.iface_print_auto  = true;
 
+                                console.log('ticket session_id'+self.pos.get_order().session_id)
+
 
 
 
@@ -485,6 +487,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                         body: 'Se vencio el tiempo de espera. Contacta al encargado.'
                     });
                 });
+
+                console.log('ultimo session id'+self.pos.get_order().session_id)
             });
 
             $("#OriginalOrderCancel").on('click', function(){
