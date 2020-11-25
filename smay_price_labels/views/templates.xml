@@ -10,8 +10,8 @@
                                 <table style="width:100%">
                                     <tr>
                                         <td class="table-active text-center" style="width:30%;padding:2px;">
-                                            <t t-if="product.product_tmpl_id.company_id">
-                                                <img t-att-src="image_data_uri(product.product_tmpl_id.company_id.partner_id.image_512)"
+                                            <t t-if="product.write_uid.company_id">
+                                                <img t-att-src="image_data_uri(product.write_uid.company_id.partner_id.image_512)"
                                                      style="width:100%;height:190px"/>
                                             </t>
 
