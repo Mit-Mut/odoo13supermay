@@ -38,7 +38,7 @@ class PosSessionSmayCloseSession(models.Model):
 
         return self.browse(session_id).start_at
 
-    @api.model
+    '''@api.model
     def get_unsigned_invoices(self, session_id):
         session = self.browse(session_id)
         unsigned_orders = {}
@@ -47,7 +47,7 @@ class PosSessionSmayCloseSession(models.Model):
                 if (
                         order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign') and order.partner_id.id != self.env.user.company_id.invoice_partner_id.id:
                     unsigned_orders[order.pos_reference] = order.account_move.name
-        return unsigned_orders
+        return unsigned_orders'''
 
     @api.model
     def action_pos_session_closing_control_from_pos(self, session_id):
