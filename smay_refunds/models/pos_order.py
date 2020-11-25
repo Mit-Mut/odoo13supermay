@@ -351,7 +351,7 @@ class SmayRefundPosOrder(models.Model):
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
             # order. It can be the same session, or if it has been closed the new one that has been opened.
-            #current_session = order.session_id.config_id.current_session_id
+            current_session = order.session_id.config_id.current_session_id
             #if not current_session:
             #raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
             refund_order = order.copy({
