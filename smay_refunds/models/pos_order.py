@@ -357,7 +357,7 @@ class SmayRefundPosOrder(models.Model):
             _logger.warning('session_id:   ' + str(order.session_id))
             _logger.warning('config_id:   ' + str(order.session_id.config_id))
 
-            _logger.warning('CURREM SESSION:   ' + str(current_session))
+            #_logger.warning('CURREM SESSION:   ' + str(current_session))
             # if not current_session:
             # raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
             refund_order = order.copy({
