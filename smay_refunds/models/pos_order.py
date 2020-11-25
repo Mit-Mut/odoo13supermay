@@ -235,7 +235,7 @@ class SmayRefundPosOrder(models.Model):
         return -1
 
     @api.model
-    def get_data_order(self, pos_reference, order_to_refund):
+    def get_data_order(self, pos_reference, order_to_refund,session_id):
         order = self.search(
             [('pos_reference', '=', pos_reference),  # ('is_refund', '=', False),
              ('amount_total', '>', '0')], limit=1, order="id asc")
@@ -252,7 +252,7 @@ class SmayRefundPosOrder(models.Model):
             if total > current_session.cash_register_total_entry_encoding:
                 return -2
 
-            refund_order_id = order.pos_refund(order_to_refund)
+            refund_order_id = order.pos_refund(order_to_refund,session_id)
 
             if order.account_move and not 'Factura Global' in order.account_move.ref:
                 invoice_order = self.env['account.move'].browse(order.account_move.id)
@@ -285,9 +285,9 @@ class SmayRefundPosOrder(models.Model):
         return -1
 
     # @api.multi
-    def pos_refund(self, order_to_refund):
+    def pos_refund(self, order_to_refund,session_id):
         """Create a copy of order  for refund order"""
-        refund_order_data = self.refund()
+        refund_order_data = self.smay_refund(session_id)
         refund_order = self.search([('id', '=', refund_order_data['res_id'])])
         refund_order.write({
             'partner_id': self.partner_id.id,
@@ -345,13 +345,13 @@ class SmayRefundPosOrder(models.Model):
 
         return refund_order.id
 
-    def refund(self):
+    def smay_refund(self,session_id):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
             # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = 836  # order.session_id.config_id.current_session_id
+            #current_session = 836  # order.session_id.config_id.current_session_id
 
             _logger.warning('ORDER:   ' + str(order))
             _logger.warning('session_id:   ' + str(order.session_id))
@@ -362,7 +362,7 @@ class SmayRefundPosOrder(models.Model):
             # raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
             refund_order = order.copy({
                 'name': order.name + _(' REFUND'),
-                'session_id': 836,  # current_session.id,
+                'session_id': session_id,  # current_session.id,
                 'date_order': fields.Datetime.now(),
                 'pos_reference': order.pos_reference,
                 'lines': False,
