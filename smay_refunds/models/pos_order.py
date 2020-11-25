@@ -378,7 +378,7 @@ class SmayRefundPosOrder(models.Model):
                     })
             refund_orders |= refund_order
 
-        _logger.warning('DATOS DE DEVOLUCION'+str(refund_orders))
+        _logger.warning('DATOS DE DEVOLUCION'+str(refund_order))
 
         return {
             'name': _('Return Products'),
