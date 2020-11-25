@@ -331,7 +331,8 @@ class SmayRefundPosOrder(models.Model):
         data['create_uid'] = (self.env.user.id, self.env.user.name)
         data['pos_order_id'] = refund_order.id
 
-        current_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.user.id)])
+        #current_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.user.id)])
+        current_session = self.env['pos.session'].browse(session_id)
         # for journal in current_session.config_id.journal_ids:
         for method in current_session.config_id.payment_method_ids:
             if method.is_cash_count:
