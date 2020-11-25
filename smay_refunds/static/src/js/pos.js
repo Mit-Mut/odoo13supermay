@@ -315,6 +315,9 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                 $("#motivo_select").hide()
                 $("#descripcion_refund").hide()
 
+                console.log('session id: '+self.pos.get_order().session_id)
+                console.log('option '  +options.order.session_id)
+
 
 
                 rpc.query({
