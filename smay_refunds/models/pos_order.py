@@ -353,6 +353,10 @@ class SmayRefundPosOrder(models.Model):
             # order. It can be the same session, or if it has been closed the new one that has been opened.
             current_session = order.session_id.config_id.current_session_id
 
+            _logger.warning('ORDER:   '+str(order))
+            _logger.warning('session_id:   '+str(order.session_id))
+            _logger.warning('config_id:   '+str(order.session_id.config_id))
+
             _logger.warning('CURREM SESSION:   '+str(current_session))
             #if not current_session:
             #raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
