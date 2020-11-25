@@ -351,7 +351,7 @@ class SmayRefundPosOrder(models.Model):
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
             # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = order.session_id.config_id.current_session_id
+            current_session = 836 #order.session_id.config_id.current_session_id
 
             _logger.warning('ORDER:   '+str(order))
             _logger.warning('session_id:   '+str(order.session_id))
