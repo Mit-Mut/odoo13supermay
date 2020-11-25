@@ -351,18 +351,18 @@ class SmayRefundPosOrder(models.Model):
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
             # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = 836 #order.session_id.config_id.current_session_id
+            current_session = 836  # order.session_id.config_id.current_session_id
 
-            _logger.warning('ORDER:   '+str(order))
-            _logger.warning('session_id:   '+str(order.session_id))
-            _logger.warning('config_id:   '+str(order.session_id.config_id))
+            _logger.warning('ORDER:   ' + str(order))
+            _logger.warning('session_id:   ' + str(order.session_id))
+            _logger.warning('config_id:   ' + str(order.session_id.config_id))
 
-            _logger.warning('CURREM SESSION:   '+str(current_session))
-            #if not current_session:
-            #raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
+            _logger.warning('CURREM SESSION:   ' + str(current_session))
+            # if not current_session:
+            # raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
             refund_order = order.copy({
                 'name': order.name + _(' REFUND'),
-                'session_id': current_session.id,
+                'session_id': 836,  # current_session.id,
                 'date_order': fields.Datetime.now(),
                 'pos_reference': order.pos_reference,
                 'lines': False,
@@ -381,10 +381,10 @@ class SmayRefundPosOrder(models.Model):
                     'price_subtotal': -line.price_subtotal,
                     'price_subtotal_incl': -line.price_subtotal_incl,
                     'pack_lot_ids': PosOrderLineLot,
-                    })
+                })
             refund_orders |= refund_order
 
-        _logger.warning('DATOS DE DEVOLUCION'+str(refund_order))
+        _logger.warning('DATOS DE DEVOLUCION' + str(refund_order))
 
         return {
             'name': _('Return Products'),
