@@ -236,6 +236,7 @@ class SmayRefundPosOrder(models.Model):
 
     @api.model
     def get_data_order(self, pos_reference, order_to_refund,session_id):
+        _logger.warning('get_data - '+str(session_id))
         order = self.search(
             [('pos_reference', '=', pos_reference),  # ('is_refund', '=', False),
              ('amount_total', '>', '0')], limit=1, order="id asc")
@@ -287,6 +288,7 @@ class SmayRefundPosOrder(models.Model):
     # @api.multi
     def pos_refund(self, order_to_refund,session_id):
         """Create a copy of order  for refund order"""
+        _logger.warning('pos_refund - session_id'+str(session_id))
         refund_order_data = self.smay_refund(session_id)
         refund_order = self.search([('id', '=', refund_order_data['res_id'])])
         refund_order.write({
@@ -354,7 +356,7 @@ class SmayRefundPosOrder(models.Model):
             #current_session = 836  # order.session_id.config_id.current_session_id
 
             _logger.warning('ORDER:   ' + str(order))
-            _logger.warning('session_id:   ' + str(order.session_id))
+            _logger.warning('session_id:   ' + str(session_id))
             _logger.warning('config_id:   ' + str(order.session_id.config_id))
 
             #_logger.warning('CURREM SESSION:   ' + str(current_session))
