@@ -9,7 +9,6 @@ odoo.define('smay_refunds.smay_refunds', function(require){
     var core = require('web.core');
     var QWeb = core.qweb;
     var screens = require('point_of_sale.screens');
-    var models = require('point_of_sale.models')
 
     models.load_fields('res.users', 'is_manager');
     models.load_fields('pos.config', ['x_dias_permitidos_devolucion']);
