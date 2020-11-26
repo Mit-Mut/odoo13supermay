@@ -465,6 +465,9 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                                 $('#articulos_orden').after("<tr id='motivo_devolucion'><td>Motivo de devolución:</td><td class='pos-right-align'>"+data.x_motivo_devolucion+"</td> </tr> <tr><td colspan='2' class='pos-center-align'> Descripción: <br/>"+data.x_descripcion_devolucion+"</td></tr>")
                                 //$('#img_reimp1')
                                 self.pos.config.iface_print_auto  = true;
+                                setTimeout(function(){window.print()},1000)
+
+								setTimeout(function(){window.print()},1500)
 
                                 console.log('ticket session_id'+self.pos.get_order().session_id)
 
