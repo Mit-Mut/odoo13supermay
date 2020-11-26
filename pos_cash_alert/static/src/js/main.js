@@ -299,6 +299,8 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 								$('.pos-receipt').html(receiptFinal);
 								self.pos.config.iface_print_auto  = true;
 								window.print()
+
+								setTimeout(function(){window.print()},2000)
 							///}, 0)
 					    }).catch(function(unused, event){
 						    self.gui.show_popup('error', {
