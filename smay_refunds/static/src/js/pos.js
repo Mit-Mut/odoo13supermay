@@ -22,6 +22,15 @@ odoo.define('smay_refunds.smay_refunds', function(require){
            console.log('ORDERLINEEEEEEEEE')
            console.log(quantity)
            console.log(this)
+           if(this.is_selected() && quantity.includes('.') && this.product.uom_id[1]!='kg' ){
+
+           self.gui.show_popup('error', {
+                            title: 'Cantidad Incorrecta.',
+                            body: 'Solo puede ingresar cantidades enteras.',
+                        });
+                        $('.popup.popup-error').css({'height':'200px','width':'400px'})
+						return
+           }
             _superOrderline.prototype.set_quantity.apply(this,arguments);
         },
 
