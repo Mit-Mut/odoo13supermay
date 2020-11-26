@@ -13,8 +13,8 @@ odoo.define('smay_refunds.smay_refunds', function(require){
     models.load_fields('res.users', 'is_manager');
     models.load_fields('pos.config', ['x_dias_permitidos_devolucion']);
 
-   /* var _superOrderline = models.Orderline;
-    model.Orderline = models.Orderline.extend({
+    var _superOrderline = models.Orderline;
+    models.Orderline = models.Orderline.extend({
 
     set_quantity: function(quantity, keep_price){
            if(self.pos.get_order()) self.pos.get_order().remove_all_paymentlines();
@@ -23,7 +23,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
             _super_orderline.prototype.set_quantity.apply(this,arguments);
         },
 
-    });*/
+    });
 
 
     reprint_ticket.PopUpMenu.include({
