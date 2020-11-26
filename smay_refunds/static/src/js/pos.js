@@ -22,7 +22,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
            console.log('ORDERLINEEEEEEEEE')
            console.log(quantity)
            console.log(this)
-           if(this.is_selected() && quantity.includes('.') && this.product.uom_id[1]!='kg' ){
+           if(this.is_selected() && quantity%1>0 && this.product.uom_id[1]!='kg' ){
 
            self.gui.show_popup('error', {
                             title: 'Cantidad Incorrecta.',
