@@ -232,7 +232,9 @@ odoo.define('smay_reprint_ticket.smay_reprint_ticket', function(require){
                             self.gui.show_screen('receipt',{reprint:'true'})
                             $('.pos-receipt').html(QWeb.render('ReprintPosTicket' ,{widget:self,receipt:receipt}));
                             self.pos.config.iface_print_auto  = true;
-                            window.print()
+							
+							setTimeout(function(window.print()){},1000);
+                            //window.print()
                         }).catch(function(){
                     });
             });
