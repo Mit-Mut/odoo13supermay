@@ -17,11 +17,11 @@ odoo.define('smay_refunds.smay_refunds', function(require){
     models.Orderline = models.Orderline.extend({
 
     set_quantity: function(quantity, keep_price){
-           if(self.pos.get_order()) self.pos.get_order().remove_all_paymentlines();
+           if(self.pos.get_order())
+                self.pos.get_order().remove_all_paymentlines();
            console.log('ORDERLINEEEEEEEEE')
            console.log(quantity)
            console.log(this)
-           if()
             _superOrderline.prototype.set_quantity.apply(this,arguments);
         },
 
