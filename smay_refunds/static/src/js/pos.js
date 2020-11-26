@@ -20,7 +20,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
            if(self.pos.get_order()) self.pos.get_order().remove_all_paymentlines();
            console.log('ORDERLINEEEEEEEEE')
            console.log(this)
-            _super_orderline.prototype.set_quantity.apply(this,arguments);
+            _superOrderline.prototype.set_quantity.apply(this,arguments);
         },
 
     });
