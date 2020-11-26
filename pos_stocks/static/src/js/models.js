@@ -105,7 +105,7 @@ odoo.define('pos_stock.models',function(require) {
             // warehouse management compatiblity code end---------------
            
             if(!self.pos.config.wk_continous_sale && self.pos.config.wk_display_stock && !self.pos.get_order().is_return_order) {
-                if (parseInt($("#qty-tag" + product.id).html()) <= self.pos.config.wk_deny_val) 
+                if (parseInt($("#qty-tag" + product.id).html()) <= self.pos.config.wk_deny_val && product.type=='product' )
                     self.pos.gui.show_popup('out_of_stock',{
                         'title':  _t("Warning !!!!"),
                         'body': _t("("+product.display_name+")"+self.pos.config.wk_error_msg+"."),
@@ -206,7 +206,7 @@ odoo.define('pos_stock.models',function(require) {
             }
             // -------code for POS Warehouse Management----------------
             
-            if((!self.pos.config.wk_continous_sale && self.pos.config.wk_display_stock && isNaN(quantity)!=true && quantity!='' && parseFloat(self.wk_line_stock_qty)-parseFloat(quantity)<self.pos.config.wk_deny_val && self.wk_line_stock_qty !=0.0 )){
+            if((!self.pos.config.wk_continous_sale && self.pos.config.wk_display_stock && isNaN(quantity)!=true && quantity!='' && parseFloat(self.wk_line_stock_qty)-parseFloat(quantity)<self.pos.config.wk_deny_val && self.wk_line_stock_qty !=0.0 && this.option.product.type=='product')){
                 self.pos.gui.show_popup('out_of_stock',{
                     'title':  _t("Warning !!!!"),
                     'body': _t("("+this.option.product.display_name+")"+self.pos.config.wk_error_msg+"."),
@@ -224,7 +224,7 @@ odoo.define('pos_stock.models',function(require) {
                             wk_avail_pro = wk_current_qty + wk_pro_order_line;
                         else
                             wk_avail_pro = wk_current_qty + wk_pro_order_line - quantity;
-                        if (wk_avail_pro < self.pos.config.wk_deny_val && (!(quantity == '' || quantity == 'remove'))) {
+                        if (wk_avail_pro < self.pos.config.wk_deny_val && (!(quantity == '' || quantity == 'remove' && wk_pro_order_line.product.type == 'product'))) {
                             self.pos.gui.show_popup('out_of_stock',{
                                 'title':  _t("Warning !!!!"),
                                 'body': _t("("+wk_pro_order_line.product.display_name+")"+self.pos.config.wk_error_msg+"."),
