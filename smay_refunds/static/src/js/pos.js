@@ -9,9 +9,23 @@ odoo.define('smay_refunds.smay_refunds', function(require){
     var core = require('web.core');
     var QWeb = core.qweb;
     var screens = require('point_of_sale.screens');
+    var models = require('point_of_sale.models')
 
     models.load_fields('res.users', 'is_manager');
     models.load_fields('pos.config', ['x_dias_permitidos_devolucion']);
+
+    var _superOrderline = models.Orderline;
+    model.Orderline = models.Orderline.extend({
+
+    set_quantity: function(quantity, keep_price){
+           if(self.pos.get_order()) self.pos.get_order().remove_all_paymentlines();
+           console.log('ORDERLINEEEEEEEEE')
+           console.log(this)
+            _super_orderline.prototype.set_quantity.apply(this,arguments);
+        },
+
+    });
+
 
     reprint_ticket.PopUpMenu.include({
         show: function(options){
