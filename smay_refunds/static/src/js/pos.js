@@ -324,7 +324,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                 rpc.query({
                     model:'pos.order',
                     method: 'get_data_order',
-                    args: [options.order.pos_reference,order,self.pos.get_order().session_id],
+                    args: [options.order.pos_reference,order,self.pos.pos_session.id],
                     timeout : 12000,
                 }).then(function(data){
                     if(data==-2){
