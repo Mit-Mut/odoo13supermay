@@ -317,6 +317,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 
                 console.log('session id: '+self.pos.get_order().session_id)
                 console.log('option '  +options.order.session_id)
+                console.log(self.pos.pos_session.id)
 
 
 
