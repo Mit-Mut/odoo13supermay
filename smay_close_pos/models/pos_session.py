@@ -66,6 +66,7 @@ class PosSessionSmayCloseSession(models.Model):
             session.action_pos_session_closing_control()
             return True
         # session.action_pos_session_closing_control()
+        session.action_pos_session_closing_control()
         self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
 
         session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
