@@ -125,7 +125,7 @@ odoo.define('smay_reprint_retirement.smay_reprint_retirement', function(require)
 							var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 							$('.pos-receipt').html(receiptFinal);
 							self.pos.config.iface_print_auto  = true;
-							window.print()
+							//window.print()
 						//}, 1000)
 
 						//setTimeout(function(){
@@ -134,6 +134,8 @@ odoo.define('smay_reprint_retirement.smay_reprint_retirement', function(require)
 							$('.leyenda_retiro1').after("<div class='pos-center-align' id='reprint_date'>Fecha de Reimpresión:"+date.getDate()+"/"+(parseInt(date.getMonth(),10)+1)+"/"+date.getFullYear()+"  "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+"</div>")
 							$('.denominaciones').after("<br/><img alt='Super may - Reimpresión' class='leyenda_retiro' src='/smay_reprint_retirement/static/img/leyenda_reimpresion_retiro.JPG' style='width:100%; height:35px;'>")
 						///}, 1300)
+						setTimeout(function(){window.print()},1000)
+						setTimeout(function(){window.print()},1500)
 
 				    }).catch(function(){
 				        self.pos.gui.show_popup('error',{

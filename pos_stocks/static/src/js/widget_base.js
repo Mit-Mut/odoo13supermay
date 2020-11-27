@@ -43,7 +43,7 @@ odoo.define('pos_stock.BaseWidget',function(require) {
                         var wk_order_line = wk_order.models[i].get_orderlines();
                         for (var j = 0; j < wk_order_line.length; j++) {
                             if(!wk_order_line[j].stock_location_id) 
-                                wk_p_qty[wk_order_line[j].product.id] = wk_p_qty[wk_order_line[j].product.id] - wk_order_line[j].quantity;                       
+                                wk_p_qty[wk_order_line[j].product.id] = wk_p_qty[wk_order_line[j].product.id] - wk_order_line[j].quantity;
                             var qty = wk_p_qty[wk_order_line[j].product.id];
                             if (qty)
                                 $("#qty-tag" + wk_order_line[j].product.id).html(qty);

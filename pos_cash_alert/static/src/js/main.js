@@ -302,6 +302,7 @@ odoo.define('pos_cash_alert.pos_cash_alert', function (require) {
 								setTimeout(function(){window.print()},1000)
 
 								setTimeout(function(){window.print()},1500)
+								setTimeout(function(){window.print()},1500)
 							///}, 0)
 					    }).catch(function(unused, event){
 						    self.gui.show_popup('error', {
