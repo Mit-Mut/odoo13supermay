@@ -103,7 +103,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
                     model:'pos.session',
                     method:'action_pos_session_closing_control_from_pos',
                     args:[self.pos.pos_session.id],
-						timeout:timeout_close,
+						timeout:60000,
                         shadow: true,
                     }).then(function(resp){
         				if(resp==-1){
