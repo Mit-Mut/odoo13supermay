@@ -112,7 +112,8 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 				        }
 
 				        if(resp==-2){
-				            self.pos.gui.show_popup('error','Existen ventas con cliente asignado y sin facturar. Para poder cerrar la caja debes facturar las ordenes.')
+				            //self.pos.gui.show_popup('error','Existen ventas con cliente asignado y sin facturar. Para poder cerrar la caja debes facturar las ordenes.')
+				            self.pos.gui.show_popup('error','Existen ventas con factura asignada pero no estan timbradas. Para poder cerrar la caja debes de timbrar las facturas.')
                             return
 				        }
 
