@@ -53,7 +53,7 @@ class PosSessionSmayCloseSession(models.Model):
     def action_pos_session_closing_control_from_pos(self, session_id):
         session = self.env['pos.session'].browse(session_id)
         for order in session.order_ids:
-            if order.partner_id.id != self.env.user.company_id.invoice_partner_id.id and order.state != 'invoiced' and order.amount_total > 0:
+            if order.account_move and order.account_move.l10n_mx_edi_pac_status != 'signed' :
                 return -2
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
