@@ -34,6 +34,24 @@ class PosSessionSmayCloseSession(models.Model):
     _inherit = 'pos.session'
 
     @api.model
+    def close_session_automatically(self):
+        sessions = self.env['pos.session'].search([('state', '=', 'closing_control')])
+
+        for session in sessions:
+
+
+            order_without_invoice = self.env['pos.order'].search(
+                [('session_id', '=', session.session_id), ('state', '!=', 'invoiced')])
+            #session_to_close = self.env['pos.session'].browse(session.session_id)
+            if order_without_invoice:
+                _logger.warning(
+                    "Existen ordenes que no se han agregado a una fatura global: " + str(session.name))
+                continue
+            else:
+                session.action_pos_session_closing_control()
+                _logger.warning('Session Cerrada Exitosamente'+str(session))
+
+    @api.model
     def get_session_start_at(self, session_id):
 
         return self.browse(session_id).start_at
@@ -53,23 +71,11 @@ class PosSessionSmayCloseSession(models.Model):
     def action_pos_session_closing_control_from_pos(self, session_id):
         session = self.env['pos.session'].browse(session_id)
         for order in session.order_ids:
-            if order.account_move and order.account_move.l10n_mx_edi_pac_status != 'signed' :
+            if order.partner_id.id != self.env.user.company_id.invoice_partner_id.id and order.state != 'invoiced' and order.amount_total > 0:
                 return -2
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
-        if self.user_has_groups('point_of_sale.group_pos_user'):
-            #time.sleep(10)
-
-            #self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
-
-            #session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
-            session.action_pos_session_closing_control()
-            return True
-        # session.action_pos_session_closing_control()
         session.action_pos_session_closing_control()
-        #self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
-
-        #session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
         return True
 
     @api.model
