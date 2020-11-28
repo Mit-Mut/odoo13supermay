@@ -46,7 +46,8 @@ class PosSessionSmayCloseSession(models.Model):
             
             session.action_pos_session_validate()
             _logger.warning('Session Cerrada Exitosamente'+str(session))'''
-            _logger.warning("Inicio de Cierre de Session: " + str(session))
+            _logger.warning(
+                "Inicio de Cierre de Session: " + str(session) + '    ( ' + str(len(session.order_ids)) + ' )')
             session.action_pos_session_validate()
             _logger.warning('Session Cerrada Exitosamente' + str(session))
 
@@ -70,7 +71,7 @@ class PosSessionSmayCloseSession(models.Model):
     def action_pos_session_closing_control_from_pos(self, session_id):
         session = self.env['pos.session'].browse(session_id)
         for order in session.order_ids:
-            if order.account_move and  order.account_move.l10n_mx_edi_pac_status != 'signed':
+            if order.account_move and order.account_move.l10n_mx_edi_pac_status != 'signed':
                 return -2
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
