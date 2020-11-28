@@ -58,7 +58,7 @@ class PosSessionSmayCloseSession(models.Model):
         if abs(session.cash_register_total_entry_encoding) > session.config_id.amount_authorized_diff:
             return -1
         if self.user_has_groups('point_of_sale.group_pos_user'):
-            time.sleep(10)
+            #time.sleep(10)
 
             self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
 
