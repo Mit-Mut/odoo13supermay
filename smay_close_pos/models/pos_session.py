@@ -6,7 +6,7 @@ import logging, time
 _logger = logging.getLogger(__name__)
 
 
-class PosSessionTempClose(models.Model):
+'''class PosSessionTempClose(models.Model):
     _name = 'pos.session.temp.close'
     _description = 'guarda las sessiones que seran cerradas de manera automatica.'
 
@@ -27,7 +27,7 @@ class PosSessionTempClose(models.Model):
             else:
                 session_to_close.action_pos_session_closing_control()
                 _logger.warning('Se cerro exitosamente la session :' + str(session_to_close.name))
-                session.unlink()
+                session.unlink()'''
 
 
 class PosSessionSmayCloseSession(models.Model):
@@ -60,14 +60,14 @@ class PosSessionSmayCloseSession(models.Model):
         if self.user_has_groups('point_of_sale.group_pos_user'):
             #time.sleep(10)
 
-            self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
+            #self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
 
             #session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
             session.action_pos_session_closing_control()
             return True
         # session.action_pos_session_closing_control()
         session.action_pos_session_closing_control()
-        self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
+        #self.env['pos.session.temp.close'].sudo(True).create({'session_id': session.id})
 
         #session.sudo(True).write({'state': 'closed', 'stop_at': fields.Datetime.now()})
         return True
