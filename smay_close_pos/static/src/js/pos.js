@@ -79,6 +79,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
             self._super(options);
 
             $('.button.acceptConfirmationClose').on('click',function(){
+                $('.button.acceptConfirmationClose').hide()
                 self.gui.close_popup();
 				
 				
@@ -677,7 +678,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 
 							setTimeout(function(){
 							    $('.button.acceptConfirmationClose').click()
-							},5500);
+							},6000);
 
 
 					}).catch(function(unused, event){
