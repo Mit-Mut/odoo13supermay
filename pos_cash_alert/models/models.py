@@ -38,6 +38,7 @@ class PosSession(models.Model):
 
     @api.model
     def get_unsigned_invoices(self, session_id):
+        _logger.warning('session_id'+str(session_id))
         session = self.browse(session_id)
         unsigned_orders = {}
         for orders in session.order_ids:
