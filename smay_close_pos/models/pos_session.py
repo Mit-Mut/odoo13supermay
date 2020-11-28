@@ -5,7 +5,6 @@ import logging, time
 
 _logger = logging.getLogger(__name__)
 
-
 '''class PosSessionTempClose(models.Model):
     _name = 'pos.session.temp.close'
     _description = 'guarda las sessiones que seran cerradas de manera automatica.'
@@ -38,8 +37,6 @@ class PosSessionSmayCloseSession(models.Model):
         sessions = self.env['pos.session'].search([('state', '=', 'closing_control')])
 
         for session in sessions:
-
-
             '''order_without_invoice = self.env['pos.order'].search(
                 [('session_id', '=', session.session_id), ('state', '!=', 'invoiced')])
             if order_without_invoice:
@@ -49,8 +46,8 @@ class PosSessionSmayCloseSession(models.Model):
             else:
                 session.action_pos_session_closing_control()
                 _logger.warning('Session Cerrada Exitosamente'+str(session))'''
-            session.action_pos_session_closing_control()
-            _logger.warning('Session Cerrada Exitosamente'+str(session))
+            session.action_pos_session_validate()
+            _logger.warning('Session Cerrada Exitosamente' + str(session))
 
     @api.model
     def get_session_start_at(self, session_id):
