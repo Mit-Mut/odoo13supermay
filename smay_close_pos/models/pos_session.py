@@ -46,6 +46,7 @@ class PosSessionSmayCloseSession(models.Model):
             else:
                 session.action_pos_session_closing_control()
                 _logger.warning('Session Cerrada Exitosamente'+str(session))'''
+            _logger.warning("Inicio de Cierre de Session: " + str(session))
             session.action_pos_session_validate()
             _logger.warning('Session Cerrada Exitosamente' + str(session))
 
