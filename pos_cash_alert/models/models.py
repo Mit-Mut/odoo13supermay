@@ -44,8 +44,8 @@ class PosSession(models.Model):
             for order in orders:
                 if order.account_move:
                     #if (order.account_move.l10n_mx_edi_pac_status == 'retry' or order.account_move.l10n_mx_edi_pac_status == 'to_sign'):
-                    _logger.warning('VALOR DEL TIMBRE'+str(order.account_move.l10n_mx_edi_cfdi_uuid))
-                    if not order.account_move.l10n_mx_edi_cfdi_uuid:
+                    _logger.warning('VALOR DEL TIMBRE'+str(order.account_move.l10n_mx_edi_pac_status))
+                    if order.account_move.l10n_mx_edi_pac_status != 'signed':
                         unsigned_orders[order.pos_reference] = order.account_move.name
         return unsigned_orders
 
