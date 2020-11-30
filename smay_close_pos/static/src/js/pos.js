@@ -643,6 +643,7 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 
 							//if(self.gui.get_current_screen() != 'receipt')
 							    ///self.gui.show_screen('receipt',{'retirement': true});
+							self.pos.config.iface_print_auto  = false;
 
 							var receiptFinal = QWeb.render('XmlReciboDeRetiro',env);
 							$('.pos-receipt').html(receiptFinal);
@@ -654,6 +655,8 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 						    setTimeout(function(){window.print()},1000)
 
 							setTimeout(function(){window.print()},1500)
+
+							self.pos.config.iface_print_auto  = true;
 								///
 
 
