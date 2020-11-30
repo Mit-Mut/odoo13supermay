@@ -37,15 +37,15 @@ class PosSessionSmayCloseSession(models.Model):
         sessions = self.env['pos.session'].search([('state', '=', 'closing_control')])
 
         for session in sessions:
-            '''order_without_invoice = self.env['pos.order'].search(
-                [('session_id', '=', session.session_id), ('state', '!=', 'invoiced')])
+            order_without_invoice = self.env['pos.order'].search(
+                [('session_id', '=', session.id), ('state', '!=', 'invoiced')])
             if order_without_invoice:
                 _logger.warning(
                     "Existen ordenes que no se han agregado a una fatura global: " + str(session.name))
                 continue
             
             session.action_pos_session_validate()
-            _logger.warning('Session Cerrada Exitosamente'+str(session))'''
+            _logger.warning('Session Cerrada Exitosamente'+str(session))
             _logger.warning(
                 "Inicio de Cierre de Session: " + str(session) + '    ( ' + str(len(session.order_ids)) + ' )')
             session.action_pos_session_validate()
