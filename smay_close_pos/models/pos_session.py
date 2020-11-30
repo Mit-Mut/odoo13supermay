@@ -41,7 +41,7 @@ class PosSessionSmayCloseSession(models.Model):
                 [('session_id', '=', session.id), ('state', '!=', 'invoiced')])
             if order_without_invoice:
                 _logger.warning(
-                    "Existen ordenes que no se han agregado a una fatura global: " + str(session.name))
+                    "Existen ordenes que no se han agregado a una factura global: " + str(session.name))
                 continue
             
             '''session.action_pos_session_validate()
