@@ -648,6 +648,13 @@ odoo.define('smay_close_pos.smay_close_pos', function(require){
 							$('.pos-receipt').html(receiptFinal);
 							self.gui.close_popup();
 
+						    ///
+						    setTimeout(function(){window.print()},1000)
+
+							setTimeout(function(){window.print()},1500)
+								///
+
+
 							/*new Model('pos.session').call('get_cash_register_total_entry_encoding',
 							    [
 							        self.pos.pos_session.id
