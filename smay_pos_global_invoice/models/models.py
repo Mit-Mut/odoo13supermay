@@ -39,7 +39,7 @@ class GlobalInvoicePosOrder(models.Model):
     def _prepare_invoice(self):
         invoice_fields = super(GlobalInvoicePosOrder, self)._prepare_invoice()
         invoice_fields['team_id'] = self.env['pos.session'].search(
-            [('user_id', '=', self.env.user.id), ('state', '=', 'opened')]).config_id.equipo_ventas.id
+            [('user_id', '=', self.env.user.id), ('state', '=', 'closing_clontrol')]).config_id.equipo_ventas.id
         return invoice_fields
 
 

@@ -160,7 +160,7 @@ class GlobalInvoiceWizard(models.TransientModel):
         ])
 
         # aqui verifico que no haya ordenes con cliente asignado y sin facturar
-        orders_without_invoicing = []
+        '''orders_without_invoicing = []
         for session in sessions_to_invoicing:
             for order in session.order_ids:
                 if order.partner_id.id != self.env.user.company_id.invoice_partner_id.id and order.state != 'invoiced' and order.amount_total > 0:
@@ -169,7 +169,7 @@ class GlobalInvoiceWizard(models.TransientModel):
             message = 'Las siguientes ordenes tiene cliente asignado pero no fueron facturadas:\n'
             for ord in orders_without_invoicing:
                 message += str(ord) + ',\n'
-            raise UserError(message)
+            raise UserError(message)'''
 
         opened_sessions = self.env['pos.session'].search([
             ('state', '=', 'opened'),
