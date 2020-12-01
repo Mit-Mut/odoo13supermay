@@ -41,7 +41,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                       ('20', 'Aplicación de anticipos'),
                                       ('21', 'Intermediario pagos'),
                                       ('22', 'Por definir'),
-                                      ], 'Metodo de pago', default='22', required=True)
+                                      ], 'Metodo de pago', default='1', required=True)
 
     uso_cfdi_id = fields.Selection([('G01', 'Adquisición de mercancías.'),
                                     ('G02', 'Devoluciones, descuentos o bonificaciones.'),
@@ -67,7 +67,7 @@ class GlobalInvoiceWizard(models.TransientModel):
                                      'Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.'),
                                     ('D10', 'Pagos por servicios educativos (colegiaturas).'),
                                     ('P01', 'Por definir.'),
-                                    ], 'Uso del CFDI', default='P01', required=True)
+                                    ], 'Uso del CFDI', default='G01', required=True)
 
     def get_sucursal(self):
         sucursal = self.env.user.sucursal_id
@@ -195,6 +195,11 @@ class GlobalInvoiceWizard(models.TransientModel):
         # si no hay ordenes se termina el proceso
         if len(orders) == 0:
             _logger.warning("Termino el proceso, no hay ordenes por facturar.")
+            for session in sessions_to_invoicing:
+                session.write({
+                    'factura_global': True,
+                }
+                )
             raise UserError(
                 'No hay pedidos que facturar.')
             return
@@ -515,11 +520,11 @@ class GlobalInvoiceWizard(models.TransientModel):
 class smaynota(models.Model):
     _inherit = 'account.move'
 
-    @api.model
+    '''@api.model
     def create(self, vals):
         _logger.warning('FUNCION CREATEEEEE')
         _logger.warning(str(vals))
-        return super(smaynota, self).create(vals)
+        return super(smaynota, self).create(vals)'''
 
 
 class GlobalInvoiceCreditNoteWizard(models.TransientModel):
@@ -555,7 +560,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                                       ('20', 'Aplicación de anticipos'),
                                       ('21', 'Intermediario pagos'),
                                       ('22', 'Por definir'),
-                                      ], 'Metodo de pago', default='22', required=True, readonly=True)
+                                      ], 'Metodo de pago', default='1', required=True, readonly=True)
 
     uso_cfdi_id = fields.Selection([('G01', 'Adquisición de mercancías.'),
                                     ('G02', 'Devoluciones, descuentos o bonificaciones.'),
@@ -581,7 +586,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                                      'Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.'),
                                     ('D10', 'Pagos por servicios educativos (colegiaturas).'),
                                     ('P01', 'Por definir.'),
-                                    ], 'Uso del CFDI', default='P01', required=True, readonly=True)
+                                    ], 'Uso del CFDI', default='G01', required=True, readonly=True)
 
     def get_sucursal(self):
         sucursal = self.env.user.sucursal_id
@@ -620,6 +625,25 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                                             pos_config_id).sucursal_id.name + ' y tu sucursal asignada es ' + sucursal.name + '. Contacta al administrador para la correcta configuración de tu usuario.')
                 return sucursal.name
 
+    def get_date(self, label):
+        default_datetime = ''
+
+        if label == 'START':
+            default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
+        if label == 'END':
+            default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
+
+        if default_datetime != '':
+            local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
+            fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
+            local_dt = local.localize(fecha, is_dst=None)
+            utc_dt = local_dt.astimezone(pytz.utc)
+            return str(utc_dt)[0:19]
+        return '2017-02-02 17:30:00'
+
+    def get_company(self):
+        return self.env.user.company_id.id
+
     def generate_invoice(self):
         pos_configs = []
         user_sucursal = self.env.user.sucursal_id
@@ -654,6 +678,10 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
              ])
 
         if sessions_without_invoice:
+            for session in sessions_without_invoice:
+                session.write({
+                    'notas_credito_global': True
+                })
             raise UserError('Es necesario que primero realices la Facturación Global.')
 
         sessions_to_invoicing = self.env['pos.session'].search(
@@ -686,6 +714,14 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
              ('amount_total', '<', 0), ('sucursal_id', '=', self.env.user.sucursal_id.id)])
 
         if len(orders) == 0:
+            _logger.warning("Termino el proceso, no hay devoluciones por facturar.")
+            for session in sessions_to_invoicing:
+                session.write({
+                    'factura_global': True,
+                }
+                )
+            raise UserError(
+                'No hay devoluciones que facturar.')
             return
 
         '''pos_references = []
@@ -731,6 +767,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             data_invoice['line_ids'].append(self._get_line_totals(factura_id))
             data_invoice = self.add_tax_line(data_invoice, invoice_id)
             data_invoice = self._add_invoice_lines(data_invoice, invoice_id, invoices_to_refund[factura_id])
+            _logger.warning('NOTA DE CREITOOOOO' + str(data_invoice))
 
             credit_note = self.env['account.move'].create(data_invoice)
             _logger.warning('ESTO ES LA SALIDA DE LA FACTURA PARA GENERARLa')
@@ -1096,23 +1133,3 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             raise UserError('Existe mas de una cuenta analitica en los puntos de venta a facturar')
 
         ###
-
-    def get_date(self, label):
-
-        default_datetime = ''
-
-        if label == 'START':
-            default_datetime = str(datetime.strptime(str(date.today()) + ' 00:00:00', "%Y-%m-%d %H:%M:%S"))
-        if label == 'END':
-            default_datetime = str(datetime.strptime(str(date.today()) + ' 23:59:59', "%Y-%m-%d %H:%M:%S"))
-
-        if default_datetime != '':
-            local = pytz.timezone(str(self.env.get('res.users').browse(self._uid).tz))
-            fecha = datetime.strptime(default_datetime, "%Y-%m-%d %H:%M:%S")
-            local_dt = local.localize(fecha, is_dst=None)
-            utc_dt = local_dt.astimezone(pytz.utc)
-            return str(utc_dt)[0:19]
-        return '2017-02-02 17:30:00'
-
-    def get_company(self):
-        return self.env.user.company_id.id
