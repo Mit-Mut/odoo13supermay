@@ -957,7 +957,8 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
                             aux_price_unit = abs(li[2]['price_unit'])
                             aux_tax_base_amount = abs(li[2]['tax_base_amount'])
 
-                            li[2]['debit'] = round(abs(aux_credit) + (abs(amount_total) - abs(subtotal)), 2)
+                            #li[2]['debit'] = round(abs(aux_credit) + (abs(amount_total) - abs(subtotal)), 2)
+                            li[2]['debit'] = round(abs(aux_price_unit) + (abs(amount_total) - abs(subtotal)), 2)
                             li[2]['price_unit'] = round(abs(aux_price_unit) + (abs(amount_total) - abs(subtotal)), 2)
                             li[2]['tax_base_amount'] = round(abs(aux_tax_base_amount) + abs(subtotal), 2)
                             li[2]['quantity'] = 1
