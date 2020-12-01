@@ -780,6 +780,21 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             credit_note._recompute_dynamic_lines(recompute_all_taxes=False)
             credit_note._check_balanced()
 
+            for order in orders:
+                order.write({
+                'account_move': credit_note.id,
+                'state': 'invoiced'
+            })
+            credit_note.action_post()
+
+        for session in sessions_to_invoicing:
+                session.write({
+                    'factura_global': True,
+                }
+                )
+
+
+
         if credit_note:
             return {
                 'name': _('Customer Invoice'),
