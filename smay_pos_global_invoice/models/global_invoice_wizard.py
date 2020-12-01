@@ -678,10 +678,6 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
              ])
 
         if sessions_without_invoice:
-            for session in sessions_without_invoice:
-                session.write({
-                    'notas_credito_global': True
-                })
             raise UserError('Es necesario que primero realices la Facturación Global.')
 
         sessions_to_invoicing = self.env['pos.session'].search(
@@ -789,7 +785,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
 
         for session in sessions_to_invoicing:
                 session.write({
-                    'factura_global': True,
+                    'notas_credito_global': True,
                 }
                 )
 
