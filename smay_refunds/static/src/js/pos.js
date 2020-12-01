@@ -487,7 +487,9 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 
 
 
-                        }).catch(function(){
+                        }).catch(function(error){
+                            console.log('ttttttttttttt'+error)
+
                             self.pos.gui.show_popup('error',{
                                 title: 'Devolución',
                                 body: 'No se obtuvo la información de la devolución.',
