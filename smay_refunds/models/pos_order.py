@@ -190,7 +190,9 @@ class SmayRefundPosOrder(models.Model):
                         order_line['descuento_smay'] = (order_line_orig.x_descuento / order_line_orig.qty) * order_line[
                             'qty']
                     continue
+            _logger.warning(str('DATAAAAAAAAA'+str(data)))
             return data
+        _logger.warning(str('DATAAAAAAAAA22222222222'+str(data)))
 
         return data
 
