@@ -255,7 +255,7 @@ class SmayRefundPosOrder(models.Model):
 
             refund_order_id = order.pos_refund(order_to_refund,session_id)
 
-            if order.account_move and not 'Factura Global' in order.account_move.ref:
+            if order.account_move and order.account_move.ref:
                 invoice_order = self.env['account.move'].browse(order.account_move.id)
                 refund_order = self.env['pos.order'].browse(refund_order_id)
 
