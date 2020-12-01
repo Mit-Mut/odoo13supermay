@@ -150,7 +150,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # revisa que haya sessines sin haber generado la factura global y que ya esten cerradas
         sessions_to_invoicing = self.env['pos.session'].search([
-            ('state', '=', 'closed'),
+            ('state', 'not in', ['closed','closing_control']),
             ('start_at', '>=', self.start_date),
             ('start_at', '<=', self.end_date),
             ('user_id.company_id', '=', self.env.user.company_id.id),
@@ -713,7 +713,7 @@ class GlobalInvoiceCreditNoteWizard(models.TransientModel):
             _logger.warning("Termino el proceso, no hay devoluciones por facturar.")
             for session in sessions_to_invoicing:
                 session.write({
-                    'factura_global': True,
+                    'notas_credito_global': True,
                 }
                 )
             raise UserError(
