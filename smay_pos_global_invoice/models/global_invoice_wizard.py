@@ -159,6 +159,8 @@ class GlobalInvoiceWizard(models.TransientModel):
             ('factura_global', '=', False),
         ])
 
+        _logger.warning('testtttt'+str(sessions_to_invoicing))
+
         # aqui verifico que no haya ordenes con cliente asignado y sin facturar
         '''orders_without_invoicing = []
         for session in sessions_to_invoicing:
