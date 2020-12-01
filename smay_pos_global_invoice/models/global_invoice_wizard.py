@@ -200,8 +200,6 @@ class GlobalInvoiceWizard(models.TransientModel):
                     'factura_global': True,
                 }
                 )
-            raise UserError(
-                'No hay pedidos que facturar.')
             return
 
         # Genero la factura global
