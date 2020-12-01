@@ -274,7 +274,9 @@
 
                 <div class="pos-receipt-left-padding">
                     <t t-esc="orderline.qty"/>
+					<t t-if="widget.pos.db.get_product_by_id(orderline.product_id)">
                     <t t-esc="widget.pos.db.get_product_by_id(orderline.product_id).uom_id[1]"/>
+					</t>
                     x
                     <t t-esc='widget.format_currency(orderline.price_unit)'/>
                     <span class="price_display pos-receipt-right-align">
