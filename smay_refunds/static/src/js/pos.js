@@ -464,7 +464,9 @@ odoo.define('smay_refunds.smay_refunds', function(require){
                             }
 
                             console.log('DATA DE TICKETTTTTT'+data)
+                            console.log(data)
                             console.log('RECEIPT'+receipt)
+                            console.log(receipt)
 
                            // var reprinted_order = QWeb.render('RefoundPosTicket' ,{widget:self,receipt:receipt,refound: true});
                            var reprinted_order = QWeb.render('RefoundPosTicket' ,{widget:self,receipt:receipt,refound: true});
