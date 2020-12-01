@@ -373,7 +373,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 					        model: 'pos.order',
 						    method: 'order_has_invoice',
 						    args: [data],
-                            timeout: 5000,
+                            timeout: 10000,
 
 					    }).then(function(data){
 					    if(data >0){
@@ -405,7 +405,7 @@ odoo.define('smay_refunds.smay_refunds', function(require){
 					   	    model: 'pos.order',
 						    method: 'get_information_reprint',
 						    args: [data,false],
-                            timeout: 5000,
+                            timeout: 10000,
 					    }).then(function(data){
                             /*var _order =self.pos.get_order();
                             var orderlines =_order.get_orderlines();
