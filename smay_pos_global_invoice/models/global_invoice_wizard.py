@@ -150,7 +150,7 @@ class GlobalInvoiceWizard(models.TransientModel):
 
         # revisa que haya sessines sin haber generado la factura global y que ya esten cerradas
         sessions_to_invoicing = self.env['pos.session'].search([
-            ('state', 'not in', ['closed','closing_control']),
+            ('state', 'in', ['closed','closing_control']),
             ('start_at', '>=', self.start_date),
             ('start_at', '<=', self.end_date),
             ('user_id.company_id', '=', self.env.user.company_id.id),
